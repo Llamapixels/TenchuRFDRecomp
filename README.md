@@ -18,7 +18,7 @@ higher resolutions, widescreen, Direct3D 12 or Vulkan, texture packs, mods, chea
 > **USA,ASIA release**, as a disc image (`.iso`) made from your own disc. This project does not include, and will not
 > provide, game files, disc images or links to them. Your disc image is only read, never changed.
 
-> [!Windows Defender] warning (Behavior:Win32/DefenseEvasion.A!ml).
+> Windows Defender warning: (Behavior:Win32/DefenseEvasion.A!ml).
 > Some players may see Microsoft Defender flag TenchuRFD.exe with this alert. It’s a false positive.
 > The !ml ending means it came from Defender’s machine-learning guesswork about how the program behaves,
 > not from a match against known malware. The port trips that guesswork for ordinary reasons.
