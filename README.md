@@ -10,7 +10,7 @@ higher resolutions, widescreen, Direct3D 12 or Vulkan, texture packs, mods, chea
 
 > [!WARNING]
 > **This is an alpha, a preview for testers.** The game has been played through on this port, but expect bugs
->  or crashes further on. 
+>  or crashes randomly though none have been reported. 
 >  If something breaks, please [report it](../../issues/new/choose).
 
 > [!NOTE]
