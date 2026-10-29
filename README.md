@@ -9,13 +9,13 @@ higher resolutions, widescreen, Direct3D 12 or Vulkan, texture packs, mods, chea
 > audio, texture packs, mods, memory patches and custom levels. The menu is used with the mouse; Esc closes it.
 
 > [!WARNING]
-> **This is an alpha, a preview for testers.** The menus and the first mission have been played; the rest of the
-> game hasn't been played through yet on this port, so expect bugs or crashes further on. It has only been tested on
-> one PC (Windows 11, NVIDIA). If something breaks, please [report it](../../issues/new/choose).
+> **This is an alpha, a preview for testers.** The game has been played through on this port, but expect bugs
+>  or crashes further on. 
+>  If something breaks, please [report it](../../issues/new/choose).
 
 > [!NOTE]
 > **No game files are included.** You need your own copy of *Tenchu: Return from Darkness* for the original Xbox,
-> **USA release**, as a disc image (`.iso`) made from your own disc. This project does not include, and will not
+> **USA,ASIA release**, as a disc image (`.iso`) made from your own disc. This project does not include, and will not
 > provide, game files, disc images or links to them. Your disc image is only read, never changed.
 
 ## Getting started (Alpha 0.1.4, Windows)
