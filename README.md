@@ -18,6 +18,21 @@ higher resolutions, widescreen, Direct3D 12 or Vulkan, texture packs, mods, chea
 > **USA,ASIA release**, as a disc image (`.iso`) made from your own disc. This project does not include, and will not
 > provide, game files, disc images or links to them. Your disc image is only read, never changed.
 
+> [!Windows Defender] warning (Behavior:Win32/DefenseEvasion.A!ml).
+> Some players may see Microsoft Defender flag TenchuRFD.exe with this alert. It’s a false positive.
+> The !ml ending means it came from Defender’s machine-learning guesswork about how the program behaves,
+> not from a match against known malware. The port trips that guesswork for ordinary reasons.
+> The files aren’t code-signed. On the first start, the game runs the compiler bundled in the compiler
+> folder to build TenchuRFD.dll on your own PC from your own disc, then loads that freshly built file.
+> That looks unusual to an antivirus, but it’s how a recompiled game works without shipping any of the game’s code.
+> The port also unpacks the disc into thousands of files and writes into the game’s memory for features like cheats and memory patches.
+> The full source is public in this repository, so anyone can check or build it themselves.
+> Only download the zip from this repository’s Releases page.
+> If Defender quarantines a file, restore it from Windows Security’s Protection history.
+> Then add the game folder as an exclusion under Virus & threat protection > Manage settings > Exclusions.
+> You can also report it to Microsoft as a false positive at https://www.microsoft.com/wdsi/filesubmission, which helps clear the warning for everyone.
+
+
 ## Getting started (Alpha 0.1.4, Windows)
 
 1. Download `TenchuRFD-0.1.4-alpha-windows.zip` from [Releases](../../releases) and extract it to a folder you can
@@ -28,19 +43,7 @@ higher resolutions, widescreen, Direct3D 12 or Vulkan, texture packs, mods, chea
    game's code on your PC from your own disc (a few minutes, first time only). When it says ready, press Start.
 4. In game, press **F6** for the port menu.
 
-> [!Windows Defender] warning (Behavior:Win32/DefenseEvasion.A!ml).
-> Some players may see Microsoft Defender flag TenchuRFD.exe with this alert. It’s a false positive.
-> > The !ml ending means it came from Defender’s machine-learning guesswork about how the program behaves,
-> > not from a match against known malware. The port trips that guesswork for ordinary reasons.
-> > The files aren’t code-signed. On the first start, the game runs the compiler bundled in the compiler
-> > folder to build TenchuRFD.dll on your own PC from your own disc, then loads that freshly built file.
-> > That looks unusual to an antivirus, but it’s how a recompiled game works without shipping any of the game’s code.
-> > The port also unpacks the disc into thousands of files and writes into the game’s memory for features like cheats and memory patches.
-> > The full source is public in this repository, so anyone can check or build it themselves.
-> > Only download the zip from this repository’s Releases page.
-> > If Defender quarantines a file, restore it from Windows Security’s Protection history.
-> > Then add the game folder as an exclusion under Virus & threat protection > Manage settings > Exclusions.
-> > You can also report it to Microsoft as a false positive at https://www.microsoft.com/wdsi/filesubmission, which helps clear the warning for everyone.
+
 
 Needs Windows 10 or 11 (64-bit) and a graphics card with Direct3D 12 support.
 
