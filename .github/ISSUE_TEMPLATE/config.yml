@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Mods, texture packs and custom levels
+    url: https://github.com/Llamapixels/TenchuRFDRecomp/blob/main/docs/modding.md
+    about: How mods, texture packs, memory patches and RFD Switchblade levels work.

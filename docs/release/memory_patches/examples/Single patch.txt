@@ -1,0 +1,17 @@
+Example: one patch in one file.
+
+To use it, copy this file up into the memory_patches folder, then open
+F6 > Patches, press Reload and tick it on. Files in this examples folder
+are not read by the game.
+
+Only these lines are read:
+ - a line in square brackets starts a patch: its name, shown in F6 > Patches
+ - Author= says who made it, shown next to the name
+ - Notes= is optional, shown when you hover the name
+ - Address,<address>,value,<value> is one write; a patch can have several
+Everything else, like this text, is ignored.
+
+[Always gets grandmaster rank]
+Author=me
+Notes=Shared for Cheat Engine. The end-of-mission rank always comes out as Grand Master.
+Address,1008E40A0,value,00000063

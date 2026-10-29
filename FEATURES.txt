@@ -1,0 +1,333 @@
+TENCHU: RETURN FROM DARKNESS - NATIVE PC PORT: FEATURES
+=======================================================
+
+Status:  [ok]     confirmed working in game
+         [test]   built and tested offline, needs confirming in game
+         [exp]    experimental
+         [bug]    known problem
+         [todo]   not done yet
+
+
+HOTKEYS (in game)
+-----------------
+  F6     Port menu (all options below). Mouse-only; Esc also closes it.
+  F10    Photo mode (free camera)
+  F12    Screenshot
+  F3     Render capture for bug reports (only when enabled in F6 > Tools)
+
+
+GAME
+----
+  [ok]   Boots from the original Xbox ISO, intro movies, title and menus.
+  [ok]   Options and Saves menus.
+  [ok]   Story Mode, character select, loading and gameplay (one level
+         played so far).
+  [test] Xbox Live (shut down in 2010) is disabled: choosing its title
+         menu option just reopens the menu instead of the stuck Account
+         Selection screen.
+  [test] Other levels, both characters, saving/loading progress.
+         Report any "has no recompiled function" crash with its log.
+
+
+DISPLAY  (F6 > Display)
+-----------------------
+  [ok]   Internal resolution 0.5x - 4x (640x480 native, 4x = 2560x1920),
+         applies live.
+  [ok]   Renderer: Direct3D 12 or Vulkan (vkd3d-proton). Restart game
+         button applies the change.
+  [ok]   Window resizing / dragging without crashes (both renderers).
+  [exp]  16:9 widescreen: wider 3D view, HUD and movies kept at 4:3.
+  [test] Fixed: widescreen movies off-centre, black cutscene bars
+         detached, sky strip exposed.
+  [test] Display mode: windowed / borderless / fullscreen.
+  [test] VSync, FPS limit 30 - 240, unlimited or display refresh
+         (above 60 is experimental; may affect game speed).
+  [test] Original cutscene motion blur (off by default: removes the
+         frame-history trails in cutscenes).
+  [ok]   Fixed: half-white cutscenes and scrambled textures.
+  [ok]   Fixed: far walls and other distant surfaces flickering black
+         (depth precision).
+  [ok]   Fixed: sky and water stretched into streaks (scrolling textures
+         were clamped instead of repeating).
+
+
+SHADER  (F6 > Shader)
+---------------------
+  [test] Post-processing: exposure, brightness, contrast, saturation,
+         vibrance, warmth, gamma, shadow lift, highlight roll-off,
+         sharpening, clarity, bloom (strength/threshold/size/haze),
+         vignette. Works on both renderers.
+  [test] Built-in presets: Neutral, Vivid, Cinematic, Brighter shadows,
+         Modern Look. Save your own named presets (shader_presets.toml).
+  [test] Split-screen compare (original left, shader right).
+  [test] Last preset and adjustments restored at start.
+
+
+PROFILES  (F6 > Profiles)
+-------------------------
+  [test] Named graphics profiles: renderer, internal resolution,
+         widescreen, window mode/size, VSync, FPS limit
+         (graphics_profiles.toml).
+
+
+CHEATS  (F6 > Cheats)
+---------------------
+  [test] God mode: players keep full health. Enemies unaffected.
+         Off each time the game starts.
+  [todo] Enemies ignore players.
+  Multiplayer alone (experimental), all off each time the game starts:
+  [ok]   Virtual second controller: port 2 reports a pad, so Multiplayer
+         can be chosen with one controller.
+  [test] Your controller drives player 2; Press Start on controller 2
+         (sent when F6 closes).
+  [ok]   Two players in the next mission: a story mission loads with
+         player 2, as Multiplayer would (split screen). Also turns on the
+         virtual controller and the story start.
+  [ok]   Player 1 starts at the story start, so the opening cutscene
+         plays (story stages 0-10; other stages share the multiplayer
+         start).
+  [bug]  Player 1 full screen: stutters and glitches, cutscenes still
+         split. Left in the menu, marked not working.
+
+
+CAMERA  (F6 > Camera)
+---------------------
+  [ok]   Photo mode / free camera (F10): left stick move, right stick
+         look, RT/LT up/down, RB/LB fast/slow. Keyboard: WASD, Q/E,
+         arrows, right mouse drag, Shift/Ctrl speed.
+  [test] Field of view and camera distance, separate standing and
+         running profiles.
+  [test] Invert horizontal / vertical, stick diagnostics.
+  [bug]  Follow-camera speed sliders have little visible effect.
+  [test] Fixed: the mission 1 intro cutscene froze (audio kept playing)
+         when a custom FOV, distance or right-stick orbit was set, and
+         then flickered twice a second. The custom camera now pauses while
+         the game moves the camera itself, checking with an invisible
+         one-step focal change instead of re-applying the custom FOV.
+  [test] Custom right-stick camera is off by default (labelled
+         experimental); off uses the game's own right-stick camera.
+  [test] Remember camera settings between sessions.
+
+
+AUDIO  (F6 > Audio)
+-------------------
+  [test] Master volume 0 - 100% and mute (game keeps running normally).
+  [bug]  Some original DirectSound effects (5 of 12 slots) are not
+         reproduced, so some reverb/filter effects may be missing.
+
+
+TEXTURE PACKS  (F6 > Textures)
+------------------------------
+  [test] PS2 Tenchu: Wrath of Heaven texture packs work: put the pack
+         folder (or a link to it) in textures\packs. Each texture the
+         game uses is matched to the pack by appearance, so the PS2 file
+         names do not matter. Coverage grows as you play.
+         WoH Last Round pack, checked offline on 329 Xbox textures from
+         F3 captures: 112 replaced, 15 sent to review, no wrong automatic
+         matches found.
+  [test] Pack list: on/off, priority order, live status, reindex. The
+         first index takes a few seconds and is cached.
+  [test] Needs review list for close calls (often textures this version
+         changed), with side-by-side comparison images; Use it / Never.
+  [test] Replaced list with Block for any replacement that looks wrong.
+  [test] PS2 alpha (0x80 = opaque) converted automatically.
+  [test] Replace textures on/off, live.
+  [test] Xbox texture dumps, and Xbox-keyed packs in textures\replacement
+         (exact match, take priority over matched packs).
+  [test] Fixed: an edited dump showed "0 replaced". Exact-key replacements
+         now count as replaced and are listed. A dump (PNG or DDS) put in
+         a pack folder replaces exactly its own texture by the key in its
+         name, ahead of every pack's appearance matching (it was matched by
+         appearance, and DDS files were ignored).
+  [test] Dumps hold only the full size image (no mipmaps). Smaller
+         versions are made from the edit when it loads; a DDS whose stored
+         mipmaps no longer match its top level (an editor kept the dump's
+         old ones) gets new ones, so the original never shows at a
+         distance.
+
+
+CUSTOM LEVELS  (F6 > Levels, RFD Switchblade > Levels)
+----------------------------------------------------
+  [ok]   Custom level packs in levels\ beside the game: pick one in
+         F6 > Levels, then start the mission it is built on. Its map
+         (look, collision, player start) replaces the stage's; no restart.
+         Checked with "Flat plane" on the first story mission.
+  [ok]   RFD Switchblade Levels page: view every stage in 3D as the game
+         draws it, with its collision and player start.
+  [ok]   Make a level: a ground around a mission's start, boxes for
+         walls and platforms, the start's facing, textures from the
+         stage; Save writes the pack (a folder, zip it to share).
+  [test] The player start is the mission's own (x, z), on the level's
+         ground: a start in stage 3's river left the screen white (the
+         mission start never faded in). Packs saved earlier get it too.
+  [ok]   Model pictures: each OBJ material's picture (map_Kd in its
+         .mtl, or one picked per material) is packed on Save: converted
+         into one of the stage's first-area textures the level does not
+         use (not the sky's or water's), at that texture's size (mostly
+         128x128 on stage 3), and swapped in as the stage loads. The
+         pictures are copied into the level's images folder.
+  [ok]   A custom level starts bare: the stage's own map objects (gates,
+         sliding doors, lanterns) are emptied too, so none of the old
+         stage's invisible walls are left. Checked on stage 3.
+  [ok]   Box walls are solid from outside (wall triangles faced out;
+         re-save levels made before this).
+  [test] The camera keeps working past the old stage's edges: the height
+         grids are stretched over the level (level.toml bounds).
+  [ok]   Import OBJ models (Blender: export OBJ, Y up): place, turn, scale,
+         sit on ground, texture per material, solid or walk-through. The
+         file is copied into the level's models folder when saved.
+  [test] Lighting in RFD Switchblade: a light colour (plain, night or
+         any colour) and sun shading by direction, baked into the
+         level's vertex colours and shown in the editor.
+  [ok]   Hanging from the edges of boxes and models: the game finds
+         ledges in the stage's height grid, which a level now fills from
+         its own floors (the highest over each point) as it loads. The
+         collision uses the stages' usual surfaces (floor 0x75, wall 0x74).
+  [ok]   Per model "Ledges" (on by default). The height grid holds one
+         height per point and also blocks the player below it, so with
+         ledges a building's footprint blocks like a box up to its roof.
+         Off: only the mesh collides (rooms, doorways), no ledges.
+  [ok]   No more ground darkening as the camera turns: surfaces are cut
+         into triangles of at most 1000 units, as the game's fog is
+         worked out at the corners.
+  [ok]   Enemies: RFD Switchblade shows a mission's enemies (Rikimaru's
+         first layout) on the stage and under a level. "Own enemies" lets a
+         level move, turn, add and remove them, for every character and
+         layout: unmoved ones keep their patrols, moved ones stand guard,
+         removed ones are hidden (the mission may count them).
+  [test] Enemies are listed by model (EM00 guards, EM12, BS bosses and
+         story characters, NPC people) and character type.
+  [ok]   Lights: RFD Switchblade shows the candles, lanterns, torches and
+         paper lanterns a stage places (stages 2, 3, 5-9), and "Own lights"
+         lets a level move them or remove them. The stage's code sets how
+         many of each it has, so a level cannot have more.
+  [test] No limit on a level's collision either: more objects or bytes
+         than the stage's own chunk of BOH.BIN are loaded from past the end
+         of the file. Collision objects are up to 128 triangles.
+  [test] The ground can be any size from 0 (no ground: the level is its
+         boxes and models) to 200000.
+  [ok]   Checked: a Tenchu 2 map from Blender (62 pictures, about 18,800
+         triangles, two blocks, 1.5 MB of collision) loads in stage 3.
+         Past-the-end data is padded to whole sectors, and the game is told
+         the file is long enough for it (its reader checks the size).
+  [test] No 1 MB limit on a level's map: the mesh spreads over the
+         stage's blocks (65000 corners each, the first area's first), and a
+         block may be any size (served past the end of g.con, the game's
+         table of it pointed there while the level is in use). The editor
+         warns past the size of the stage's own map (memory).
+  [ok]   Items: RFD Switchblade shows the items lying in a story mission
+         (keys, tools, potions), and "Own items" lets a level move, add
+         and remove them for every character and layout, up to the
+         stage's longest list (15 on stage 3). Items are shown by number.
+  [todo] Item names, particles, more lights than the stage has, patrol
+         routes;
+         game meshes as props, fog and sky settings, editing the original
+         stages.
+
+MODS  (F6 > Mods)
+-----------------
+  [test] File-replacement mods: each folder in mods mirrors the disc, a
+         file at mods\<mod>\<disc path> replaces that disc file.
+  [test] On/off and load order per mod; conflicts shown; optional
+         mod.toml (title, author, version, description).
+  [test] Write disc file list (mods\disc_files.txt) for mod makers.
+  [ok]   First start unpacks every disc file into extracted\, and every
+         archive (Media\*.con) into <name>.con.files\ beside it (verified
+         byte-identical to the disc; under a minute). Later starts run
+         from extracted\. Delete it to unpack again.
+  [test] Per-file archive mods: mods\<mod>\Media\x.con.files\<file>
+         replaces one file inside x.con, so mods changing one archive
+         combine. Edits made directly in extracted\...\x.con.files apply
+         too. The archive is rebuilt into cache\archives when the game
+         starts and reused while nothing changes.
+  [ok]   Fixed: a mod that replaces a whole archive (such as Media\m.con
+         with a new outfit) was undone: the unpacked original of each file
+         it changed counted as a player edit and went back over it. Edits
+         are now told apart from the unpacked originals. Checked in game
+         with "Ayame new outfit" on the character select.
+  [test] Mods come before extracted\: a file a whole-archive mod changed
+         keeps the mod's version even if it was edited in extracted\, and
+         edits are judged against the disc, so a tool saving over
+         extracted\Media\m.con no longer brings the originals back.
+  [todo] Model, motion and level formats (.msh, .mlp/.mls, .k2v) are not
+         documented, so only textures and raw files can be edited so far.
+
+MEMORY PATCHES  (F6 > Patches)
+------------------------------
+  [test] .txt files in memory_patches, in the Cheat Engine format players
+         share ([name], Author=, Address,<address>,value,<value>); other
+         lines ignored, several patches per file. Listed by name and author
+         with remembered on/off switches, Reload and Open folder.
+  [test] memory_patches\examples: a one-patch file and a several-patch file
+         explaining each line (not read until copied up a folder).
+  [test] Cheat Engine host addresses (1xxxxxxxx) and game addresses; value
+         size from its digits (byte, 2 or 4 bytes), floats, optional type.
+  [test] While on, written ~60 times a second (freeze); original bytes come
+         back when turned off. Restore defaults turns them all off.
+  [ok]   Checked in game: the posted grandmaster rank patch writes 0x63 at
+         1008E40A0.
+  [test] Writes into the game's code sections (read from the game image)
+         are marked "Changes game code: no effect". Unreadable lines are
+         listed. Patches pointing at a routine the recompiler did not build
+         stop the game ("has no recompiled function"); the log names the
+         patches that were on.
+
+MOD WORKBENCH  (tools\RFD Switchblade.exe, a separate program)
+-----------------------------------------------------------
+  [test] App: sidebar pages, icons, status bar with background work,
+         remembered window and settings (RFD Switchblade.ini), drag and
+         drop, asks before closing with unsaved matches, pictures load
+         on worker threads. --capture <png> renders a page for checks.
+  [test] Game files: tree of extracted\ (archives' .con.files shown as
+         archives), search, kind filter, changed-only view; changed
+         files in yellow, files the archive lacks in blue. Preview with
+         zoom and colour/alpha views, text and hex views. Edit a texture
+         in your image editor (PNG in "workbench edits", converted back
+         on every save), Open / Open with, Replace (PNG converted and
+         resized on request; drop a file), Export, PNG, Revert (from the
+         archive, or a copy kept before the first change; added files
+         go to the recycle bin). Make mod from changes (optionally put
+         the originals back), Pack into a .con, Import a modded .con
+         (only differing files become a mod), Unpack any .con.
+  [test] Texture packs: every game texture against every pack image with
+         the game's matcher (shares textures\cache); palette variants
+         grouped by the PCSX2 picture hash; one to one (images that are
+         another texture's sure match are offered less); candidates
+         ranked by look (detail less colour difference), other shapes
+         flagged "stretched". Review: pages of 12/24/48 cards, most
+         likely first, click to reject, Left/Right per card, Enter
+         accepts, Space skips the page. Browse: big comparison opening
+         on the best guess, every pack image below by likeness with
+         folder filter, search, hide used, size; Enter/S/A, Import
+         image (copied into the pack's _imported). Undo (Ctrl+Z), Save
+         (Ctrl+S) -> rfd_matches.toml in the pack folder, which the game
+         reads. Build Xbox-size mod. WoH Last Round: 1,260 of 3,725 sure,
+         374 to review; ~2,000 game textures have no counterpart.
+  [ok]   The game reads a pack's rfd_matches.toml before automatic
+         matching; F6 > Textures choices still come first.
+  [ok]   Texture keys computed offline equal the game's (checked against
+         keys the game logged); A8R8G8B8 textures have none offline.
+
+
+TOOLS  (F6 > Tools, F6 > System)
+--------------------------------
+  [test] Screenshot button and F12, Open screenshot folder.
+  [test] "Open ... folder" buttons open Explorer off the render thread
+         (opening the dumps folder hung the game, then closed it).
+  [test] FPS / frame time overlay.
+  [test] Hang watchdog: if no frame is shown for 8 seconds (window not
+         minimized or being resized), every game thread's state is written
+         to the log once, so freezes can be diagnosed afterwards.
+  [test] F3 render capture (debug), off by default: saves three frames
+         with all textures and draw calls (about 20 MB per press).
+  [test] Restore default settings (keeps saves, profiles and presets),
+         Restart game.
+
+
+NOT YET (compared with the Tenchu Z port)
+-----------------------------------------
+  [todo] Keyboard & mouse gameplay controls and key binding.
+  [todo] Controller tab: button remap, deadzones, rumble strength.
+  [todo] More cheats: refill health, damage multipliers, one-hit kills,
+         items.
+  [todo] Hide HUD, speedrun timer, practice save/load position.

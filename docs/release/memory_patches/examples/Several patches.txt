@@ -1,0 +1,30 @@
+Example: several patches in one file.
+
+Each line in square brackets starts a new patch, and each one gets its own
+switch in F6 > Patches. To use them, copy this file up into the
+memory_patches folder, press Reload in F6 > Patches and tick the ones you
+want. Files in this examples folder are not read by the game.
+
+An Author= line above the first patch counts for every patch in the file;
+an Author= line under a patch's name counts for that patch only.
+
+How an address line reads:
+ - Address,1008E40A0,value,00000063
+ - 1008E40A0 is Cheat Engine's address and works as it is (game memory
+   starts at 100000000); the game's own address, 008E40A0, works too.
+ - 00000063 is the value. Its digits set the size: 2 digits = 1 byte,
+   4 = 2 bytes, 8 = 4 bytes. A value with a point, such as 1.5, is a float.
+ - A size can also be given at the end: Address,008E40A0,value,63,4 bytes
+   (byte, 2 bytes, 4 bytes or float).
+
+Tenchu: Return From Darkness (USA)
+
+[Always gets grandmaster rank]
+Author=me
+Notes=The end-of-mission rank always comes out as Grand Master.
+Address,1008E40A0,value,00000063
+
+[Ayame's alternate crouch attack (R1+Square)]
+Author=myself
+Notes=Replaces Ayame's crouch attack with her 360 degree holy kick.
+Address,1004D0520,value,002599F0

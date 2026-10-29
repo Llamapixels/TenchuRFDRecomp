@@ -1,0 +1,3527 @@
+# Recompiler input for default.xbe, written by xbe_symbols
+
+[xbe]
+trace = [0x00306D30, 0x00306CBC, 0x0005C860]
+gap_fill = false
+pointer_seeds = false
+path = "assets/default.xbe"
+title = 0x41560026
+entry = 0x306D30
+xdk = 5849
+out = "generated/startup"
+partitions = 8
+code_sections = [".text", "D3D", "D3DX", "XGRPH", "DSOUND", "WMADEC", "XMV", "XONLINE", "XNET", "XPP"]
+library = "TenchuRFD.dll"  # <exe>.dll, which the executable delay loads
+
+# extra entry points
+[functions]
+"0x00210F00" = "" # verified task registration analysis/task_registration_inventory.json
+"0x001F7040" = "" # global static callback analysis/static_callback_inventory.json
+"0x00071410" = "" # global static callback analysis/static_callback_inventory.json
+"0x00095A80" = "" # global static callback analysis/static_callback_inventory.json
+"0x001F4E60" = "" # global static callback analysis/static_callback_inventory.json
+"0x001F4EC0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001F6B30" = "" # global static callback analysis/static_callback_inventory.json
+"0x00278E40" = "" # global static callback analysis/static_callback_inventory.json
+"0x002AF910" = "" # global static callback analysis/static_callback_inventory.json
+"0x002B0310" = "" # global static callback analysis/static_callback_inventory.json
+"0x0006C450" = "" # global static callback analysis/static_callback_inventory.json
+"0x0006E4A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0006EC00" = "" # global static callback analysis/static_callback_inventory.json
+"0x00071510" = "" # global static callback analysis/static_callback_inventory.json
+"0x00074750" = "" # global static callback analysis/static_callback_inventory.json
+"0x00074830" = "" # global static callback analysis/static_callback_inventory.json
+"0x00074CC0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00074ED0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00074F60" = "" # global static callback analysis/static_callback_inventory.json
+"0x00075380" = "" # global static callback analysis/static_callback_inventory.json
+"0x0007F7A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000860C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00087630" = "" # global static callback analysis/static_callback_inventory.json
+"0x0008C030" = "" # global static callback analysis/static_callback_inventory.json
+"0x0008C0B0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0008C520" = "" # global static callback analysis/static_callback_inventory.json
+"0x0008C5A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0008D350" = "" # global static callback analysis/static_callback_inventory.json
+"0x00095BD0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00095C40" = "" # global static callback analysis/static_callback_inventory.json
+"0x00095CC0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00095DC0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00096C20" = "" # global static callback analysis/static_callback_inventory.json
+"0x00096CB0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00096DD0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000E12D0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000E1620" = "" # global static callback analysis/static_callback_inventory.json
+"0x000E1E30" = "" # global static callback analysis/static_callback_inventory.json
+"0x000E2180" = "" # global static callback analysis/static_callback_inventory.json
+"0x00135060" = "" # global static callback analysis/static_callback_inventory.json
+"0x00135590" = "" # global static callback analysis/static_callback_inventory.json
+"0x0013DF80" = "" # global static callback analysis/static_callback_inventory.json
+"0x0013E030" = "" # global static callback analysis/static_callback_inventory.json
+"0x0014FB10" = "" # global static callback analysis/static_callback_inventory.json
+"0x0014FF80" = "" # global static callback analysis/static_callback_inventory.json
+"0x001505F0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001509C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00176390" = "" # global static callback analysis/static_callback_inventory.json
+"0x001767A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00177E90" = "" # global static callback analysis/static_callback_inventory.json
+"0x00177F90" = "" # global static callback analysis/static_callback_inventory.json
+"0x00189530" = "" # global static callback analysis/static_callback_inventory.json
+"0x00189B40" = "" # global static callback analysis/static_callback_inventory.json
+"0x001AF990" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B4210" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B42E0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B51A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B78B0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B79B0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001BC400" = "" # global static callback analysis/static_callback_inventory.json
+"0x001BD4D0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001BEC80" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C2710" = "" # global static callback analysis/static_callback_inventory.json
+"0x001CABF0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001CACD0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001CDEA0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001CE420" = "" # global static callback analysis/static_callback_inventory.json
+"0x001D24F0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001D2D50" = "" # global static callback analysis/static_callback_inventory.json
+"0x001DF570" = "" # global static callback analysis/static_callback_inventory.json
+"0x001E1030" = "" # global static callback analysis/static_callback_inventory.json
+"0x001F3DE0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001F3E60" = "" # global static callback analysis/static_callback_inventory.json
+"0x001F4580" = "" # global static callback analysis/static_callback_inventory.json
+"0x0020FAB0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0025EF00" = "" # global static callback analysis/static_callback_inventory.json
+"0x00260F40" = "" # global static callback analysis/static_callback_inventory.json
+"0x00279090" = "" # global static callback analysis/static_callback_inventory.json
+"0x002792A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00279840" = "" # global static callback analysis/static_callback_inventory.json
+"0x0027A0B0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0027B6C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x002813C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00283AD0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0028A200" = "" # global static callback analysis/static_callback_inventory.json
+"0x0028A570" = "" # global static callback analysis/static_callback_inventory.json
+"0x0028A870" = "" # global static callback analysis/static_callback_inventory.json
+"0x0028B1F0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0028B570" = "" # global static callback analysis/static_callback_inventory.json
+"0x002A9D30" = "" # global static callback analysis/static_callback_inventory.json
+"0x002ACF60" = "" # global static callback analysis/static_callback_inventory.json
+"0x002AE440" = "" # global static callback analysis/static_callback_inventory.json
+"0x002BB380" = "" # global static callback analysis/static_callback_inventory.json
+"0x002D69B0" = "" # global static callback analysis/static_callback_inventory.json
+"0x002D6D30" = "" # global static callback analysis/static_callback_inventory.json
+"0x002D7400" = "" # global static callback analysis/static_callback_inventory.json
+"0x002D7830" = "" # global static callback analysis/static_callback_inventory.json
+"0x002D7BC0" = "" # global static callback analysis/static_callback_inventory.json
+"0x002E3790" = "" # global static callback analysis/static_callback_inventory.json
+"0x00014520" = "" # global static callback analysis/static_callback_inventory.json
+"0x00014890" = "" # global static callback analysis/static_callback_inventory.json
+"0x00015160" = "" # global static callback analysis/static_callback_inventory.json
+"0x00015320" = "" # global static callback analysis/static_callback_inventory.json
+"0x000153D0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000154A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000155A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00015C80" = "" # global static callback analysis/static_callback_inventory.json
+"0x0001AAC0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0001ABB0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00028020" = "" # global static callback analysis/static_callback_inventory.json
+"0x00028BE0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00028C10" = "" # global static callback analysis/static_callback_inventory.json
+"0x0005A740" = "" # global static callback analysis/static_callback_inventory.json
+"0x000613A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00061560" = "" # global static callback analysis/static_callback_inventory.json
+"0x000618C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00061940" = "" # global static callback analysis/static_callback_inventory.json
+"0x00061990" = "" # global static callback analysis/static_callback_inventory.json
+"0x00062EC0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0006A2D0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0006A3A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0006A3C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0006A3E0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0006A640" = "" # global static callback analysis/static_callback_inventory.json
+"0x0006AC20" = "" # global static callback analysis/static_callback_inventory.json
+"0x0006B1E0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0006B7E0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0006C610" = "" # global static callback analysis/static_callback_inventory.json
+"0x0006C8F0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0006CB30" = "" # global static callback analysis/static_callback_inventory.json
+"0x0006D2B0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0006D4F0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0006D7D0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0006E280" = "" # global static callback analysis/static_callback_inventory.json
+"0x0006E5B0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0006E7A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0006E9D0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0006ED10" = "" # global static callback analysis/static_callback_inventory.json
+"0x0006EF00" = "" # global static callback analysis/static_callback_inventory.json
+"0x0006F470" = "" # global static callback analysis/static_callback_inventory.json
+"0x0006F700" = "" # global static callback analysis/static_callback_inventory.json
+"0x0006F770" = "" # global static callback analysis/static_callback_inventory.json
+"0x0006F910" = "" # global static callback analysis/static_callback_inventory.json
+"0x0006FD40" = "" # global static callback analysis/static_callback_inventory.json
+"0x00070040" = "" # global static callback analysis/static_callback_inventory.json
+"0x00070420" = "" # global static callback analysis/static_callback_inventory.json
+"0x000704E0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00070530" = "" # global static callback analysis/static_callback_inventory.json
+"0x00070A00" = "" # global static callback analysis/static_callback_inventory.json
+"0x00070A20" = "" # global static callback analysis/static_callback_inventory.json
+"0x00071360" = "" # global static callback analysis/static_callback_inventory.json
+"0x00071630" = "" # global static callback analysis/static_callback_inventory.json
+"0x00071870" = "" # global static callback analysis/static_callback_inventory.json
+"0x00071AD0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00071BD0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00071DB0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00072200" = "" # global static callback analysis/static_callback_inventory.json
+"0x00072470" = "" # global static callback analysis/static_callback_inventory.json
+"0x00072660" = "" # global static callback analysis/static_callback_inventory.json
+"0x00072B60" = "" # global static callback analysis/static_callback_inventory.json
+"0x00072DA0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000730C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00073160" = "" # global static callback analysis/static_callback_inventory.json
+"0x000731B0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000734A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00073BB0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00073BE0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00074600" = "" # global static callback analysis/static_callback_inventory.json
+"0x000746F0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00074A00" = "" # global static callback analysis/static_callback_inventory.json
+"0x00075320" = "" # global static callback analysis/static_callback_inventory.json
+"0x00075700" = "" # global static callback analysis/static_callback_inventory.json
+"0x00075760" = "" # global static callback analysis/static_callback_inventory.json
+"0x00075880" = "" # global static callback analysis/static_callback_inventory.json
+"0x000760C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000763A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00076BE0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00077020" = "" # global static callback analysis/static_callback_inventory.json
+"0x00077170" = "" # global static callback analysis/static_callback_inventory.json
+"0x000777F0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000778F0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00077930" = "" # global static callback analysis/static_callback_inventory.json
+"0x00077FC0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000780E0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000781E0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000782E0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00078440" = "" # global static callback analysis/static_callback_inventory.json
+"0x00078670" = "" # global static callback analysis/static_callback_inventory.json
+"0x00078BA0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00078D10" = "" # global static callback analysis/static_callback_inventory.json
+"0x00078EF0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00079330" = "" # global static callback analysis/static_callback_inventory.json
+"0x00079360" = "" # global static callback analysis/static_callback_inventory.json
+"0x00079380" = "" # global static callback analysis/static_callback_inventory.json
+"0x00079780" = "" # global static callback analysis/static_callback_inventory.json
+"0x00079DA0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0007A010" = "" # global static callback analysis/static_callback_inventory.json
+"0x0007A890" = "" # global static callback analysis/static_callback_inventory.json
+"0x0007AE50" = "" # global static callback analysis/static_callback_inventory.json
+"0x0007B090" = "" # global static callback analysis/static_callback_inventory.json
+"0x0007B6B0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0007B830" = "" # global static callback analysis/static_callback_inventory.json
+"0x0007BF20" = "" # global static callback analysis/static_callback_inventory.json
+"0x0007C6C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0007CA30" = "" # global static callback analysis/static_callback_inventory.json
+"0x0007CCB0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0007D090" = "" # global static callback analysis/static_callback_inventory.json
+"0x0007D0F0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0007D260" = "" # global static callback analysis/static_callback_inventory.json
+"0x0007D2C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0007D320" = "" # global static callback analysis/static_callback_inventory.json
+"0x0007D560" = "" # global static callback analysis/static_callback_inventory.json
+"0x0007D650" = "" # global static callback analysis/static_callback_inventory.json
+"0x0007D950" = "" # global static callback analysis/static_callback_inventory.json
+"0x0007DDB0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0007DE20" = "" # global static callback analysis/static_callback_inventory.json
+"0x0007E0C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0007E260" = "" # global static callback analysis/static_callback_inventory.json
+"0x0007E2A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0007E580" = "" # global static callback analysis/static_callback_inventory.json
+"0x0007ED30" = "" # global static callback analysis/static_callback_inventory.json
+"0x0007EED0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0007F150" = "" # global static callback analysis/static_callback_inventory.json
+"0x0007FFF0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00080050" = "" # global static callback analysis/static_callback_inventory.json
+"0x000801E0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000809B0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00080D80" = "" # global static callback analysis/static_callback_inventory.json
+"0x00080DE0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000814B0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00081790" = "" # global static callback analysis/static_callback_inventory.json
+"0x00081AD0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00081B20" = "" # global static callback analysis/static_callback_inventory.json
+"0x00081D20" = "" # global static callback analysis/static_callback_inventory.json
+"0x000821F0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00082250" = "" # global static callback analysis/static_callback_inventory.json
+"0x00082CD0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00083060" = "" # global static callback analysis/static_callback_inventory.json
+"0x00083270" = "" # global static callback analysis/static_callback_inventory.json
+"0x00083690" = "" # global static callback analysis/static_callback_inventory.json
+"0x000838B0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00083910" = "" # global static callback analysis/static_callback_inventory.json
+"0x00083CC0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00083D30" = "" # global static callback analysis/static_callback_inventory.json
+"0x00084250" = "" # global static callback analysis/static_callback_inventory.json
+"0x00084510" = "" # global static callback analysis/static_callback_inventory.json
+"0x000846F0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00084850" = "" # global static callback analysis/static_callback_inventory.json
+"0x00084980" = "" # global static callback analysis/static_callback_inventory.json
+"0x000849B0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00084B00" = "" # global static callback analysis/static_callback_inventory.json
+"0x00084DA0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00084E00" = "" # global static callback analysis/static_callback_inventory.json
+"0x000854A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00086180" = "" # global static callback analysis/static_callback_inventory.json
+"0x00086460" = "" # global static callback analysis/static_callback_inventory.json
+"0x00086480" = "" # global static callback analysis/static_callback_inventory.json
+"0x00086520" = "" # global static callback analysis/static_callback_inventory.json
+"0x00086700" = "" # global static callback analysis/static_callback_inventory.json
+"0x00086760" = "" # global static callback analysis/static_callback_inventory.json
+"0x00086790" = "" # global static callback analysis/static_callback_inventory.json
+"0x000868C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000870F0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00087730" = "" # global static callback analysis/static_callback_inventory.json
+"0x00087AC0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00088000" = "" # global static callback analysis/static_callback_inventory.json
+"0x000880E0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00088100" = "" # global static callback analysis/static_callback_inventory.json
+"0x000886A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00088850" = "" # global static callback analysis/static_callback_inventory.json
+"0x00088A00" = "" # global static callback analysis/static_callback_inventory.json
+"0x00088B10" = "" # global static callback analysis/static_callback_inventory.json
+"0x00088CD0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000891B0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00089520" = "" # global static callback analysis/static_callback_inventory.json
+"0x00089980" = "" # global static callback analysis/static_callback_inventory.json
+"0x0008A0A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0008A0F0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0008A440" = "" # global static callback analysis/static_callback_inventory.json
+"0x0008A790" = "" # global static callback analysis/static_callback_inventory.json
+"0x0008AF70" = "" # global static callback analysis/static_callback_inventory.json
+"0x0008B8C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0008BFB0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0008C220" = "" # global static callback analysis/static_callback_inventory.json
+"0x0008C710" = "" # global static callback analysis/static_callback_inventory.json
+"0x0008C9A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0008CC10" = "" # global static callback analysis/static_callback_inventory.json
+"0x0008D4A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0008DA50" = "" # global static callback analysis/static_callback_inventory.json
+"0x0008E120" = "" # global static callback analysis/static_callback_inventory.json
+"0x0008E2C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0008E5A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0008E800" = "" # global static callback analysis/static_callback_inventory.json
+"0x0008EE00" = "" # global static callback analysis/static_callback_inventory.json
+"0x0008EE40" = "" # global static callback analysis/static_callback_inventory.json
+"0x0008F450" = "" # global static callback analysis/static_callback_inventory.json
+"0x0008F670" = "" # global static callback analysis/static_callback_inventory.json
+"0x0008F8E0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0008F940" = "" # global static callback analysis/static_callback_inventory.json
+"0x0008FBA0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00090150" = "" # global static callback analysis/static_callback_inventory.json
+"0x00090300" = "" # global static callback analysis/static_callback_inventory.json
+"0x00090360" = "" # global static callback analysis/static_callback_inventory.json
+"0x00090510" = "" # global static callback analysis/static_callback_inventory.json
+"0x00090760" = "" # global static callback analysis/static_callback_inventory.json
+"0x00090900" = "" # global static callback analysis/static_callback_inventory.json
+"0x00090EC0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00091180" = "" # global static callback analysis/static_callback_inventory.json
+"0x00091300" = "" # global static callback analysis/static_callback_inventory.json
+"0x00091C40" = "" # global static callback analysis/static_callback_inventory.json
+"0x00092430" = "" # global static callback analysis/static_callback_inventory.json
+"0x000924B0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000927C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00092AD0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00092BC0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00092D80" = "" # global static callback analysis/static_callback_inventory.json
+"0x00092DE0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00092F20" = "" # global static callback analysis/static_callback_inventory.json
+"0x00092F80" = "" # global static callback analysis/static_callback_inventory.json
+"0x00093030" = "" # global static callback analysis/static_callback_inventory.json
+"0x00093090" = "" # global static callback analysis/static_callback_inventory.json
+"0x00093330" = "" # global static callback analysis/static_callback_inventory.json
+"0x00093600" = "" # global static callback analysis/static_callback_inventory.json
+"0x00093A50" = "" # global static callback analysis/static_callback_inventory.json
+"0x00093C00" = "" # global static callback analysis/static_callback_inventory.json
+"0x00095370" = "" # global static callback analysis/static_callback_inventory.json
+"0x00096060" = "" # global static callback analysis/static_callback_inventory.json
+"0x000964D0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000969C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00096A30" = "" # global static callback analysis/static_callback_inventory.json
+"0x00096BA0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000972B0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00097310" = "" # global static callback analysis/static_callback_inventory.json
+"0x00097420" = "" # global static callback analysis/static_callback_inventory.json
+"0x00097480" = "" # global static callback analysis/static_callback_inventory.json
+"0x00097780" = "" # global static callback analysis/static_callback_inventory.json
+"0x0009D920" = "" # global static callback analysis/static_callback_inventory.json
+"0x0009DCB0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0009E0D0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0009E460" = "" # global static callback analysis/static_callback_inventory.json
+"0x0009E890" = "" # global static callback analysis/static_callback_inventory.json
+"0x0009E9C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0009EE60" = "" # global static callback analysis/static_callback_inventory.json
+"0x0009F470" = "" # global static callback analysis/static_callback_inventory.json
+"0x0009F6E0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0009FDF0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A07A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A0A70" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A0ED0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A0FA0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A1070" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A1180" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A12B0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A15F0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A16C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A17C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A1BF0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A1FC0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A2090" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A21A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A2360" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A2430" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A2570" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A2950" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A2AF0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A2BF0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A2D50" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A2E40" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A2F20" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A3040" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A3130" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A32F0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A4D10" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A4E70" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A50E0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A52D0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A54C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A5640" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A58C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A5BF0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A7970" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A7AF0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A87C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A9380" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A9E00" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A9EE0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A9FA0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000A9FC0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000AA050" = "" # global static callback analysis/static_callback_inventory.json
+"0x000AA130" = "" # global static callback analysis/static_callback_inventory.json
+"0x000AB070" = "" # global static callback analysis/static_callback_inventory.json
+"0x000AB150" = "" # global static callback analysis/static_callback_inventory.json
+"0x000AB870" = "" # global static callback analysis/static_callback_inventory.json
+"0x000AB9D0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000ABC40" = "" # global static callback analysis/static_callback_inventory.json
+"0x000ABD50" = "" # global static callback analysis/static_callback_inventory.json
+"0x000ABE30" = "" # global static callback analysis/static_callback_inventory.json
+"0x000ABF10" = "" # global static callback analysis/static_callback_inventory.json
+"0x000AC0C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000AC360" = "" # global static callback analysis/static_callback_inventory.json
+"0x000AC3E0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000ACB60" = "" # global static callback analysis/static_callback_inventory.json
+"0x000ACE70" = "" # global static callback analysis/static_callback_inventory.json
+"0x000AD2A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000ADD50" = "" # global static callback analysis/static_callback_inventory.json
+"0x000B32A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000B5960" = "" # global static callback analysis/static_callback_inventory.json
+"0x000B62C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000B6310" = "" # global static callback analysis/static_callback_inventory.json
+"0x000B6A10" = "" # global static callback analysis/static_callback_inventory.json
+"0x000B7010" = "" # global static callback analysis/static_callback_inventory.json
+"0x000BC300" = "" # global static callback analysis/static_callback_inventory.json
+"0x000BC360" = "" # global static callback analysis/static_callback_inventory.json
+"0x000BC3A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000BC420" = "" # global static callback analysis/static_callback_inventory.json
+"0x000BC560" = "" # global static callback analysis/static_callback_inventory.json
+"0x000BC5E0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000BC670" = "" # global static callback analysis/static_callback_inventory.json
+"0x000BC6C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000BC8C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000BC910" = "" # global static callback analysis/static_callback_inventory.json
+"0x000BD810" = "" # global static callback analysis/static_callback_inventory.json
+"0x000BDFB0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000BE070" = "" # global static callback analysis/static_callback_inventory.json
+"0x000BE1F0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000BE380" = "" # global static callback analysis/static_callback_inventory.json
+"0x000BE510" = "" # global static callback analysis/static_callback_inventory.json
+"0x000BE800" = "" # global static callback analysis/static_callback_inventory.json
+"0x000D7FF0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000D8050" = "" # global static callback analysis/static_callback_inventory.json
+"0x000D94B0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000D9B90" = "" # global static callback analysis/static_callback_inventory.json
+"0x000F1400" = "" # global static callback analysis/static_callback_inventory.json
+"0x000F28A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000F9AE0" = "" # global static callback analysis/static_callback_inventory.json
+"0x000F9D80" = "" # global static callback analysis/static_callback_inventory.json
+"0x00112CE0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001191B0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001194D0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001197F0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0011A0A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0011A4A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00129200" = "" # global static callback analysis/static_callback_inventory.json
+"0x00141DB0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00142160" = "" # global static callback analysis/static_callback_inventory.json
+"0x00147BE0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00147EB0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0015DA30" = "" # global static callback analysis/static_callback_inventory.json
+"0x00168DB0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00168F50" = "" # global static callback analysis/static_callback_inventory.json
+"0x0016B770" = "" # global static callback analysis/static_callback_inventory.json
+"0x0016B9E0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0016CE80" = "" # global static callback analysis/static_callback_inventory.json
+"0x0016D3B0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00173540" = "" # global static callback analysis/static_callback_inventory.json
+"0x00173640" = "" # global static callback analysis/static_callback_inventory.json
+"0x00176DB0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00177440" = "" # global static callback analysis/static_callback_inventory.json
+"0x0017B5A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0017B6A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0018F9F0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0018FDB0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00190320" = "" # global static callback analysis/static_callback_inventory.json
+"0x00190700" = "" # global static callback analysis/static_callback_inventory.json
+"0x00190CD0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00190DA0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00191220" = "" # global static callback analysis/static_callback_inventory.json
+"0x001915B0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001AD510" = "" # global static callback analysis/static_callback_inventory.json
+"0x001AD620" = "" # global static callback analysis/static_callback_inventory.json
+"0x001ADC00" = "" # global static callback analysis/static_callback_inventory.json
+"0x001AE250" = "" # global static callback analysis/static_callback_inventory.json
+"0x001AE8C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001AEE30" = "" # global static callback analysis/static_callback_inventory.json
+"0x001AEFD0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001AF220" = "" # global static callback analysis/static_callback_inventory.json
+"0x001AF470" = "" # global static callback analysis/static_callback_inventory.json
+"0x001AF740" = "" # global static callback analysis/static_callback_inventory.json
+"0x001AFA50" = "" # global static callback analysis/static_callback_inventory.json
+"0x001AFB90" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B0340" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B0410" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B0860" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B0BF0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B1210" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B1910" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B20B0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B2250" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B23F0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B2620" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B2660" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B2C60" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B3280" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B3880" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B3EA0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B3F30" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B4060" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B4350" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B45C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B4BB0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B5280" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B5440" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B5700" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B58A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B5A40" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B5AD0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B5B30" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B61C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B6830" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B6EC0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B74E0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B7610" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B7670" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B77A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B7A30" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B7C70" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B7D80" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B7F40" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B8340" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B8A00" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B8EB0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B8F40" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B90B0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B9620" = "" # global static callback analysis/static_callback_inventory.json
+"0x001B9CC0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001BA030" = "" # global static callback analysis/static_callback_inventory.json
+"0x001BA850" = "" # global static callback analysis/static_callback_inventory.json
+"0x001BAB40" = "" # global static callback analysis/static_callback_inventory.json
+"0x001BAE30" = "" # global static callback analysis/static_callback_inventory.json
+"0x001BB0A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001BB310" = "" # global static callback analysis/static_callback_inventory.json
+"0x001BB420" = "" # global static callback analysis/static_callback_inventory.json
+"0x001BB750" = "" # global static callback analysis/static_callback_inventory.json
+"0x001BBA70" = "" # global static callback analysis/static_callback_inventory.json
+"0x001BBFF0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001BC1A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001BC670" = "" # global static callback analysis/static_callback_inventory.json
+"0x001BC6A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001BC7C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001BCDA0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001BD390" = "" # global static callback analysis/static_callback_inventory.json
+"0x001BD530" = "" # global static callback analysis/static_callback_inventory.json
+"0x001BDB60" = "" # global static callback analysis/static_callback_inventory.json
+"0x001BDC90" = "" # global static callback analysis/static_callback_inventory.json
+"0x001BDE00" = "" # global static callback analysis/static_callback_inventory.json
+"0x001BE0F0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001BE420" = "" # global static callback analysis/static_callback_inventory.json
+"0x001BE6F0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001BED50" = "" # global static callback analysis/static_callback_inventory.json
+"0x001BF3C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001BF520" = "" # global static callback analysis/static_callback_inventory.json
+"0x001BF920" = "" # global static callback analysis/static_callback_inventory.json
+"0x001BFCB0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001BFD10" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C0430" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C05A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C06B0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C0B00" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C0D90" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C0F70" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C15E0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C1CC0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C1E60" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C1EB0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C24F0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C2810" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C2BF0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C2E70" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C37E0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C3870" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C3FB0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C4680" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C48B0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C4B20" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C4CD0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C54C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C5AE0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C5E30" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C6010" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C61F0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C63F0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C6580" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C67D0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C6A50" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C6D40" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C6FA0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C73C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C7430" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C79E0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C7D30" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C7F80" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C8410" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C8A50" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C8CC0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C8FA0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C92B0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C95C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C97D0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C9B40" = "" # global static callback analysis/static_callback_inventory.json
+"0x001C9DE0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001CA050" = "" # global static callback analysis/static_callback_inventory.json
+"0x001CA620" = "" # global static callback analysis/static_callback_inventory.json
+"0x001CAE40" = "" # global static callback analysis/static_callback_inventory.json
+"0x001CB030" = "" # global static callback analysis/static_callback_inventory.json
+"0x001CB090" = "" # global static callback analysis/static_callback_inventory.json
+"0x001CB0B0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001CB140" = "" # global static callback analysis/static_callback_inventory.json
+"0x001CB760" = "" # global static callback analysis/static_callback_inventory.json
+"0x001CBDF0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001CC550" = "" # global static callback analysis/static_callback_inventory.json
+"0x001CCB00" = "" # global static callback analysis/static_callback_inventory.json
+"0x001CCC20" = "" # global static callback analysis/static_callback_inventory.json
+"0x001CCE30" = "" # global static callback analysis/static_callback_inventory.json
+"0x001CD140" = "" # global static callback analysis/static_callback_inventory.json
+"0x001CD680" = "" # global static callback analysis/static_callback_inventory.json
+"0x001CD820" = "" # global static callback analysis/static_callback_inventory.json
+"0x001CDFA0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001CE9E0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001CEA40" = "" # global static callback analysis/static_callback_inventory.json
+"0x001CED10" = "" # global static callback analysis/static_callback_inventory.json
+"0x001CEF00" = "" # global static callback analysis/static_callback_inventory.json
+"0x001CF0D0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001CF600" = "" # global static callback analysis/static_callback_inventory.json
+"0x001CF7F0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001CF840" = "" # global static callback analysis/static_callback_inventory.json
+"0x001CFE20" = "" # global static callback analysis/static_callback_inventory.json
+"0x001D0650" = "" # global static callback analysis/static_callback_inventory.json
+"0x001D0AC0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001D0D10" = "" # global static callback analysis/static_callback_inventory.json
+"0x001D0E60" = "" # global static callback analysis/static_callback_inventory.json
+"0x001D0F90" = "" # global static callback analysis/static_callback_inventory.json
+"0x001D1020" = "" # global static callback analysis/static_callback_inventory.json
+"0x001D1650" = "" # global static callback analysis/static_callback_inventory.json
+"0x001D1D50" = "" # global static callback analysis/static_callback_inventory.json
+"0x001D25F0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001D2720" = "" # global static callback analysis/static_callback_inventory.json
+"0x001D2E50" = "" # global static callback analysis/static_callback_inventory.json
+"0x001D2F80" = "" # global static callback analysis/static_callback_inventory.json
+"0x001D2FF0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001D3640" = "" # global static callback analysis/static_callback_inventory.json
+"0x001D3710" = "" # global static callback analysis/static_callback_inventory.json
+"0x001D4340" = "" # global static callback analysis/static_callback_inventory.json
+"0x001D43F0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001D4D80" = "" # global static callback analysis/static_callback_inventory.json
+"0x001D77B0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001D8140" = "" # global static callback analysis/static_callback_inventory.json
+"0x001DBA90" = "" # global static callback analysis/static_callback_inventory.json
+"0x001DBB60" = "" # global static callback analysis/static_callback_inventory.json
+"0x001DC330" = "" # global static callback analysis/static_callback_inventory.json
+"0x001DC630" = "" # global static callback analysis/static_callback_inventory.json
+"0x001DD230" = "" # global static callback analysis/static_callback_inventory.json
+"0x001DDA40" = "" # global static callback analysis/static_callback_inventory.json
+"0x001DDEA0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001DE3B0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001DE760" = "" # global static callback analysis/static_callback_inventory.json
+"0x001DF1D0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001E09C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001E1320" = "" # global static callback analysis/static_callback_inventory.json
+"0x001E2150" = "" # global static callback analysis/static_callback_inventory.json
+"0x001E23C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001E2720" = "" # global static callback analysis/static_callback_inventory.json
+"0x001E2C30" = "" # global static callback analysis/static_callback_inventory.json
+"0x001E2E70" = "" # global static callback analysis/static_callback_inventory.json
+"0x001E33E0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001E38A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001E3F40" = "" # global static callback analysis/static_callback_inventory.json
+"0x001E4940" = "" # global static callback analysis/static_callback_inventory.json
+"0x001E4E60" = "" # global static callback analysis/static_callback_inventory.json
+"0x001E4F40" = "" # global static callback analysis/static_callback_inventory.json
+"0x001E50F0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001E54A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001E5530" = "" # global static callback analysis/static_callback_inventory.json
+"0x001E55C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001E5650" = "" # global static callback analysis/static_callback_inventory.json
+"0x001E56E0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001E5770" = "" # global static callback analysis/static_callback_inventory.json
+"0x001E6380" = "" # global static callback analysis/static_callback_inventory.json
+"0x001ECA80" = "" # global static callback analysis/static_callback_inventory.json
+"0x001ECBA0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001ECC50" = "" # global static callback analysis/static_callback_inventory.json
+"0x001ECD10" = "" # global static callback analysis/static_callback_inventory.json
+"0x001EE060" = "" # global static callback analysis/static_callback_inventory.json
+"0x001EEAC0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001EEB60" = "" # global static callback analysis/static_callback_inventory.json
+"0x001EF170" = "" # global static callback analysis/static_callback_inventory.json
+"0x001EFFB0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001F0120" = "" # global static callback analysis/static_callback_inventory.json
+"0x001F0280" = "" # global static callback analysis/static_callback_inventory.json
+"0x001F0300" = "" # global static callback analysis/static_callback_inventory.json
+"0x001F0390" = "" # global static callback analysis/static_callback_inventory.json
+"0x001F0850" = "" # global static callback analysis/static_callback_inventory.json
+"0x001F16C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x001F1A40" = "" # global static callback analysis/static_callback_inventory.json
+"0x001F2D20" = "" # global static callback analysis/static_callback_inventory.json
+"0x001F3F60" = "" # global static callback analysis/static_callback_inventory.json
+"0x001F7230" = "" # global static callback analysis/static_callback_inventory.json
+"0x00200950" = "" # global static callback analysis/static_callback_inventory.json
+"0x00200AD0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00200EE0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00202980" = "" # global static callback analysis/static_callback_inventory.json
+"0x002029C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00202BA0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00203040" = "" # global static callback analysis/static_callback_inventory.json
+"0x00203150" = "" # global static callback analysis/static_callback_inventory.json
+"0x00203210" = "" # global static callback analysis/static_callback_inventory.json
+"0x00204350" = "" # global static callback analysis/static_callback_inventory.json
+"0x00207170" = "" # global static callback analysis/static_callback_inventory.json
+"0x002199D0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00219BF0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0021A060" = "" # global static callback analysis/static_callback_inventory.json
+"0x0021A4C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0021AA50" = "" # global static callback analysis/static_callback_inventory.json
+"0x0021ACB0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0021B170" = "" # global static callback analysis/static_callback_inventory.json
+"0x0021B3C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0021B7C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0021B920" = "" # global static callback analysis/static_callback_inventory.json
+"0x0021BE10" = "" # global static callback analysis/static_callback_inventory.json
+"0x0021BE80" = "" # global static callback analysis/static_callback_inventory.json
+"0x0021C1A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0021CE00" = "" # global static callback analysis/static_callback_inventory.json
+"0x0021CE70" = "" # global static callback analysis/static_callback_inventory.json
+"0x0021D2E0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0021DAD0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0021DB60" = "" # global static callback analysis/static_callback_inventory.json
+"0x0021DC70" = "" # global static callback analysis/static_callback_inventory.json
+"0x0021DE40" = "" # global static callback analysis/static_callback_inventory.json
+"0x0021E640" = "" # global static callback analysis/static_callback_inventory.json
+"0x0021EBC0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0021F5E0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0021FCE0" = "" # global static callback analysis/static_callback_inventory.json
+"0x002203F0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00220910" = "" # global static callback analysis/static_callback_inventory.json
+"0x00220F40" = "" # global static callback analysis/static_callback_inventory.json
+"0x00221220" = "" # global static callback analysis/static_callback_inventory.json
+"0x002213B0" = "" # global static callback analysis/static_callback_inventory.json
+"0x002214E0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00222520" = "" # global static callback analysis/static_callback_inventory.json
+"0x002225F0" = "" # global static callback analysis/static_callback_inventory.json
+"0x002229C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00223350" = "" # global static callback analysis/static_callback_inventory.json
+"0x00224B70" = "" # global static callback analysis/static_callback_inventory.json
+"0x00224F70" = "" # global static callback analysis/static_callback_inventory.json
+"0x00225480" = "" # global static callback analysis/static_callback_inventory.json
+"0x00225850" = "" # global static callback analysis/static_callback_inventory.json
+"0x002259A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00225F60" = "" # global static callback analysis/static_callback_inventory.json
+"0x00226130" = "" # global static callback analysis/static_callback_inventory.json
+"0x00226A90" = "" # global static callback analysis/static_callback_inventory.json
+"0x00226F50" = "" # global static callback analysis/static_callback_inventory.json
+"0x00227AB0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0022AB00" = "" # global static callback analysis/static_callback_inventory.json
+"0x0022AE20" = "" # global static callback analysis/static_callback_inventory.json
+"0x0022AFB0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0022B320" = "" # global static callback analysis/static_callback_inventory.json
+"0x0022B4C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0022B880" = "" # global static callback analysis/static_callback_inventory.json
+"0x0022BCF0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0022BD90" = "" # global static callback analysis/static_callback_inventory.json
+"0x0022BDD0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0022BE80" = "" # global static callback analysis/static_callback_inventory.json
+"0x0022C770" = "" # global static callback analysis/static_callback_inventory.json
+"0x0022CB60" = "" # global static callback analysis/static_callback_inventory.json
+"0x0022CB90" = "" # global static callback analysis/static_callback_inventory.json
+"0x0022CCC0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0022CD40" = "" # global static callback analysis/static_callback_inventory.json
+"0x0022CE10" = "" # global static callback analysis/static_callback_inventory.json
+"0x0022D370" = "" # global static callback analysis/static_callback_inventory.json
+"0x0022D990" = "" # global static callback analysis/static_callback_inventory.json
+"0x0022DCD0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0022DDC0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0022EC40" = "" # global static callback analysis/static_callback_inventory.json
+"0x0022EDE0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0022EED0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00252530" = "" # global static callback analysis/static_callback_inventory.json
+"0x00252940" = "" # global static callback analysis/static_callback_inventory.json
+"0x00252D70" = "" # global static callback analysis/static_callback_inventory.json
+"0x00254090" = "" # global static callback analysis/static_callback_inventory.json
+"0x00254330" = "" # global static callback analysis/static_callback_inventory.json
+"0x002545F0" = "" # global static callback analysis/static_callback_inventory.json
+"0x002569A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x002571A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0025F090" = "" # global static callback analysis/static_callback_inventory.json
+"0x002603D0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00260AC0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00261280" = "" # global static callback analysis/static_callback_inventory.json
+"0x00261310" = "" # global static callback analysis/static_callback_inventory.json
+"0x00261AD0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00261C80" = "" # global static callback analysis/static_callback_inventory.json
+"0x00261CE0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00261D40" = "" # global static callback analysis/static_callback_inventory.json
+"0x00261E50" = "" # global static callback analysis/static_callback_inventory.json
+"0x00262020" = "" # global static callback analysis/static_callback_inventory.json
+"0x00262450" = "" # global static callback analysis/static_callback_inventory.json
+"0x00262640" = "" # global static callback analysis/static_callback_inventory.json
+"0x00262980" = "" # global static callback analysis/static_callback_inventory.json
+"0x00262B50" = "" # global static callback analysis/static_callback_inventory.json
+"0x002630D0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00274F10" = "" # global static callback analysis/static_callback_inventory.json
+"0x00275290" = "" # global static callback analysis/static_callback_inventory.json
+"0x002753D0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00275410" = "" # global static callback analysis/static_callback_inventory.json
+"0x00279BF0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0027ACF0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0027B0F0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0027C140" = "" # global static callback analysis/static_callback_inventory.json
+"0x0027C420" = "" # global static callback analysis/static_callback_inventory.json
+"0x0027C560" = "" # global static callback analysis/static_callback_inventory.json
+"0x0027CCB0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0027CE00" = "" # global static callback analysis/static_callback_inventory.json
+"0x0027D250" = "" # global static callback analysis/static_callback_inventory.json
+"0x0027D3B0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0027D840" = "" # global static callback analysis/static_callback_inventory.json
+"0x0027D970" = "" # global static callback analysis/static_callback_inventory.json
+"0x0027DA70" = "" # global static callback analysis/static_callback_inventory.json
+"0x0027DD90" = "" # global static callback analysis/static_callback_inventory.json
+"0x0027DFB0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0027E9F0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0027EC40" = "" # global static callback analysis/static_callback_inventory.json
+"0x0027F320" = "" # global static callback analysis/static_callback_inventory.json
+"0x0027F590" = "" # global static callback analysis/static_callback_inventory.json
+"0x0027F710" = "" # global static callback analysis/static_callback_inventory.json
+"0x0027F840" = "" # global static callback analysis/static_callback_inventory.json
+"0x0027FEB0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00280010" = "" # global static callback analysis/static_callback_inventory.json
+"0x00280790" = "" # global static callback analysis/static_callback_inventory.json
+"0x00280910" = "" # global static callback analysis/static_callback_inventory.json
+"0x00280A00" = "" # global static callback analysis/static_callback_inventory.json
+"0x00281090" = "" # global static callback analysis/static_callback_inventory.json
+"0x00281C90" = "" # global static callback analysis/static_callback_inventory.json
+"0x00281D60" = "" # global static callback analysis/static_callback_inventory.json
+"0x00281F20" = "" # global static callback analysis/static_callback_inventory.json
+"0x00282480" = "" # global static callback analysis/static_callback_inventory.json
+"0x00282A60" = "" # global static callback analysis/static_callback_inventory.json
+"0x00282B60" = "" # global static callback analysis/static_callback_inventory.json
+"0x00282F40" = "" # global static callback analysis/static_callback_inventory.json
+"0x00283520" = "" # global static callback analysis/static_callback_inventory.json
+"0x00283CE0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00284350" = "" # global static callback analysis/static_callback_inventory.json
+"0x00284D20" = "" # global static callback analysis/static_callback_inventory.json
+"0x00284FD0" = "" # global static callback analysis/static_callback_inventory.json
+"0x002850F0" = "" # global static callback analysis/static_callback_inventory.json
+"0x002855E0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00285970" = "" # global static callback analysis/static_callback_inventory.json
+"0x00285D00" = "" # global static callback analysis/static_callback_inventory.json
+"0x00286040" = "" # global static callback analysis/static_callback_inventory.json
+"0x00286210" = "" # global static callback analysis/static_callback_inventory.json
+"0x002868E0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00286DB0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00286F10" = "" # global static callback analysis/static_callback_inventory.json
+"0x00287690" = "" # global static callback analysis/static_callback_inventory.json
+"0x00287D00" = "" # global static callback analysis/static_callback_inventory.json
+"0x00287FC0" = "" # global static callback analysis/static_callback_inventory.json
+"0x002886A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00288980" = "" # global static callback analysis/static_callback_inventory.json
+"0x00288A20" = "" # global static callback analysis/static_callback_inventory.json
+"0x00288AF0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0028AE00" = "" # global static callback analysis/static_callback_inventory.json
+"0x0028B840" = "" # global static callback analysis/static_callback_inventory.json
+"0x0028BE60" = "" # global static callback analysis/static_callback_inventory.json
+"0x0028C850" = "" # global static callback analysis/static_callback_inventory.json
+"0x0028CC80" = "" # global static callback analysis/static_callback_inventory.json
+"0x0028CE20" = "" # global static callback analysis/static_callback_inventory.json
+"0x00296D00" = "" # global static callback analysis/static_callback_inventory.json
+"0x00296F60" = "" # global static callback analysis/static_callback_inventory.json
+"0x002970C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00297210" = "" # global static callback analysis/static_callback_inventory.json
+"0x00297360" = "" # global static callback analysis/static_callback_inventory.json
+"0x00297410" = "" # global static callback analysis/static_callback_inventory.json
+"0x00297530" = "" # global static callback analysis/static_callback_inventory.json
+"0x00298620" = "" # global static callback analysis/static_callback_inventory.json
+"0x00298800" = "" # global static callback analysis/static_callback_inventory.json
+"0x002989D0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00298BD0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00298DD0" = "" # global static callback analysis/static_callback_inventory.json
+"0x00298F50" = "" # global static callback analysis/static_callback_inventory.json
+"0x0029B040" = "" # global static callback analysis/static_callback_inventory.json
+"0x0029B0F0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0029B1C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0029B290" = "" # global static callback analysis/static_callback_inventory.json
+"0x0029B360" = "" # global static callback analysis/static_callback_inventory.json
+"0x0029B970" = "" # global static callback analysis/static_callback_inventory.json
+"0x0029BD80" = "" # global static callback analysis/static_callback_inventory.json
+"0x0029BEB0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0029C040" = "" # global static callback analysis/static_callback_inventory.json
+"0x0029C1F0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0029C3A0" = "" # global static callback analysis/static_callback_inventory.json
+"0x0029CB10" = "" # global static callback analysis/static_callback_inventory.json
+"0x0029CC20" = "" # global static callback analysis/static_callback_inventory.json
+"0x0029EB70" = "" # global static callback analysis/static_callback_inventory.json
+"0x002A1FB0" = "" # global static callback analysis/static_callback_inventory.json
+"0x002A20D0" = "" # global static callback analysis/static_callback_inventory.json
+"0x002A21F0" = "" # global static callback analysis/static_callback_inventory.json
+"0x002A22C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x002A23E0" = "" # global static callback analysis/static_callback_inventory.json
+"0x002A2500" = "" # global static callback analysis/static_callback_inventory.json
+"0x002A25D0" = "" # global static callback analysis/static_callback_inventory.json
+"0x002A26F0" = "" # global static callback analysis/static_callback_inventory.json
+"0x002A2810" = "" # global static callback analysis/static_callback_inventory.json
+"0x002A28E0" = "" # global static callback analysis/static_callback_inventory.json
+"0x002A2A00" = "" # global static callback analysis/static_callback_inventory.json
+"0x002A2B20" = "" # global static callback analysis/static_callback_inventory.json
+"0x002A2BF0" = "" # global static callback analysis/static_callback_inventory.json
+"0x002A2CD0" = "" # global static callback analysis/static_callback_inventory.json
+"0x002A6950" = "" # global static callback analysis/static_callback_inventory.json
+"0x002A76E0" = "" # global static callback analysis/static_callback_inventory.json
+"0x002A7A50" = "" # global static callback analysis/static_callback_inventory.json
+"0x002A8D80" = "" # global static callback analysis/static_callback_inventory.json
+"0x002AEA50" = "" # global static callback analysis/static_callback_inventory.json
+"0x002AF0B0" = "" # global static callback analysis/static_callback_inventory.json
+"0x002AF4F0" = "" # global static callback analysis/static_callback_inventory.json
+"0x002C1270" = "" # global static callback analysis/static_callback_inventory.json
+"0x002C19E0" = "" # global static callback analysis/static_callback_inventory.json
+"0x002C2950" = "" # global static callback analysis/static_callback_inventory.json
+"0x002C2F70" = "" # global static callback analysis/static_callback_inventory.json
+"0x002C38C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x002C3A90" = "" # global static callback analysis/static_callback_inventory.json
+"0x002D2280" = "" # global static callback analysis/static_callback_inventory.json
+"0x002D4850" = "" # global static callback analysis/static_callback_inventory.json
+"0x002D9C20" = "" # global static callback analysis/static_callback_inventory.json
+"0x002D9D50" = "" # global static callback analysis/static_callback_inventory.json
+"0x002DD100" = "" # global static callback analysis/static_callback_inventory.json
+"0x002DD540" = "" # global static callback analysis/static_callback_inventory.json
+"0x002DD860" = "" # global static callback analysis/static_callback_inventory.json
+"0x002DDA80" = "" # global static callback analysis/static_callback_inventory.json
+"0x002DDE50" = "" # global static callback analysis/static_callback_inventory.json
+"0x002DEDC0" = "" # global static callback analysis/static_callback_inventory.json
+"0x002DF080" = "" # global static callback analysis/static_callback_inventory.json
+"0x002DF7C0" = "" # global static callback analysis/static_callback_inventory.json
+"0x002DF840" = "" # global static callback analysis/static_callback_inventory.json
+"0x002E0B30" = "" # global static callback analysis/static_callback_inventory.json
+"0x002E1490" = "" # global static callback analysis/static_callback_inventory.json
+"0x002E15F0" = "" # global static callback analysis/static_callback_inventory.json
+"0x002EE890" = "" # global static callback analysis/static_callback_inventory.json
+"0x002EE950" = "" # global static callback analysis/static_callback_inventory.json
+"0x002F4A10" = "" # global static callback analysis/static_callback_inventory.json
+"0x002F5180" = "" # global static callback analysis/static_callback_inventory.json
+"0x002F7880" = "" # global static callback analysis/static_callback_inventory.json
+"0x002F8160" = "" # global static callback analysis/static_callback_inventory.json
+"0x002FCD50" = "" # global static callback analysis/static_callback_inventory.json
+"0x002A5240" = "" # compiler-fixed callback retry analysis/quarantine_retry_inventory.json
+"0x0029FD30" = "" # compiler-fixed callback retry analysis/quarantine_retry_inventory.json
+"0x0025F550" = "" # compiler-fixed callback retry analysis/quarantine_retry_inventory.json
+"0x0025F940" = "" # compiler-fixed callback retry analysis/quarantine_retry_inventory.json
+"0x0025E2D0" = "" # compiler-fixed callback retry analysis/quarantine_retry_inventory.json
+"0x0025E980" = "" # compiler-fixed callback retry analysis/quarantine_retry_inventory.json
+"0x0025EB90" = "" # compiler-fixed callback retry analysis/quarantine_retry_inventory.json
+"0x0025F490" = "" # compiler-fixed callback retry analysis/quarantine_retry_inventory.json
+"0x0025F4F0" = "" # compiler-fixed callback retry analysis/quarantine_retry_inventory.json
+"0x0025A3E0" = "" # compiler-fixed callback retry analysis/quarantine_retry_inventory.json
+"0x0025AB30" = "" # compiler-fixed callback retry analysis/quarantine_retry_inventory.json
+"0x0025B7E0" = "" # compiler-fixed callback retry analysis/quarantine_retry_inventory.json
+"0x0025B890" = "" # compiler-fixed callback retry analysis/quarantine_retry_inventory.json
+"0x0025BBF0" = "" # compiler-fixed callback retry analysis/quarantine_retry_inventory.json
+"0x0025C110" = "" # compiler-fixed callback retry analysis/quarantine_retry_inventory.json
+"0x0025C740" = "" # compiler-fixed callback retry analysis/quarantine_retry_inventory.json
+"0x0025D1A0" = "" # compiler-fixed callback retry analysis/quarantine_retry_inventory.json
+"0x0025D860" = "" # compiler-fixed callback retry analysis/quarantine_retry_inventory.json
+"0x00246890" = "" # compiler-fixed callback retry analysis/quarantine_retry_inventory.json
+"0x00246AB0" = "" # compiler-fixed callback retry analysis/quarantine_retry_inventory.json
+"0x00249070" = "" # compiler-fixed callback retry analysis/quarantine_retry_inventory.json
+"0x00249300" = "" # compiler-fixed callback retry analysis/quarantine_retry_inventory.json
+"0x002573B0" = "" # compiler-fixed callback retry analysis/quarantine_retry_inventory.json
+"0x00257B10" = "" # compiler-fixed callback retry analysis/quarantine_retry_inventory.json
+"0x002587A0" = "" # compiler-fixed callback retry analysis/quarantine_retry_inventory.json
+"0x00258E60" = "" # compiler-fixed callback retry analysis/quarantine_retry_inventory.json
+"0x002593A0" = "" # compiler-fixed callback retry analysis/quarantine_retry_inventory.json
+"0x00259430" = "" # compiler-fixed callback retry analysis/quarantine_retry_inventory.json
+"0x002594F0" = "" # compiler-fixed callback retry analysis/quarantine_retry_inventory.json
+"0x002599F0" = "" # compiler-fixed callback retry analysis/quarantine_retry_inventory.json
+"0x00259A50" = "" # compiler-fixed callback retry analysis/quarantine_retry_inventory.json
+"0x00259AB0" = "" # compiler-fixed callback retry analysis/quarantine_retry_inventory.json
+"0x00259B10" = "" # compiler-fixed callback retry analysis/quarantine_retry_inventory.json
+"0x00259E80" = "" # compiler-fixed callback retry analysis/quarantine_retry_inventory.json
+"0x00259F00" = "" # compiler-fixed callback retry analysis/quarantine_retry_inventory.json
+"0x0025A270" = "" # compiler-fixed callback retry analysis/quarantine_retry_inventory.json
+"0x0025A2D0" = "" # compiler-fixed callback retry analysis/quarantine_retry_inventory.json
+"0x0035535A" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x003553FC" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x003554AC" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x0035555B" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x003555CD" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x00355631" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x0035569F" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x00355CC9" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x00355D41" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x0035645B" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x003564E1" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x00356619" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x00356B34" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x0036CDAC" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x0036CDB9" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x0036D09A" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x0036D513" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x0036DD14" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x0036DD1E" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x0036E147" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x0036E32A" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x0036E520" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x0036E797" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x0036ED81" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x0036EE37" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x0036F0C5" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x0036F5D4" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x00371292" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x00371ABA" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x00371AE9" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x00371FC5" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x003720AA" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x0037232E" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x00372379" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x003728E1" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x003729E7" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x00372B85" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x003741AC" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x003746D4" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x003747B6" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x003747E5" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x00374BCA" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x00374CAB" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x00374CFA" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x00353F5C" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x00353F5F" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x00353FC8" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x0035405E" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x003540DC" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x00354472" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x00354539" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x00354638" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x00354715" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x003547F2" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x003548CF" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x003549C8" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x00354AC7" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x00354B4D" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x00354C07" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x00354CA9" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x00354D7F" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x00354E34" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x00354F19" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x00355030" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x003550E7" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x00355173" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x00355219" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x003552B5" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x0030002E" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x0030C116" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x0030C11E" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x0030D92D" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x0030D93A" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x0030E4B8" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x002FF720" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x002FF6F0" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x002FB0A0" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x002FEF40" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x002FF330" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x00029800" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x00029820" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x00029960" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x0003E070" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x0003E0D0" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x00041BD0" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x00041BE0" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x00041BF0" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x00056BA0" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x00056C00" = "" # constructor referenced vtable analysis/referenced_vtable_inventory.json
+"0x00311C65" = "" # CRT math dispatch analysis/math_dispatch_inventory.json
+"0x00311C67" = "" # CRT math dispatch analysis/math_dispatch_inventory.json
+"0x00311C8F" = "" # CRT math dispatch analysis/math_dispatch_inventory.json
+"0x00311CCE" = "" # CRT math dispatch analysis/math_dispatch_inventory.json
+"0x00312A2C" = "" # CRT math dispatch analysis/math_dispatch_inventory.json
+"0x00054AC0" = "" # loader vtable analysis/loader_vtable_inventory.json
+"0x00054AD0" = "" # loader vtable analysis/loader_vtable_inventory.json
+"0x00054B30" = "" # loader vtable analysis/loader_vtable_inventory.json
+"0x00054B50" = "" # loader vtable analysis/loader_vtable_inventory.json
+"0x00054BA0" = "" # loader vtable analysis/loader_vtable_inventory.json
+"0x00054BF0" = "" # loader vtable analysis/loader_vtable_inventory.json
+"0x00054C30" = "" # loader vtable analysis/loader_vtable_inventory.json
+"0x00054C60" = "" # loader vtable analysis/loader_vtable_inventory.json
+"0x00054C80" = "" # loader vtable analysis/loader_vtable_inventory.json
+"0x00054CB0" = "" # loader vtable analysis/loader_vtable_inventory.json
+"0x0005EF20" = "" # loader vtable analysis/loader_vtable_inventory.json
+"0x002B7C70" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002B88E0" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002B8DA0" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002B90C0" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002B9190" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002B9500" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002B95E0" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002B9870" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002B9900" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002B9BA0" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002B9C30" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002B9EF0" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002B9F80" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002BA2A0" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002BA350" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002BA620" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002BA6B0" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002BA9E0" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002BAA80" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002BAD80" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002BAE40" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002BB190" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002BB430" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002BB660" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002BB6C0" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002BBA60" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002BBB80" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002BBDC0" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002BBE50" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002BC110" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002BC1D0" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002BC530" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002BC600" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002BC980" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002BCA50" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002BCC60" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002BCCC0" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002BD4C0" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002BD860" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002BDAB0" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002BDB20" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002BDB50" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002BDB70" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x002BDF00" = "" # Story Mode dispatch table analysis/story_table_inventory.json
+"0x000B8EE0" = "" # task field transition analysis/task_transition_inventory.json
+"0x000BE010" = "" # task field transition analysis/task_transition_inventory.json
+"0x000B8F10" = "" # task field transition analysis/task_transition_inventory.json
+"0x000680A0" = "" # task field transition analysis/task_transition_inventory.json
+"0x000B84E0" = "" # task field transition analysis/task_transition_inventory.json
+"0x000B8610" = "" # task field transition analysis/task_transition_inventory.json
+"0x0022A500" = "" # task field transition analysis/task_transition_inventory.json
+"0x002C6FD0" = "" # task field transition analysis/task_transition_inventory.json
+"0x002C7030" = "" # task field transition analysis/task_transition_inventory.json
+"0x002C73C0" = "" # task field transition analysis/task_transition_inventory.json
+"0x0003BDE0" = "" # verified task registration analysis/task_registration_inventory.json
+"0x000680D0" = "" # verified task registration analysis/task_registration_inventory.json
+"0x00068340" = "" # verified task registration analysis/task_registration_inventory.json
+"0x00068710" = "" # verified task registration analysis/task_registration_inventory.json
+"0x002C7470" = "" # verified task registration analysis/task_registration_inventory.json
+"0x002ED570" = "" # verified task registration analysis/task_registration_inventory.json
+"0x002CD3F0" = "" # verified task registration analysis/task_registration_inventory.json
+"0x002E7860" = "" # verified task registration analysis/task_registration_inventory.json
+"0x002E9250" = "" # verified task registration analysis/task_registration_inventory.json
+"0x002EA970" = "" # verified task registration analysis/task_registration_inventory.json
+"0x002EBA70" = "" # verified task registration analysis/task_registration_inventory.json
+"0x002EC6B0" = "" # verified task registration analysis/task_registration_inventory.json
+"0x002EF0D0" = "" # verified task registration analysis/task_registration_inventory.json
+"0x002F0100" = "" # verified task registration analysis/task_registration_inventory.json
+"0x002F0220" = "" # verified task registration analysis/task_registration_inventory.json
+"0x002F03C0" = "" # verified task registration analysis/task_registration_inventory.json
+"0x002F70B0" = "" # verified task registration analysis/task_registration_inventory.json
+"0x002C8F40" = "" # verified task registration analysis/task_registration_inventory.json
+"0x002C9A20" = "" # verified task registration analysis/task_registration_inventory.json
+"0x002C9AC0" = "" # verified task registration analysis/task_registration_inventory.json
+"0x002C9E80" = "" # verified task registration analysis/task_registration_inventory.json
+"0x002CA120" = "" # verified task registration analysis/task_registration_inventory.json
+"0x002B3D10" = "" # verified task registration analysis/task_registration_inventory.json
+"0x002C5D50" = "" # verified task registration analysis/task_registration_inventory.json
+"0x002C6490" = "" # verified task registration analysis/task_registration_inventory.json
+"0x002435D0" = "" # verified task registration analysis/task_registration_inventory.json
+"0x0021B2F0" = "" # verified task registration analysis/task_registration_inventory.json
+"0x0021E200" = "" # verified task registration analysis/task_registration_inventory.json
+"0x00220450" = "" # verified task registration analysis/task_registration_inventory.json
+"0x00221610" = "" # verified task registration analysis/task_registration_inventory.json
+"0x00221C30" = "" # verified task registration analysis/task_registration_inventory.json
+"0x002232C0" = "" # verified task registration analysis/task_registration_inventory.json
+"0x00223670" = "" # verified task registration analysis/task_registration_inventory.json
+"0x002245A0" = "" # verified task registration analysis/task_registration_inventory.json
+"0x00225CE0" = "" # verified task registration analysis/task_registration_inventory.json
+"0x002270F0" = "" # verified task registration analysis/task_registration_inventory.json
+"0x002274F0" = "" # verified task registration analysis/task_registration_inventory.json
+"0x00227F50" = "" # verified task registration analysis/task_registration_inventory.json
+"0x00228890" = "" # verified task registration analysis/task_registration_inventory.json
+"0x00228E40" = "" # verified task registration analysis/task_registration_inventory.json
+"0x00229BE0" = "" # verified task registration analysis/task_registration_inventory.json
+"0x0022A130" = "" # verified task registration analysis/task_registration_inventory.json
+"0x0022AC10" = "" # verified task registration analysis/task_registration_inventory.json
+"0x0022E890" = "" # verified task registration analysis/task_registration_inventory.json
+"0x0022F3A0" = "" # verified task registration analysis/task_registration_inventory.json
+"0x00231C30" = "" # verified task registration analysis/task_registration_inventory.json
+"0x00242320" = "" # verified task registration analysis/task_registration_inventory.json
+"0x000386C0" = "" # verified task registration analysis/task_registration_inventory.json
+"0x00039330" = "" # verified task registration analysis/task_registration_inventory.json
+"0x00039730" = "" # verified task registration analysis/task_registration_inventory.json
+"0x0003A030" = "" # verified task registration analysis/task_registration_inventory.json
+"0x00067EB0" = "" # verified task registration analysis/task_registration_inventory.json
+"0x00069120" = "" # verified task registration analysis/task_registration_inventory.json
+"0x00069C20" = "" # verified task registration analysis/task_registration_inventory.json
+"0x000B7A50" = "" # verified task registration analysis/task_registration_inventory.json
+"0x000C2AD0" = "" # verified task registration analysis/task_registration_inventory.json
+"0x000C7780" = "" # verified task registration analysis/task_registration_inventory.json
+"0x000C9DD0" = "" # verified task registration analysis/task_registration_inventory.json
+"0x000CC3B0" = "" # verified task registration analysis/task_registration_inventory.json
+"0x000D7820" = "" # verified task registration analysis/task_registration_inventory.json
+"0x000E7D80" = "" # verified task registration analysis/task_registration_inventory.json
+"0x000F3140" = "" # verified task registration analysis/task_registration_inventory.json
+"0x000F3DA0" = "" # verified task registration analysis/task_registration_inventory.json
+"0x000F47B0" = "" # verified task registration analysis/task_registration_inventory.json
+"0x000F4D90" = "" # verified task registration analysis/task_registration_inventory.json
+"0x000F5F20" = "" # verified task registration analysis/task_registration_inventory.json
+"0x001120A0" = "" # verified task registration analysis/task_registration_inventory.json
+"0x001125F0" = "" # verified task registration analysis/task_registration_inventory.json
+"0x00116660" = "" # verified task registration analysis/task_registration_inventory.json
+"0x00139B30" = "" # verified task registration analysis/task_registration_inventory.json
+"0x0013A500" = "" # verified task registration analysis/task_registration_inventory.json
+"0x0013B5C0" = "" # verified task registration analysis/task_registration_inventory.json
+"0x0016E870" = "" # verified task registration analysis/task_registration_inventory.json
+"0x0016F070" = "" # verified task registration analysis/task_registration_inventory.json
+"0x0016F5E0" = "" # verified task registration analysis/task_registration_inventory.json
+"0x0016FCD0" = "" # verified task registration analysis/task_registration_inventory.json
+"0x00170310" = "" # verified task registration analysis/task_registration_inventory.json
+"0x001704A0" = "" # verified task registration analysis/task_registration_inventory.json
+"0x00170780" = "" # verified task registration analysis/task_registration_inventory.json
+"0x00170D30" = "" # verified task registration analysis/task_registration_inventory.json
+"0x00171000" = "" # verified task registration analysis/task_registration_inventory.json
+"0x00171EF0" = "" # verified task registration analysis/task_registration_inventory.json
+"0x001721B0" = "" # verified task registration analysis/task_registration_inventory.json
+"0x001722B0" = "" # verified task registration analysis/task_registration_inventory.json
+"0x00172370" = "" # verified task registration analysis/task_registration_inventory.json
+"0x001F2250" = "" # verified task registration analysis/task_registration_inventory.json
+"0x001F2330" = "" # verified task registration analysis/task_registration_inventory.json
+"0x001F8D10" = "" # verified task registration analysis/task_registration_inventory.json
+"0x00219DE0" = "" # verified task registration analysis/task_registration_inventory.json
+"0x00275670" = "" # task field transition analysis/task_transition_inventory.json
+"0x002CCC70" = "" # task field transition analysis/task_transition_inventory.json
+"0x002E7970" = "" # task field transition analysis/task_transition_inventory.json
+"0x002E9360" = "" # task field transition analysis/task_transition_inventory.json
+"0x002EAD40" = "" # task field transition analysis/task_transition_inventory.json
+"0x002EBAD0" = "" # task field transition analysis/task_transition_inventory.json
+"0x002ECA80" = "" # task field transition analysis/task_transition_inventory.json
+"0x002EF710" = "" # task field transition analysis/task_transition_inventory.json
+"0x002F0150" = "" # task field transition analysis/task_transition_inventory.json
+"0x002F0270" = "" # task field transition analysis/task_transition_inventory.json
+"0x002F08A0" = "" # task field transition analysis/task_transition_inventory.json
+"0x002F71C0" = "" # task field transition analysis/task_transition_inventory.json
+"0x002B4780" = "" # task field transition analysis/task_transition_inventory.json
+"0x002C74D0" = "" # task field transition analysis/task_transition_inventory.json
+"0x002CABB0" = "" # task field transition analysis/task_transition_inventory.json
+"0x0023FA20" = "" # task field transition analysis/task_transition_inventory.json
+"0x00231A80" = "" # task field transition analysis/task_transition_inventory.json
+"0x00232450" = "" # task field transition analysis/task_transition_inventory.json
+"0x00233500" = "" # task field transition analysis/task_transition_inventory.json
+"0x0023DD80" = "" # task field transition analysis/task_transition_inventory.json
+"0x00225E60" = "" # task field transition analysis/task_transition_inventory.json
+"0x00227040" = "" # task field transition analysis/task_transition_inventory.json
+"0x002278F0" = "" # task field transition analysis/task_transition_inventory.json
+"0x00227EE0" = "" # task field transition analysis/task_transition_inventory.json
+"0x002283C0" = "" # task field transition analysis/task_transition_inventory.json
+"0x00228530" = "" # task field transition analysis/task_transition_inventory.json
+"0x00228810" = "" # task field transition analysis/task_transition_inventory.json
+"0x00228DF0" = "" # task field transition analysis/task_transition_inventory.json
+"0x00229BA0" = "" # task field transition analysis/task_transition_inventory.json
+"0x00229CA0" = "" # task field transition analysis/task_transition_inventory.json
+"0x0022A080" = "" # task field transition analysis/task_transition_inventory.json
+"0x0022AB50" = "" # task field transition analysis/task_transition_inventory.json
+"0x0022B6D0" = "" # task field transition analysis/task_transition_inventory.json
+"0x0022C200" = "" # task field transition analysis/task_transition_inventory.json
+"0x0022D240" = "" # task field transition analysis/task_transition_inventory.json
+"0x0022DDD0" = "" # task field transition analysis/task_transition_inventory.json
+"0x0022E6C0" = "" # task field transition analysis/task_transition_inventory.json
+"0x0022EF10" = "" # task field transition analysis/task_transition_inventory.json
+"0x0022F1D0" = "" # task field transition analysis/task_transition_inventory.json
+"0x0002B5F0" = "" # task field transition analysis/task_transition_inventory.json
+"0x0006A150" = "" # task field transition analysis/task_transition_inventory.json
+"0x000C78D0" = "" # task field transition analysis/task_transition_inventory.json
+"0x000C9F30" = "" # task field transition analysis/task_transition_inventory.json
+"0x000CC490" = "" # task field transition analysis/task_transition_inventory.json
+"0x000D78F0" = "" # task field transition analysis/task_transition_inventory.json
+"0x000E8110" = "" # task field transition analysis/task_transition_inventory.json
+"0x000F4800" = "" # task field transition analysis/task_transition_inventory.json
+"0x000F4E80" = "" # task field transition analysis/task_transition_inventory.json
+"0x001124D0" = "" # task field transition analysis/task_transition_inventory.json
+"0x00116AD0" = "" # task field transition analysis/task_transition_inventory.json
+"0x00139B50" = "" # task field transition analysis/task_transition_inventory.json
+"0x002188C0" = "" # task field transition analysis/task_transition_inventory.json
+"0x0021B260" = "" # task field transition analysis/task_transition_inventory.json
+"0x0021B380" = "" # task field transition analysis/task_transition_inventory.json
+"0x0021B430" = "" # task field transition analysis/task_transition_inventory.json
+"0x0021C240" = "" # task field transition analysis/task_transition_inventory.json
+"0x0021DF30" = "" # task field transition analysis/task_transition_inventory.json
+"0x0021E0A0" = "" # task field transition analysis/task_transition_inventory.json
+"0x0021E4B0" = "" # task field transition analysis/task_transition_inventory.json
+"0x0021E690" = "" # task field transition analysis/task_transition_inventory.json
+"0x0021FF70" = "" # task field transition analysis/task_transition_inventory.json
+"0x00220130" = "" # task field transition analysis/task_transition_inventory.json
+"0x00220D10" = "" # task field transition analysis/task_transition_inventory.json
+"0x002218B0" = "" # task field transition analysis/task_transition_inventory.json
+"0x00221A00" = "" # task field transition analysis/task_transition_inventory.json
+"0x00221CA0" = "" # task field transition analysis/task_transition_inventory.json
+"0x00221E70" = "" # task field transition analysis/task_transition_inventory.json
+"0x00222410" = "" # task field transition analysis/task_transition_inventory.json
+"0x002226A0" = "" # task field transition analysis/task_transition_inventory.json
+"0x00222830" = "" # task field transition analysis/task_transition_inventory.json
+"0x00223330" = "" # task field transition analysis/task_transition_inventory.json
+"0x002234C0" = "" # task field transition analysis/task_transition_inventory.json
+"0x00223A10" = "" # task field transition analysis/task_transition_inventory.json
+"0x00223A60" = "" # task field transition analysis/task_transition_inventory.json
+"0x00224700" = "" # task field transition analysis/task_transition_inventory.json
+"0x00224720" = "" # task field transition analysis/task_transition_inventory.json
+"0x002A84A0" = "" # task field transition analysis/task_transition_inventory.json
+"0x002A8750" = "" # task field transition analysis/task_transition_inventory.json
+"0x002A8BA0" = "" # task field transition analysis/task_transition_inventory.json
+"0x002E2B00" = "" # task field transition analysis/task_transition_inventory.json
+"0x002A82B0" = "" # task field transition analysis/task_transition_inventory.json
+"0x0002B120" = "" # task field transition analysis/task_transition_inventory.json
+"0x002A1A80" = "" # task field transition analysis/task_transition_inventory.json
+"0x00298300" = "" # static framed callback; analysis/menu_callback_inventory.json
+"0x0025FE00" = "" # static framed callback; analysis/menu_callback_inventory.json
+"0x0025F5E0" = "" # static framed callback; analysis/menu_callback_inventory.json
+"0x0025A440" = "" # static framed callback; analysis/menu_callback_inventory.json
+"0x00258AC0" = "" # static framed callback; analysis/menu_callback_inventory.json
+"0x0024CEC0" = "" # static framed callback; analysis/menu_callback_inventory.json
+"0x0024DBC0" = "" # static framed callback; analysis/menu_callback_inventory.json
+"0x0024F120" = "" # static framed callback; analysis/menu_callback_inventory.json
+"0x0024F450" = "" # static framed callback; analysis/menu_callback_inventory.json
+"0x00249470" = "" # static framed callback; analysis/menu_callback_inventory.json
+"0x002496C0" = "" # static framed callback; analysis/menu_callback_inventory.json
+"0x0024B1F0" = "" # static framed callback; analysis/menu_callback_inventory.json
+"0x0024BE20" = "" # static framed callback; analysis/menu_callback_inventory.json
+"0x00248E70" = "" # static framed callback; analysis/menu_callback_inventory.json
+"0x00248F70" = "" # static framed callback; analysis/menu_callback_inventory.json
+"0x00246E50" = "" # static framed callback; analysis/menu_callback_inventory.json
+"0x00247A00" = "" # static framed callback; analysis/menu_callback_inventory.json
+"0x00247A20" = "" # static framed callback; analysis/menu_callback_inventory.json
+"0x00248070" = "" # static framed callback; analysis/menu_callback_inventory.json
+"0x00248100" = "" # static framed callback; analysis/menu_callback_inventory.json
+"0x002482D0" = "" # static framed callback; analysis/menu_callback_inventory.json
+"0x002485B0" = "" # static framed callback; analysis/menu_callback_inventory.json
+"0x002486E0" = "" # static framed callback; analysis/menu_callback_inventory.json
+"0x00246C00" = "" # static framed callback; analysis/menu_callback_inventory.json
+"0x00246790" = "" # static framed callback; analysis/menu_callback_inventory.json
+"0x00246490" = "" # static framed callback; analysis/menu_callback_inventory.json
+"0x002464B0" = "" # static framed callback; analysis/menu_callback_inventory.json
+"0x00246690" = "" # static framed callback; analysis/menu_callback_inventory.json
+"0x00234DB0" = "" # literal callback to task registration 002D4140
+"0x00235330" = "" # literal callback to task registration 002D4140
+"0x002503E0" = "" # literal callback to task registration 002D4140
+"0x0024EA90" = "" # observed Saves callback in analysis/saves_menu_crash.log
+"0x0024A3F0" = "" # observed options callback in analysis/options_menu_crash.log
+"0x00198120" = "" # literal callback to task registration 002D4140
+"0x00198420" = "" # literal callback to task registration 002D4140
+"0x001989B0" = "" # literal callback to task registration 002D4140
+"0x00199190" = "" # literal callback to task registration 002D4140
+"0x0019A320" = "" # literal callback to task registration 002D4140
+"0x0019AF90" = "" # literal callback to task registration 002D4140
+"0x0019B840" = "" # literal callback to task registration 002D4140
+"0x0019C1A0" = "" # literal callback to task registration 002D4140
+"0x0019C520" = "" # literal callback to task registration 002D4140
+"0x0019C890" = "" # literal callback to task registration 002D4140
+"0x00250140" = "" # literal callback to task registration 002D4140
+"0x002A1CC0" = "" # literal callback to task registration 002D4140
+"0x002E2FF0" = "" # literal callback to task registration 002D4140
+"0x00013C50" = "" # literal callback to task registration 002D4140
+"0x00041560" = "" # literal callback to task registration 002D4140
+"0x0005B9A0" = "" # literal callback to task registration 002D4140
+"0x00061C30" = "" # literal callback to task registration 002D4140
+"0x00062F20" = "" # literal callback to task registration 002D4140
+"0x000640D0" = "" # literal callback to task registration 002D4140
+"0x000D8600" = "" # literal callback to task registration 002D4140
+"0x000D9FB0" = "" # literal callback to task registration 002D4140
+"0x000DD740" = "" # literal callback to task registration 002D4140
+"0x000DDB90" = "" # literal callback to task registration 002D4140
+"0x000DE7C0" = "" # literal callback to task registration 002D4140
+"0x000DF110" = "" # literal callback to task registration 002D4140
+"0x000DF690" = "" # literal callback to task registration 002D4140
+"0x000E0180" = "" # literal callback to task registration 002D4140
+"0x000E0870" = "" # literal callback to task registration 002D4140
+"0x000E4440" = "" # literal callback to task registration 002D4140
+"0x000E5D00" = "" # literal callback to task registration 002D4140
+"0x000E7130" = "" # literal callback to task registration 002D4140
+"0x000E85D0" = "" # literal callback to task registration 002D4140
+"0x000E8C60" = "" # literal callback to task registration 002D4140
+"0x000E9130" = "" # literal callback to task registration 002D4140
+"0x000E9980" = "" # literal callback to task registration 002D4140
+"0x000EA280" = "" # literal callback to task registration 002D4140
+"0x000ECC60" = "" # literal callback to task registration 002D4140
+"0x000EE300" = "" # literal callback to task registration 002D4140
+"0x000EF000" = "" # literal callback to task registration 002D4140
+"0x000EFD40" = "" # literal callback to task registration 002D4140
+"0x000F0870" = "" # literal callback to task registration 002D4140
+"0x0010F860" = "" # literal callback to task registration 002D4140
+"0x001102A0" = "" # literal callback to task registration 002D4140
+"0x00110E10" = "" # literal callback to task registration 002D4140
+"0x00111930" = "" # literal callback to task registration 002D4140
+"0x0012A8C0" = "" # literal callback to task registration 002D4140
+"0x0012AC20" = "" # literal callback to task registration 002D4140
+"0x00144070" = "" # literal callback to task registration 002D4140
+"0x00144B40" = "" # literal callback to task registration 002D4140
+"0x00145760" = "" # literal callback to task registration 002D4140
+"0x00146100" = "" # literal callback to task registration 002D4140
+"0x00146B50" = "" # literal callback to task registration 002D4140
+"0x00147130" = "" # literal callback to task registration 002D4140
+"0x0014B380" = "" # literal callback to task registration 002D4140
+"0x0014C6B0" = "" # literal callback to task registration 002D4140
+"0x00154490" = "" # literal callback to task registration 002D4140
+"0x00157180" = "" # literal callback to task registration 002D4140
+"0x001593E0" = "" # literal callback to task registration 002D4140
+"0x0015A930" = "" # literal callback to task registration 002D4140
+"0x0015B7A0" = "" # literal callback to task registration 002D4140
+"0x001647B0" = "" # literal callback to task registration 002D4140
+"0x001656F0" = "" # literal callback to task registration 002D4140
+"0x001682A0" = "" # literal callback to task registration 002D4140
+"0x0017C980" = "" # literal callback to task registration 002D4140
+"0x00180850" = "" # literal callback to task registration 002D4140
+"0x001811B0" = "" # literal callback to task registration 002D4140
+"0x00181640" = "" # literal callback to task registration 002D4140
+"0x00181E80" = "" # literal callback to task registration 002D4140
+"0x00182500" = "" # literal callback to task registration 002D4140
+"0x00182F00" = "" # literal callback to task registration 002D4140
+"0x00183690" = "" # literal callback to task registration 002D4140
+"0x00183D80" = "" # literal callback to task registration 002D4140
+"0x00184490" = "" # literal callback to task registration 002D4140
+"0x00184C40" = "" # literal callback to task registration 002D4140
+"0x001857D0" = "" # literal callback to task registration 002D4140
+"0x00185F80" = "" # literal callback to task registration 002D4140
+"0x00186BF0" = "" # literal callback to task registration 002D4140
+"0x00187750" = "" # literal callback to task registration 002D4140
+"0x00187F30" = "" # literal callback to task registration 002D4140
+"0x0018C1A0" = "" # literal callback to task registration 002D4140
+"0x0018D560" = "" # literal callback to task registration 002D4140
+"0x0018E1F0" = "" # literal callback to task registration 002D4140
+"0x0018EE70" = "" # literal callback to task registration 002D4140
+"0x001925A0" = "" # literal callback to task registration 002D4140
+"0x001959A0" = "" # literal callback to task registration 002D4140
+"0x00196BD0" = "" # literal callback to task registration 002D4140
+"0x0019D780" = "" # literal callback to task registration 002D4140
+"0x0019DCF0" = "" # literal callback to task registration 002D4140
+"0x0019E770" = "" # literal callback to task registration 002D4140
+"0x0019EFF0" = "" # literal callback to task registration 002D4140
+"0x0019F760" = "" # literal callback to task registration 002D4140
+"0x001A01F0" = "" # literal callback to task registration 002D4140
+"0x001A0350" = "" # literal callback to task registration 002D4140
+"0x001A0870" = "" # literal callback to task registration 002D4140
+"0x001A4940" = "" # literal callback to task registration 002D4140
+"0x002340B0" = "" # literal callback to task registration 002D4140
+"0x00234320" = "" # literal callback to task registration 002D4140
+"0x00234910" = "" # literal callback to task registration 002D4140
+"0x00249AA0" = "" # literal callback to task registration 002D4140
+"0x002A4B70" = "" # literal callback to task registration 002D4140
+"0x002B2960" = "" # literal callback to task registration 002D4140
+"0x002E1F90" = "" # literal callback to task registration 002D4140
+"0x002D7F20" = "" # observed in analysis/runs/041.log
+"0x0038AA6F" = "" # observed WMA vtable 0040C984; run 039
+"0x0038AB3F" = "" # observed WMA vtable 0040C984; run 039
+"0x0038AB7C" = "" # observed WMA vtable 0040C984; run 039
+"0x0038AB81" = "" # observed WMA vtable 0040C984; run 039
+"0x0038ABB6" = "" # observed WMA vtable 0040C984; run 039
+"0x0038AC00" = "" # observed WMA vtable 0040C984; run 039
+"0x0038AC3A" = "" # observed WMA vtable 0040C984; run 039
+"0x0038AC50" = "" # observed WMA vtable 0040C984; run 039
+"0x0038AC58" = "" # observed WMA vtable 0040C984; run 039
+"0x0038ACA0" = "" # observed WMA vtable 0040C984; run 039
+"0x0038ADE5" = "" # observed WMA vtable 0040C984; run 039
+"0x0038AE03" = "" # observed WMA vtable 0040C984; run 039
+"0x0038AE67" = "" # observed WMA vtable 0040C984; run 039
+"0x0038AF57" = "" # observed WMA vtable 0040C984; run 039
+"0x002A7330" = "" # observed in analysis/runs/028.log
+"0x00056C90" = "" # observed in analysis/runs/027.log
+"0x00056C40" = "" # observed in analysis/runs/026.log
+"0x00056C20" = "" # observed in analysis/runs/025.log
+"0x002A4D20" = "" # observed in analysis/runs/024.log
+"0x002B7AE0" = "" # observed in analysis/runs/023.log
+"0x002B7A90" = "" # observed in analysis/runs/022.log
+"0x0005E720" = "" # observed in analysis/runs/021.log
+"0x0005CE60" = "" # observed in analysis/runs/020.log
+"0x002FF830" = "" # observed in analysis/runs/017.log
+"0x002FF4C0" = "" # observed in analysis/runs/016.log
+"0x00312A09" = "" # observed in analysis/runs/015.log
+"0x003129B0" = "" # observed in analysis/runs/014.log
+"0x00356B58" = "" # observed in analysis/runs/013.log
+"0x0005C9A0" = "" # observed in analysis/runs/012.log
+"0x00041C40" = "" # observed in analysis/runs/010.log
+"0x00054E00" = "" # observed in analysis/runs/009.log
+"0x00054EB0" = "" # observed in analysis/runs/008.log
+"0x00310463" = "" # startup initializer table; analysis/initializer_targets.json
+"0x003119B7" = "" # startup initializer table; analysis/initializer_targets.json
+"0x00314300" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033ABA0" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033ABB0" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033ABC0" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033ABE0" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033AC00" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033AC20" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033AC40" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033AC50" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033AC60" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033AC80" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033ACB0" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033ACE0" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033AD00" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033AD20" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033AD40" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033AD50" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033AD70" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033AD90" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033ADA0" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033ADC0" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033ADE0" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033AE00" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033AE10" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033AE30" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033AE50" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033AE70" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033AE90" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033AEA0" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033AEB0" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033AEE0" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033AF00" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033AF10" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033AF40" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033AF70" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033AFA0" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033AFD0" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033AFF0" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033B010" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033B030" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033B040" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033B050" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033B060" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033B070" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033B080" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033B0C0" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033B0D0" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033B0E0" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033B0F0" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033B100" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033B110" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033B120" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033B140" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033B150" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033B170" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033B190" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033B1B0" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033B1D0" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033B200" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0033B230" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0036FBC6" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0036FBD1" = "" # startup initializer table; analysis/initializer_targets.json
+"0x00372AE6" = "" # startup initializer table; analysis/initializer_targets.json
+"0x00372AF1" = "" # startup initializer table; analysis/initializer_targets.json
+"0x003FA567" = "" # startup initializer table; analysis/initializer_targets.json
+"0x00400D3E" = "" # startup initializer table; analysis/initializer_targets.json
+"0x00400D6E" = "" # startup initializer table; analysis/initializer_targets.json
+"0x0030F380" = "" # observed in analysis/runs/006.log
+"0x0030D07D" = "" # observed in analysis/runs/005.log
+"0x003E3208" = "" # observed in analysis/runs/004.log
+"0x0030C718" = "" # observed in analysis/runs/003.log
+"0x003135B8" = "" # observed in analysis/runs/002.log
+"0x003103F0" = "" # observed in analysis/runs/001.log
+
+# functions the host replaces or calls by name, 0 where the image has none
+[symbols]
+_CIacos                                              = 0x30E190
+_CIasin                                              = 0x33A370
+accept                                               = 0x3E55D5
+bind                                                 = 0x3E55B4
+BinkDoFrame                                          = 0
+BinkGetSummary                                       = 0
+BinkNextFrame                                        = 0
+BinkWait                                             = 0
+CDevice_KickOff                                      = 0x342370
+CDirectSoundStream_AddRef                            = 0x36D68C
+CDirectSoundStream_Discontinuity                     = 0x36D788
+CDirectSoundStream_Flush                             = 0x36D7D5
+CDirectSoundStream_FlushEx                           = 0x36D992
+CDirectSoundStream_GetInfo                           = 0x36D721
+CDirectSoundStream_GetStatus                         = 0x36D820
+CDirectSoundStream_Pause                             = 0x36D8E8
+CDirectSoundStream_Process                           = 0x36D871
+CDirectSoundStream_Release                           = 0x36D6D3
+CDirectSoundStream_SetFilter                         = 0
+CDirectSoundStream_SetFormat                         = 0
+CDirectSoundStream_SetFrequency                      = 0
+CDirectSoundStream_SetHeadroom                       = 0x36DD7A
+CDirectSoundStream_SetI3DL2Source                    = 0
+CDirectSoundStream_SetMaxDistance                    = 0x36E5A8
+CDirectSoundStream_SetMinDistance                    = 0x36E602
+CDirectSoundStream_SetMixBins                        = 0x36E556
+CDirectSoundStream_SetMixBinVolumes                  = 0x36DDCC
+CDirectSoundStream_SetPosition                       = 0x36E65C
+CDirectSoundStream_SetVelocity                       = 0
+CDirectSoundStream_SetVolume                         = 0x36DD28
+closesocket                                          = 0x3E5584
+connect                                              = 0x3E55BF
+crt_acos                                             = 0x30E1AD
+crt_asin                                             = 0x33A38D
+crt_atan                                             = 0x30E34F
+crt_cos                                              = 0x30D9D5
+crt_log                                              = 0
+crt_log10                                            = 0x30E0D7
+crt_pow                                              = 0x30EFA0
+crt_sin                                              = 0x30DA85
+crt_sqrt                                             = 0x30E279
+crt_tan                                              = 0
+D3D_BlockOnResource                                  = 0x342880
+D3D_BlockOnTime                                      = 0x342550
+D3D_InitDefaultState                                 = 0x343510
+D3D_InternalAddRef                                   = 0x340F20
+D3D_InternalRelease                                  = 0x341080
+D3D_KickOffAndWaitForIdle                            = 0x342860
+D3D_MakeRequestedSpace                               = 0x3426C0
+D3D_SetFence                                         = 0x342490
+D3DDevice_Begin                                      = 0x33ED70
+D3DDevice_BeginPush                                  = 0
+D3DDevice_BlockOnFence                               = 0
+D3DDevice_BlockUntilVerticalBlank                    = 0x33CE50
+D3DDevice_Clear                                      = 0x33FCE0
+D3DDevice_CopyRects                                  = 0x33D3C0
+D3DDevice_CreatePixelShader                          = 0
+D3DDevice_CreateVertexShader                         = 0x33F300
+D3DDevice_DeletePixelShader                          = 0
+D3DDevice_DeleteVertexShader                         = 0
+D3DDevice_DrawIndexedVertices                        = 0x33EAD0
+D3DDevice_DrawVertices                               = 0
+D3DDevice_DrawVerticesUP                             = 0x33E820
+D3DDevice_EnableOverlay                              = 0
+D3DDevice_End                                        = 0x33EDB0
+D3DDevice_EndPush                                    = 0
+D3DDevice_FlushVertexCache                           = 0
+D3DDevice_GetBackBuffer2                             = 0x33D370
+D3DDevice_GetDepthStencilSurface2                    = 0x33D6F0
+D3DDevice_GetRenderTarget2                           = 0
+D3DDevice_GetTile                                    = 0
+D3DDevice_GetVertexShaderFunction                    = 0
+D3DDevice_InsertFence                                = 0
+D3DDevice_IsFencePending                             = 0
+D3DDevice_LightEnable                                = 0x33DC00
+D3DDevice_LoadVertexShader                           = 0x33F700
+D3DDevice_LoadVertexShaderProgram                    = 0
+D3DDevice_MakeSpace                                  = 0x342800
+D3DDevice_PersistDisplay                             = 0
+D3DDevice_Release                                    = 0
+D3DDevice_SelectVertexShader                         = 0x33F760
+D3DDevice_SetFlickerFilter                           = 0x33CE80
+D3DDevice_SetGammaRamp                               = 0x33CBC0
+D3DDevice_SetIndices                                 = 0x33DF10
+D3DDevice_SetLight                                   = 0x33D940
+D3DDevice_SetMaterial                                = 0x33CDA0
+D3DDevice_SetPalette                                 = 0
+D3DDevice_SetPixelShader                             = 0x341200
+D3DDevice_SetPixelShaderConstant                     = 0
+D3DDevice_SetRenderState_BackFillMode                = 0x33BBF0
+D3DDevice_SetRenderState_CullMode                    = 0x33B880
+D3DDevice_SetRenderState_DoNotCullUncompressed       = 0x33C9F0
+D3DDevice_SetRenderState_Dxt1NoiseEnable             = 0x33BA40
+D3DDevice_SetRenderState_EdgeAntiAlias               = 0x33B7B0
+D3DDevice_SetRenderState_FillMode                    = 0x33BBA0
+D3DDevice_SetRenderState_FogColor                    = 0x33B830
+D3DDevice_SetRenderState_FrontFace                   = 0x33B8F0
+D3DDevice_SetRenderState_LineWidth                   = 0x33B9D0
+D3DDevice_SetRenderState_LogicOp                     = 0x33BB40
+D3DDevice_SetRenderState_MultiSampleAntiAlias        = 0x33CA70
+D3DDevice_SetRenderState_MultiSampleMask             = 0x33CAF0
+D3DDevice_SetRenderState_MultiSampleMode             = 0x33CA10
+D3DDevice_SetRenderState_MultiSampleRenderTargetMode = 0x33CA40
+D3DDevice_SetRenderState_NormalizeNormals            = 0x33B930
+D3DDevice_SetRenderState_OcclusionCullEnable         = 0x33C8D0
+D3DDevice_SetRenderState_PSTextureModes              = 0x33B480
+D3DDevice_SetRenderState_RopZCmpAlwaysRead           = 0x33C9B0
+D3DDevice_SetRenderState_RopZRead                    = 0x33C9D0
+D3DDevice_SetRenderState_SampleAlpha                 = 0x33CB40
+D3DDevice_SetRenderState_ShadowFunc                  = 0x33B7F0
+D3DDevice_SetRenderState_Simple                      = 0x33B4B0
+D3DDevice_SetRenderState_StencilCullEnable           = 0x33C940
+D3DDevice_SetRenderState_StencilEnable               = 0x33C790
+D3DDevice_SetRenderState_StencilFail                 = 0x33C830
+D3DDevice_SetRenderState_TextureFactor               = 0x33B970
+D3DDevice_SetRenderState_TwoSidedLighting            = 0x33BC50
+D3DDevice_SetRenderState_VertexBlend                 = 0x33BCD0
+D3DDevice_SetRenderState_YuvEnable                   = 0x33C8A0
+D3DDevice_SetRenderState_ZEnable                     = 0x33C700
+D3DDevice_SetRenderStateNotInline                    = 0x33B4E0
+D3DDevice_SetRenderTarget                            = 0x33D0F0
+D3DDevice_SetRenderTargetFast                        = 0
+D3DDevice_SetScissors                                = 0x33E1F0
+D3DDevice_SetScreenSpaceOffset                       = 0x33E4F0
+D3DDevice_SetShaderConstantMode                      = 0x33F800
+D3DDevice_SetSoftDisplayFilter                       = 0x33CED0
+D3DDevice_SetStreamSource                            = 0x33F670
+D3DDevice_SetTexture                                 = 0x33DD60
+D3DDevice_SetTextureStageStateNotInline              = 0x33BF20
+D3DDevice_SetTextureState_BorderColor                = 0x33BEA0
+D3DDevice_SetTextureState_BumpEnv                    = 0x33BE30
+D3DDevice_SetTextureState_ColorKeyColor              = 0x33BEE0
+D3DDevice_SetTextureState_TexCoordIndex              = 0x33BD20
+D3DDevice_SetTile                                    = 0
+D3DDevice_SetTransform                               = 0x33CC50
+D3DDevice_SetVertexShader                            = 0x33FA50
+D3DDevice_SetVertexShaderConstant1                   = 0x33F440
+D3DDevice_SetVertexShaderConstant1Fast               = 0
+D3DDevice_SetVertexShaderConstant4                   = 0x33F4A0
+D3DDevice_SetVertexShaderConstantNotInlineFast       = 0x33F550
+D3DDevice_SetViewport                                = 0x33D710
+D3DDevice_Swap                                       = 0x340B30
+D3DDevice_SwitchTexture                              = 0
+D3DResource_BlockUntilNotBusy                        = 0
+D3DResource_IsBusy                                   = 0
+Direct3D_CreateDevice                                = 0x341410
+DirectSoundCreate                                    = 0x36F8A0
+DirectSoundCreateBuffer                              = 0
+DirectSoundCreateStream                              = 0x36F8E7
+DirectSoundDoWork                                    = 0x36DF1C
+DirectSoundUseFullHRTF                               = 0x36CFED
+DirectSoundUseLightHRTF                              = 0
+getsockname                                          = 0
+getsockopt                                           = 0
+IDirectSound_CommitDeferredSettings                  = 0x36F1C9
+IDirectSound_CommitEffectData                        = 0
+IDirectSound_CreateSoundBuffer                       = 0
+IDirectSound_DownloadEffectsImage                    = 0
+IDirectSound_EnableHeadphones                        = 0
+IDirectSound_GetEffectData                           = 0
+IDirectSound_GetOutputLevels                         = 0
+IDirectSound_GetSpeakerConfig                        = 0
+IDirectSound_Release                                 = 0x36CFC1
+IDirectSound_SetDistanceFactor                       = 0x36F613
+IDirectSound_SetDopplerFactor                        = 0x36F637
+IDirectSound_SetEffectData                           = 0x36DE1E
+IDirectSound_SetI3DL2Listener                        = 0x36F6DA
+IDirectSound_SetMixBinHeadroom                       = 0x36DE48
+IDirectSound_SetOrientation                          = 0x36F65B
+IDirectSound_SetPosition                             = 0x36F6A5
+IDirectSound_SetRolloffFactor                        = 0
+IDirectSound_SetVelocity                             = 0
+IDirectSound_SynchPlayback                           = 0x36DE68
+IDirectSoundBuffer_GetCurrentPosition                = 0
+IDirectSoundBuffer_GetStatus                         = 0x36DEBC
+IDirectSoundBuffer_Lock                              = 0
+IDirectSoundBuffer_Pause                             = 0
+IDirectSoundBuffer_Play                              = 0x36DE80
+IDirectSoundBuffer_Release                           = 0x36CFD7
+IDirectSoundBuffer_SetAllParameters                  = 0
+IDirectSoundBuffer_SetBufferData                     = 0x36ECD2
+IDirectSoundBuffer_SetCurrentPosition                = 0
+IDirectSoundBuffer_SetEG                             = 0
+IDirectSoundBuffer_SetFilter                         = 0
+IDirectSoundBuffer_SetFormat                         = 0
+IDirectSoundBuffer_SetFrequency                      = 0
+IDirectSoundBuffer_SetHeadroom                       = 0
+IDirectSoundBuffer_SetI3DL2Source                    = 0
+IDirectSoundBuffer_SetLoopRegion                     = 0
+IDirectSoundBuffer_SetMaxDistance                    = 0
+IDirectSoundBuffer_SetMinDistance                    = 0
+IDirectSoundBuffer_SetMixBins                        = 0
+IDirectSoundBuffer_SetMixBinVolumes                  = 0
+IDirectSoundBuffer_SetOutputBuffer                   = 0
+IDirectSoundBuffer_SetPlayRegion                     = 0
+IDirectSoundBuffer_SetPosition                       = 0
+IDirectSoundBuffer_SetRolloffCurve                   = 0
+IDirectSoundBuffer_SetVelocity                       = 0
+IDirectSoundBuffer_SetVolume                         = 0
+IDirectSoundBuffer_Stop                              = 0x36DEA4
+IDirectSoundBuffer_StopEx                            = 0
+IDirectSoundBuffer_Unlock                            = 0
+IDirectSoundStream_SetEG                             = 0
+ioctlsocket                                          = 0x3E559A
+listen                                               = 0x3E55CA
+Lock2DSurface                                        = 0x344A60
+recv                                                 = 0x3E5609
+recvfrom                                             = 0x3E5623
+select                                               = 0x3E55E0
+send                                                 = 0x3E5632
+sendto                                               = 0x3E564C
+setsockopt                                           = 0x3E55A5
+shutdown                                             = 0x3E558F
+socket                                               = 0x3E5579
+WSACancelOverlappedIO                                = 0x3E55FE
+WSAGetLastError                                      = 0x3E5A43
+WSAGetOverlappedResult                               = 0x3E55EF
+WSARecv                                              = 0x3E5614
+WSARecvFrom                                          = 0
+WSASend                                              = 0x3E563D
+WSASendTo                                            = 0x3E565B
+WSAStartup                                           = 0x3E58B8
+XAudioDownloadEffectsImage                           = 0x36DF45
+XInitDevices                                         = 0x3F84D3
+XInputClose                                          = 0x3FA5F5
+XInputGetState                                       = 0x3FA7D9
+XInputOpen                                           = 0x3FA59F
+XInputSetState                                       = 0x3FA84C
+XLaunchNewImageA                                     = 0x305485
+XMountUtilityDrive                                   = 0x3062FD
+XNetCreateKey                                        = 0
+XNetDnsLookup                                        = 0x3E5516
+XNetDnsRelease                                       = 0x3E552D
+XNetGetEthernetLinkStatus                            = 0x315500
+XNetGetTitleXnAddr                                   = 0x3E556E
+XNetInAddrToXnAddr                                   = 0x3E5684
+XNetRandom                                           = 0x3E54DE
+XNetRegisterKey                                      = 0x3E54E9
+XNetStartup                                          = 0x3E58A1
+XNetUnregisterKey                                    = 0x3E54F4
+XNetXnAddrToInAddr                                   = 0
+XOnlineCleanup                                       = 0x003CBDA0
+XOnlineStartup                                       = 0x003CBCB5
+[data]
+D3D_DeferredTextureState    = 0x34BE80
+D3D_Device                  = 0x34C320
+D3D_DirtyFlags              = 0x34BE78
+D3D_IndexData               = 0x34BE74
+D3D_pDevice                 = 0x34C318
+D3D_RenderState             = 0x34C080
+D3D_SimpleRenderStateEncode = 0x4012C8
+D3D_Streams                 = 0x34E7D8
+DSound_StreamVtable         = 0x40C938
+DSound_StreamVtable2        = 0x40C928
+XPP_GamepadType             = 0x3F815C
+XPP_MemoryUnitType          = 0x3F80E0
+
+# argument locations in API order for functions a link time code generated library compiled with another
+# convention: a register (eax ebx ecx edx esi edi ebp) or "stack" for the next stack slot, which the callee pops
+[abi]
+
+# Gameplay camera: scope overrides to original view/projection setup.
+[[hook]]
+at = 0x002A1929
+call = "TenchuCameraBegin"
+
+[[hook]]
+at = 0x002A1400
+call = "TenchuCameraEnd"
+
+# Xbox Live is gone: the boot-time availability check (0003D940) reports it unusable.
+[[hook]]
+at = 0x0003D961
+call = "TenchuXboxLiveUnavailable"
+after = true
+
+# The title menu's Xbox Live item (state 400) reopens the menu list (state 0x0A) instead.
+[[hook]]
+at = 0x002A6E9B
+call = "TenchuBlockXboxLiveMenu"
+after = true
+
+# Scene render (00236Axx), split screen when [0x018FE6CC] & 0x04000000: the viewport at [ebp-0x174]
+# (x, y, width, height, min z, max z) is 320 wide for player 1, then moved to x 320 for player 2.
+# Player 1 full screen widens the first, and the scene pass sub_000139C0 (coop_hooks.cpp) skips
+# player 2's; the game's single-screen branch is no use, it leaves the viewport and clears to code
+# that split screen skips.
+[[hook]]
+at = 0x00236AA4
+call = "TenchuPlayer1Viewport"
+
+# Player placement (0029FD30, actor at [ebp-8]): split screen jumps to the multiplayer start tables
+# (player 1 0x4D9560, player 2 0x4D9690, by stage [0x018E412C] - 10); a clear ZF before this jnz
+# keeps the single-player starts (story stages: 0x4D9320 + stage * 0x30 + character * 16).
+[[hook]]
+at = 0x0029FF1E
+call = "TenchuStoryStart"
+
+# Stage loader task (002A4E00): creates player 1, then player 2 when [0x018FE6CC] & 0x04000000
+# (002A50A1). Two players for the next mission sets that bit from the loader's first step, so the
+# screens before it never see a second player that does not exist (setting it there crashed).
+[[hook]]
+at = 0x002A4E00
+call = "TenchuLoadTwoPlayers"
+
+[[hook]]
+at = 0x002A50D2
+call = "TenchuTwoPlayersLoaded"
+
+# BEGIN PLAYER HEALTH HOOKS
+# Regenerate with tools/scripts/prepare_cheat_hooks.py after adding gameplay code.
+[[hook]]
+at = 0x000118FE
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x00011C01
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x00012136
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x0001249A
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x00012723
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x00012C6D
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x00012E25
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x00013030
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x0001894E
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x000191F0
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x000193DA
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x00019508
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x0002BD89
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x0002BE0A
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x0002BE3D
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x0002BF84
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x0002C388
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x0002C397
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x0002C3E7
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x0002C40A
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x0002C4F1
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x0002C52F
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x0002C58F
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x0002C5E6
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x0002C5F2
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x0002C712
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x0002CA8D
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x0002D79F
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x0002DA40
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x0002DA4F
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x0002DA6C
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x0002DA7B
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x0002DAE9
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x0002DD83
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x0002DD92
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x0002DDAF
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x0002DDBE
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x0002DDD2
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x0002DE84
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x0002DE90
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x0002E446
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x0002E47B
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x0002E48F
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x0002E4AB
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x0002E4C3
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x0002E573
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x0002E5A4
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x0002ED1A
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x0002ED4A
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x0002EE61
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x0002EE9A
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x0002F3C9
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x0002F974
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x0002F983
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x0002F9D0
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x0002F9E7
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x0002FB41
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x0002FC8C
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x0002FEE0
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x0002FF16
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x000301E3
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x00030205
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x00030211
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x00030B6F
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x00030F66
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x0003140E
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x0003141D
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x0003143D
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x0003144C
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x0003153B
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x0003155F
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x000316C2
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x00031E4F
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x00032662
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x000326F0
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x00032754
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x00032760
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x00032875
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x00032881
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x00032950
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x00032A16
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x00034A49
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x00035CED
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x00039DAC
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x00039DB9
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x0003C177
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x000401D0
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x000592F6
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x0005AB49
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x0005B65E
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x0005BFEE
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x000665D7
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x00068402
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x0007781E
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x0007783D
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x0009F0AE
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x0009F0CD
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x000A18EA
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x000A1915
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x000B0ADB
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x000B0AFC
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x000B0D85
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x000B0DA6
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x000B407F
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x000B409E
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x000B4648
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x000B733C
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x000B9E0E
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x000BC0DD
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x000BCEF7
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x000BCF5E
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x000BD0EB
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x000EAB48
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x000F29A2
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x000F2B18
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x000F3203
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x000F346C
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x000F3493
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x000F34BC
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x000F3E3D
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x000F40A6
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x000F40CD
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x000F40F6
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x000F5FE3
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x000F624C
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x000F6273
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x000F629C
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x000F6BC3
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x000F6E2C
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x000F6E53
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x000F6E7C
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x00103797
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x001037A5
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x001058CA
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x00105C7B
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x0010E175
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x0010E23D
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x0010E2E2
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x0010E6F9
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x0011C7CE
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x0011C830
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x0011C8B0
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x0011C8C2
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x0011C927
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x00125DA2
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x00134FEE
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x00135243
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x001486D8
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x00148833
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x0014885C
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x0016DA61
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x0016DB99
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x0016DC5F
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x0016E33E
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x001816F9
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x001817D6
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x00182618
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x0018274F
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x00198103
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x001D721D
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x001D9C70
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x001DDFAC
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x001DE036
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x001DE0E4
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x001DE16E
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x001DE49A
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x001DE53E
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x001DE7E6
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x001DF2CA
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x001DF328
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x001E0A7D
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x001E0AC1
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x001E13C9
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x001E1404
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x001E24BD
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x001E2883
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x001E3063
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x001E35ED
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x001E4A6B
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x001E4CC8
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x001EBF51
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x001ECEE6
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x001ECFA3
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x001ECFED
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x001ED221
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x001ED254
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x001ED2FE
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x001ED3AB
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x001ED3F4
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x001ED42B
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x001F32AA
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x001F3F4A
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x001F44CB
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x001F4772
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x001F4902
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x001F4C8A
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x001F502A
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x001F519F
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x001F51D8
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x001F530F
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x001F539E
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x001F548F
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x001F57A0
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x001F587A
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x001F596A
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x001F5A5E
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x001F7301
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x001F7732
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x0020288A
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x00202A19
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x00202C0C
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x00203DA8
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x0020421F
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x00204409
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x00206824
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x00206959
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x00206BEB
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x00206C41
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x00206DD3
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x0023DCCB
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x0024139D
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x002419F4
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x00241A1D
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x00241ACB
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x00242CAC
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x00243CDA
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x00243D02
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x00243D5E
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x0024A42A
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x0024A7CD
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x0024A815
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x0024A892
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x0024B22A
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x0024B63D
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x0024B684
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x0024B703
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x002588C9
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x0025C6E8
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x0025D6A5
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x0025D6C6
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x002604E5
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x00262E85
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x0026842D
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x00268A7E
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x0027B7A8
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x0027B8FF
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x00296389
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x0029D792
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x0029DF6A
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x0029F461
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x0029F480
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x002A0600
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x002A3008
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x002A3130
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x002A320D
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x002A3257
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x002A35CD
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x002A36F1
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x002A3767
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x002A37BA
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x002A37E2
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x002A4F1C
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x002A502B
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x002A55A4
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x002A93A0
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x002A93BA
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x002A9690
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x002AA172
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x002AE4CE
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x002AE7A2
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x002AE83B
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x002AF77A
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x002AF9E3
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x002AFA04
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x002AFF26
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x002AFF57
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x002B07BB
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x002C1336
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x002C1BB7
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x002C1C26
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x002C1C6D
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x002C2075
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x002C20CD
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x002C2111
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x002C2147
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x002C2170
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x002C2D68
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x002C2E23
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x002C3963
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x002C3F32
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x002C3FED
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x002C426E
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x002C42DD
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x002C4324
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x002C46D2
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x002C4721
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x002C474A
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x002C96BB
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x002C972E
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x002C97A1
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x002C9814
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x002C9887
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x002C98FA
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x002C996A
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x002CA4BF
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x002CB06E
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x002CE35A
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x002CE477
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x002CE65E
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x002CE77C
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x002D286E
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x002D2E4C
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x002D323E
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x002D34EF
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x002D3BED
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x002D6833
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x002DE4FC
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x002DE51B
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x002DE55F
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x002DE580
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x002E5659
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x002E5C36
+call = "TenchuProtectHealth_eax"
+after = true
+
+[[hook]]
+at = 0x002E77EA
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x002E91E1
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x002EB9F7
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x002EE848
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x00300606
+call = "TenchuProtectHealth_ecx"
+after = true
+
+[[hook]]
+at = 0x00301F2C
+call = "TenchuProtectHealth_edx"
+after = true
+
+[[hook]]
+at = 0x00302043
+call = "TenchuProtectHealth_ecx"
+after = true
+

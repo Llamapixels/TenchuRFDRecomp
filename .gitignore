@@ -1,0 +1,35 @@
+# Whitelist: everything is ignored unless listed here, so game files, disc
+# images, generated game code and builds can never be committed by accident.
+/*
+!/.gitignore
+!/.gitattributes
+!/.github/
+!/README.md
+!/CHANGELOG.md
+!/LICENSE
+!/FEATURES.txt
+!/SDK-VERSION.md
+!/CMakeLists.txt
+!/config/
+!/docs/
+!/runtime/
+!/src/
+!/tests/
+!/tools/
+
+# tools: the port's scripts only (the SDK and compiler are cloned and unpacked here)
+/tools/*
+!/tools/scripts/
+
+# Never: game-derived data, binaries, scratch files.
+/runtime/vulkan/
+*.iso
+*.xbe
+*.xpr
+*.exe
+*.obj
+*.dll
+*.pdb
+*.zip
+*.dmp
+__pycache__/
