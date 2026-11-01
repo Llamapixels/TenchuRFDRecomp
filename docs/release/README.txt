@@ -48,6 +48,18 @@ What to test
   - Cutscenes (with and without a custom FOV in F6 > Camera).
   - Multiplayer modes on one PC.
   - Both renderers (F6 > Display: Direct3D 12 and Vulkan).
+  - Enhanced cloth (F6 > Physics): compare movement, collisions, bending
+    and saved presets. See PHYSICS.txt for the controls and limitations.
+
+Updating from 0.1.x
+------------------
+  Extract this release into a new folder for a clean tester installation,
+  or copy it over your existing game folder with the game closed. Saves
+  are in "hdd"; port settings are in tenchu_startup.toml. This ZIP does
+  not include either, so copying it over does not replace them.
+  Keep the bundled compiler files together: an update may need to prepare
+  the game code again. First-start compilation is expected on a fresh
+  installation; no TenchuRFD.dll or game files are shipped.
 
 Reporting a problem
 -------------------
@@ -106,6 +118,31 @@ Memory patches (F6 > Patches)
   puts the original back. Patches that change values and tables work.
   Patches that change the game's code have no effect in this port (the game
   runs recompiled to PC code) and are marked so in the list.
+
+  The RFD cheat examples include original one-shot actions and sustained
+  checkboxes. One-shots stay checked until you close F6, then run once and
+  automatically uncheck. Tick again and close F6 to repeat. Hover a patch
+  name for the required screen and instructions. Unlocks and grants
+  can be retained by normal game saving. Full-stock patches affect stored
+  supplies on item selection. See pointer_patches.md for the text format
+  and builtin_cheat_scan.md for the original button-code research.
+
+  No clip flight: copy "RFD - noclip.txt" from memory_patches\examples
+  into memory_patches, then enable "No clip flight - P1" in F6 > Patches.
+  Left stick moves, right stick looks, RT/LT move up/down, RB/LB change
+  speed. Release the controls to hold position. Uncheck in open space.
+
+Cloth physics (F6 > Physics)
+---------------------------
+  The enhanced solver is optional and off on a clean installation. Enable
+  it to use animated body capsules, edge collision and bend resistance.
+  Self-collision is a separate experimental switch, initially off.
+  Response speed, drag, gravity, stiffness and collision controls apply
+  globally. Save named presets and load them from this tab; they are
+  stored in physics_presets.toml beside the game. The current settings
+  are remembered between starts. See PHYSICS.txt for details.
+  These options improve models that already contain cloth simulation
+  data; they do not automatically add physics to arbitrary hair meshes.
 
 RFD Switchblade (tools\RFD Switchblade.exe)
 -------------------------------------------

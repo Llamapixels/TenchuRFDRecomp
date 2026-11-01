@@ -1,3 +1,4 @@
+#include "cloth_solver.h"
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
@@ -14,6 +15,7 @@
 #include "game_camera.h"
 #include "graphics/widescreen.h"
 #include "port/port_settings.h"
+#include "port/memory_patches.h"
 #include "audio/master_volume.h"
 #include "graphics/screenshot.h"
 #include "graphics/post_processing.h"
@@ -52,9 +54,11 @@ int main(){
         intptr_t result=0;
         auto frame=[&]{ImGui::NewFrame();TenchuRenderDisplayMenu(60);ImGui::Render();};
         frame();check(ImGui::GetDrawData()->TotalVtxCount==0,"menu should start closed");
+        check(!tenchu::patches::MenuOpen(),"closed menu must release one-shot queue");
         check(!(io.ConfigFlags&(ImGuiConfigFlags_NavEnableKeyboard|ImGuiConfigFlags_NavEnableGamepad)),"F6 menu must disable keyboard/controller navigation");
         check(TenchuDisplayMenuMessage(WM_KEYDOWN,VK_F6,0,&result),"F6 must be handled");
         frame();frame();check(ImGui::GetDrawData()->TotalVtxCount>0,"F6 must show menu");
+        check(tenchu::patches::MenuOpen(),"F6 must defer one-shot patches while open");
         ImGui::SetWindowSize(ImGui::FindWindowByName("Tenchu: Return from Darkness (F6)"),{780,570});frame();frame();
         auto* nav_window=ImGui::FindWindowByName("Tenchu: Return from Darkness (F6)");
         check((nav_window->Flags&ImGuiWindowFlags_NoNavInputs)&&(nav_window->Flags&ImGuiWindowFlags_NoNavFocus),"menu window must reject navigation input/focus");
@@ -65,7 +69,7 @@ int main(){
             auto* window=ImGui::FindWindowByName("Tenchu: Return from Darkness (F6)");
             check(window!=nullptr,"menu window missing");
             auto* tabs=GImGui->TabBars.GetByKey(window->GetID("Display settings"));
-            check(tabs&&tabs->Tabs.Size==12,"menu categories missing");
+            check(tabs&&tabs->Tabs.Size==13,"menu categories missing");
             ImGui::ActivateItemByID(ImHashStr(label,0,tabs->Tabs[0].ID));frame();
         };
         activate("Restart game");check(restarts==1,"restart button must queue one game restart");
@@ -116,6 +120,7 @@ int main(){
         click(5,"Write thread dump (Ctrl+F3)");check(thread_dumps==1,"thread dump button must write a dump");
         click(5,"F3 render capture (debug)");check(g_tenchu_debug_capture,"debug capture checkbox must enable F3 captures");
         click(5,"Take screenshot (F12)");
+        check(!tenchu::patches::MenuOpen(),"screenshot menu closure must release queued one-shots");
         check(tenchu::shots::delay==2,"screenshot button must queue delayed readback");
         check(!TenchuDisplayMenuMessage(WM_KEYDOWN,VK_ESCAPE,0,&result),"screenshot must hide F6 before capture");
         check(!tenchu::shots::NextFrame()&&!tenchu::shots::NextFrame()&&tenchu::shots::NextFrame(),"capture must wait until menu has disappeared");tenchu::shots::saving=false;
@@ -131,10 +136,26 @@ int main(){
         tab(8);click(8,"Write disc file list");
         tab(9);click(9,"Refresh levels");
         tab(10);click(10,"Reload");
+        tab(12);click(12,"Enhanced cloth solver (experimental)");
+        check(tenchu::cloth::enhanced,"Physics checkbox must enable the solver");
+        click(12,"Save physics preset");check(g_tenchu_physics_preset=="My physics"&&!TenchuPhysicsPresets().empty(),"physics save button must write a named preset");
+        tenchu::cloth::response_speed=.3f;click(12,"Load physics preset");
+        check(tenchu::cloth::response_speed==.6f,"physics load button must restore saved controls");
+        click(12,"Cloth body collision");check(!tenchu::cloth::body_collision,"body collision checkbox must disable blockers");
+        click(12,"Cloth body collision");check(tenchu::cloth::body_collision,"body collision checkbox must enable blockers");
+        click(12,"Cloth edge collision");check(!tenchu::cloth::edge_collision,"edge collision checkbox must disable edge contacts");
+        click(12,"Cloth edge collision");check(tenchu::cloth::edge_collision,"edge collision checkbox must enable edge contacts");
+        ImGui::SetScrollY(window,window->ScrollMax.y);frame();frame();
+        click(12,"Cloth self-collision");check(tenchu::cloth::self_collision,"self-collision checkbox must enable separation");
+        ImGui::SetScrollY(window,0);frame();frame();
+        click(12,"Enhanced cloth solver (experimental)");
+        check(!tenchu::cloth::enhanced,"Physics checkbox must restore original solver");
+        click(12,"Enhanced cloth solver (experimental)");
         tab(11);
         tenchu::cheats::god_mode=true;click(11,"Restore default settings");
         check(!g_tenchu_performance_overlay&&!g_tenchu_debug_capture&&!g_tenchu_mute&&g_tenchu_master_volume==100&&!tenchu::cheats::god_mode&&g_tenchu_renderer==0&&g_tenchu_internal_percent==100,"System reset must restore port defaults and disable cheats");
         check(!TenchuGraphicsProfiles().empty(),"reset must retain saved graphics profiles");
+        check(!tenchu::cloth::enhanced,"System reset must restore original cloth solver");
         TenchuDisplayMenuMessage(WM_KEYDOWN,VK_F6,intptr_t(1)<<30,&result);frame();
         check(ImGui::GetDrawData()->TotalVtxCount>0,"held F6 must not repeatedly toggle");
         TenchuDisplayMenuMessage(WM_KEYDOWN,VK_ESCAPE,0,&result);frame();

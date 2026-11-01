@@ -16,24 +16,26 @@
 #include "graphics/renderer_selection.h"
 #include "graphics/screenshot.h"
 #include "port/port_settings.h"
+#include "port/memory_patches.h"
 
 uint32_t g_tenchu_internal_percent=100;
 bool g_tenchu_widescreen=false;
 namespace {
 std::atomic<uint32_t> active_percent{100};
 std::atomic<bool> visible{false};
+void SetVisible(bool open){visible=open;tenchu::patches::SetMenuOpen(open);}
 ImVec4 Color(float r,float g,float b){return {r,g,b,1};}
 }
 void TenchuInitializeDisplayMenu(){
     g_tenchu_internal_percent=tenchu::ClampInternalPercent(g_tenchu_internal_percent);
     active_percent=g_tenchu_internal_percent;
     tenchu::wide::enabled=g_tenchu_widescreen;
-    visible=std::getenv("TENCHU_MENU_OPEN")!=nullptr;
+    SetVisible(std::getenv("TENCHU_MENU_OPEN")!=nullptr);
     TenchuInitializeRenderer();
     TenchuInitializePortSettings();
 }
 void TenchuSetInternalPercent(uint32_t value){g_tenchu_internal_percent=tenchu::ClampInternalPercent(value);active_percent=g_tenchu_internal_percent;}
-void TenchuTakeScreenshot(){visible=false;tenchu::shots::Request();}
+void TenchuTakeScreenshot(){SetVisible(false);tenchu::shots::Request();}
 void TenchuInitializeMenuWindow(void*){
     ImGui::GetIO().ConfigFlags&=~(ImGuiConfigFlags_NavEnableKeyboard|ImGuiConfigFlags_NavEnableGamepad);
 }
@@ -51,10 +53,10 @@ bool TenchuDisplayMenuMessage(uint32_t msg,uintptr_t key,intptr_t flags,intptr_t
         *result=0;return true;
     }
     if(key==VK_F6){
-        if(!(flags&(intptr_t(1)<<30)))visible=!visible.load();
+        if(!(flags&(intptr_t(1)<<30)))SetVisible(!visible.load());
         *result=0;return true;
     }
-    if(key==VK_ESCAPE&&visible){visible=false;*result=0;return true;}
+    if(key==VK_ESCAPE&&visible){SetVisible(false);*result=0;return true;}
     return false;
 }
 void TenchuRenderDisplayMenu(double fps){
@@ -249,6 +251,6 @@ void TenchuRenderDisplayMenu(double fps){
         if(ImGui::Button("Close (F6)"))open=false;
     }
     ImGui::End();
-    if(!open)visible=false;
+    if(!open)SetVisible(false);
     ImGui::PopStyleColor(17);ImGui::PopStyleVar(4);
 }

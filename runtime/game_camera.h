@@ -1,5 +1,6 @@
 #pragma once
 #include "core/input.h"
+#include "noclip_state.h"
 #include <atomic>
 #include <algorithm>
 #include <cmath>
@@ -33,7 +34,7 @@ inline float Axis(int value){float v=std::clamp(value/32767.f,-1.f,1.f);return s
 inline void FilterPad(int port,input::Pad& pad){
     if(port!=0)return;
     {std::lock_guard lock(pad_lock);raw_pad=pad;}
-    if(free_active.load()){
+    if(free_active.load()||(tenchu::noclip::requested.load()&&tenchu::noclip::active.load())){
         pad.buttons=0;for(auto& a:pad.analog)a=0;pad.lx=pad.ly=pad.rx=pad.ry=0;return;
     }
     if(available.load()){

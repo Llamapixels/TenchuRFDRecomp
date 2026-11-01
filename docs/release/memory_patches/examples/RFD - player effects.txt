@@ -1,0 +1,121 @@
+Requires the updated RFD data-action patch loader. Older loaders ignore DataAddress.
+One-shots stay checked while F6 is open, run once when it closes, and automatically uncheck.
+Other checkboxes sustain effects until unchecked. All new entries start off.
+
+[Restore health - P1]
+Author=RFD executable research
+Notes=Tick this, then close F6 to run once. Copies this player maximum to current/delayed health and both HUD mirrors once, matching the original refill.
+Mode=Once
+Pointer=01BAB110,00EC7D10,000007D8
+GlobalCheck,008E38BC,value,0003
+Check,00EC7D2B,value,59414C50
+Check,00EC80A3,value,00
+DataAddress,00EC7D58,copy,00EC7D60,4 bytes
+DataAddress,00EC7D64,copy,00EC7D60,4 bytes
+GlobalAddress,008E17AC,copy,00EC7D60,4 bytes
+GlobalAddress,008E17B4,copy,00EC7D60,4 bytes
+
+[Keep health full - P1]
+Author=RFD executable research
+Notes=Refills current/delayed health from this player maximum. Uncheck stops refilling. This is periodic refill; use built-in God mode for immediate lethal-damage protection.
+Restore=No
+Pointer=01BAB110,00EC7D10,000007D8
+GlobalCheck,008E38BC,value,0003
+Check,00EC7D2B,value,59414C50
+Check,00EC80A3,value,00
+DataAddress,00EC7D58,copy,00EC7D60,4 bytes
+DataAddress,00EC7D64,copy,00EC7D60,4 bytes
+GlobalAddress,008E17AC,copy,00EC7D60,4 bytes
+GlobalAddress,008E17B4,copy,00EC7D60,4 bytes
+
+[Invisibility spell - timed - P1]
+Author=RFD executable research
+Notes=Tick this, then close F6 to run once. Applies the normal 900-tick invisibility state once without the casting animation. It expires through the original game timer.
+Mode=Once
+Pointer=01BAB110,00EC7D10,000007D8
+GlobalCheck,008E38BC,value,0003
+Check,00EC7D2B,value,59414C50
+Check,00EC80A3,value,00
+DataAddress,00EC809C,value,0384,2 bytes
+DataAddress,00EC7DFC,mask,00020000,00020000,4 bytes
+DataAddress,00EC80A2,mask,08,08,byte
+
+[Stay invisible until unchecked - P1]
+Author=RFD executable research
+Notes=Holds the invisibility timer and its two original status bits. Uncheck restores the previous invisibility state without changing other status bits.
+Pointer=01BAB110,00EC7D10,000007D8
+GlobalCheck,008E38BC,value,0003
+Check,00EC7D2B,value,59414C50
+Check,00EC80A3,value,00
+DataAddress,00EC809C,value,0384,2 bytes
+DataAddress,00EC7DFC,mask,00020000,00020000,4 bytes
+DataAddress,00EC80A2,mask,08,08,byte
+
+[Keep Chameleon spell active - P1]
+Author=RFD executable research
+Notes=Use the actual Chameleon spell first. This waits for its initialized disguise, then holds its timer. Uncheck resumes the prior remaining timer; does not spawn or replace a disguise model.
+Pointer=01BAB110,00EC7D10,000007D8
+GlobalCheck,008E38BC,value,0003
+Check,00EC7D2B,value,59414C50
+Check,00EC80A3,value,00
+Check,00EC80A2,mask,20
+DataAddress,00EC809A,value,0258,2 bytes
+
+[Restore health - P2]
+Author=RFD executable research
+Notes=Tick this, then close F6 to run once. Copies this player maximum to current/delayed health and both HUD mirrors once, matching the original refill.
+Mode=Once
+Pointer=01BAB114,00EC7D10,000007D8
+GlobalCheck,008E38BC,value,0003
+Check,00EC7D2B,value,59414C50
+Check,00EC80A3,value,01
+DataAddress,00EC7D58,copy,00EC7D60,4 bytes
+DataAddress,00EC7D64,copy,00EC7D60,4 bytes
+GlobalAddress,008E17B0,copy,00EC7D60,4 bytes
+GlobalAddress,008E17B8,copy,00EC7D60,4 bytes
+
+[Keep health full - P2]
+Author=RFD executable research
+Notes=Refills current/delayed health from this player maximum. Uncheck stops refilling. This is periodic refill; use built-in God mode for immediate lethal-damage protection.
+Restore=No
+Pointer=01BAB114,00EC7D10,000007D8
+GlobalCheck,008E38BC,value,0003
+Check,00EC7D2B,value,59414C50
+Check,00EC80A3,value,01
+DataAddress,00EC7D58,copy,00EC7D60,4 bytes
+DataAddress,00EC7D64,copy,00EC7D60,4 bytes
+GlobalAddress,008E17B0,copy,00EC7D60,4 bytes
+GlobalAddress,008E17B8,copy,00EC7D60,4 bytes
+
+[Invisibility spell - timed - P2]
+Author=RFD executable research
+Notes=Tick this, then close F6 to run once. Applies the normal 900-tick invisibility state once without the casting animation. It expires through the original game timer.
+Mode=Once
+Pointer=01BAB114,00EC7D10,000007D8
+GlobalCheck,008E38BC,value,0003
+Check,00EC7D2B,value,59414C50
+Check,00EC80A3,value,01
+DataAddress,00EC809C,value,0384,2 bytes
+DataAddress,00EC7DFC,mask,00020000,00020000,4 bytes
+DataAddress,00EC80A2,mask,08,08,byte
+
+[Stay invisible until unchecked - P2]
+Author=RFD executable research
+Notes=Holds the invisibility timer and its two original status bits. Uncheck restores the previous invisibility state without changing other status bits.
+Pointer=01BAB114,00EC7D10,000007D8
+GlobalCheck,008E38BC,value,0003
+Check,00EC7D2B,value,59414C50
+Check,00EC80A3,value,01
+DataAddress,00EC809C,value,0384,2 bytes
+DataAddress,00EC7DFC,mask,00020000,00020000,4 bytes
+DataAddress,00EC80A2,mask,08,08,byte
+
+[Keep Chameleon spell active - P2]
+Author=RFD executable research
+Notes=Use the actual Chameleon spell first. This waits for its initialized disguise, then holds its timer. Uncheck resumes the prior remaining timer; does not spawn or replace a disguise model.
+Pointer=01BAB114,00EC7D10,000007D8
+GlobalCheck,008E38BC,value,0003
+Check,00EC7D2B,value,59414C50
+Check,00EC80A3,value,01
+Check,00EC80A2,mask,20
+DataAddress,00EC809A,value,0258,2 bytes

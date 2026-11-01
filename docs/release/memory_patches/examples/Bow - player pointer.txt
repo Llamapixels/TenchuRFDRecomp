@@ -1,0 +1,22 @@
+Pointer=01BAB110,00EC7D10,000007D8
+
+[Infinite bow arrows]
+Author=Local bow investigation
+Notes=Live. Follows player 1 across allocations. Requires the bow in inventory slot 1; enable Equip bow first if absent. Leaves other items alone.
+Check,100EC7D2B,value,59414C50
+Check,100EC8440,min,02
+Check,100EC8440,max,07
+Check,100EC845C,value,0021
+PointerAddress,100EC845E,value,03
+
+[Equip bow (two-slot inventory)]
+Author=Local bow investigation
+Notes=Live. Follows player 1. Only applies with the grappling hook in slot 0 and slot 1 empty or already the bow, with no other active inventory slots. Keeps the bow selected while enabled. Disabling restores the prior inventory if its checks still match.
+Check,100EC7D2B,value,59414C50
+Check,100EC8440,min,01
+Check,100EC8440,max,02
+Check,100EC8458,value,0000
+Check,100EC845C,oneof,FFFF|0021
+PointerAddress,100EC845C,value,18030021
+PointerAddress,100EC8440,value,02
+PointerAddress,100EC8441,value,01

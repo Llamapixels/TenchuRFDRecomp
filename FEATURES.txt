@@ -7,6 +7,8 @@ Status:  [ok]     confirmed working in game
          [bug]    known problem
          [todo]   not done yet
 
+Keep this file up to date when features are added or changed.
+
 
 HOTKEYS (in game)
 -----------------
@@ -262,6 +264,16 @@ MEMORY PATCHES  (F6 > Patches)
          explaining each line (not read until copied up a folder).
   [test] Cheat Engine host addresses (1xxxxxxxx) and game addresses; value
          size from its digits (byte, 2 or 4 bytes), floats, optional type.
+  [test] Pointer metadata and guarded PointerAddress writes for allocated
+         player objects. Shared bow patches follow the current player;
+         original numeric Address patches keep their existing behavior.
+  [ok]   User confirmed in game (2026-10-31): bow equips and ammunition
+         stays at 3 after firing with the pointer-based bow patches enabled.
+  [test] 68 researched cheat entries: original actions, sustained Kuji/health,
+         invisibility, player-two variants and individual reward-item unlocks.
+         One-shots stay checked while F6 is open, run once on closing it,
+         then uncheck; failed guards report Not applied without firing later.
+         Masked writes preserve unrelated flag bits. See builtin_cheat_scan.md.
   [test] While on, written ~60 times a second (freeze); original bytes come
          back when turned off. Restore defaults turns them all off.
   [ok]   Checked in game: the posted grandmaster rank patch writes 0x63 at

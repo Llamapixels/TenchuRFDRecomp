@@ -3,6 +3,7 @@
 #include "audio/master_volume.h"
 #include "game_camera.h"
 #include "game_cheats.h"
+#include "cloth_solver.h"
 #include "graphics/widescreen.h"
 #include "graphics/post_processing.h"
 #include "graphics/cutscene_motion_blur.h"
@@ -19,6 +20,8 @@
 uint32_t g_tenchu_master_volume=100;
 std::string g_tenchu_shader_preset;
 bool g_tenchu_shader_modified=false;
+std::string g_tenchu_physics_preset;
+bool g_tenchu_physics_modified=false;
 bool g_tenchu_mute=false,g_tenchu_performance_overlay=false,g_tenchu_remember_camera=true,g_tenchu_debug_capture=false;
 extern uint32_t g_tenchu_internal_percent;
 extern bool g_tenchu_widescreen;
@@ -38,6 +41,28 @@ float Number(const toml::table& t,const char* key,float fallback,float low,float
     double value=t[key].value_or(double(fallback));
     return std::isfinite(value)?std::clamp(float(value),low,high):fallback;
 }
+toml::table PhysicsSettings(){
+    using namespace tenchu::cloth;
+    return toml::table{{"enhanced_cloth",enhanced.load()},{"cloth_body_collision",body_collision.load()},
+        {"cloth_response_speed",response_speed.load()},{"cloth_body_size",body_size.load()},
+        {"cloth_settling_drag",settling_drag.load()},{"cloth_gravity_scale",gravity_scale.load()},
+        {"cloth_stretch_stiffness",stretch_stiffness.load()},{"cloth_bend_resistance",bend_resistance.load()},
+        {"cloth_edge_collision",edge_collision.load()},{"cloth_edge_strength",edge_strength.load()},
+        {"cloth_self_collision",self_collision.load()},{"cloth_self_strength",self_strength.load()},
+        {"cloth_self_thickness",self_thickness.load()}};
+}
+void ApplyPhysics(const toml::table& p){
+    using namespace tenchu::cloth;
+    enhanced=p["enhanced_cloth"].value_or(false);body_collision=p["cloth_body_collision"].value_or(true);
+    response_speed=Number(p,"cloth_response_speed",.6f,.25f,1);body_size=Number(p,"cloth_body_size",1,.5f,1.5f);
+    settling_drag=Number(p,"cloth_settling_drag",.9f,.5f,1);gravity_scale=Number(p,"cloth_gravity_scale",1,0,2);
+    stretch_stiffness=Number(p,"cloth_stretch_stiffness",1,.25f,1);bend_resistance=Number(p,"cloth_bend_resistance",.25f,0,1);
+    edge_collision=p["cloth_edge_collision"].value_or(true);edge_strength=Number(p,"cloth_edge_strength",1,0,1);
+    self_collision=p["cloth_self_collision"].value_or(false);self_strength=Number(p,"cloth_self_strength",.5f,0,1);
+    self_thickness=Number(p,"cloth_self_thickness",.08f,.01f,.3f);
+}
+std::filesystem::path PhysicsPresetsFile(){return app::ExeDir()/"physics_presets.toml";}
+toml::table ReadPhysicsPresets(){return std::filesystem::exists(PhysicsPresetsFile())?toml::parse_file(PhysicsPresetsFile().string()):toml::table{};}
 toml::table ShaderSettings(){
     using namespace tenchu::post;
     toml::table shader{{"enabled",enabled.load()},{"split_compare",compare.load()},{"split_position",divider.load()}};
@@ -85,6 +110,9 @@ void TenchuLoadPortSettings(const void* value){
         g_tenchu_shader_modified=(*shader)["preset_modified"].value_or(false);
     }
     tenchu::motion::original_blur=t["cutscene"]["original_motion_blur"].value_or(false);
+    if(const auto* physics=t["physics"].as_table())ApplyPhysics(*physics);else ApplyPhysics({});
+    g_tenchu_physics_preset=t["physics"]["last_preset"].value_or(std::string{});
+    g_tenchu_physics_modified=t["physics"]["preset_modified"].value_or(false);
     tenchu::packs::Load(&t);
     tenchu::mods::Load(&t);
     tenchu::patches::Load(&t);
@@ -102,6 +130,8 @@ void TenchuLoadPortSettings(const void* value){
 void TenchuSavePortSettings(void* value){
     auto& t=*static_cast<toml::table*>(value);
     t.insert_or_assign("cutscene",toml::table{{"original_motion_blur",tenchu::motion::original_blur.load()}});
+    auto physics=PhysicsSettings();physics.insert_or_assign("last_preset",g_tenchu_physics_preset);
+    physics.insert_or_assign("preset_modified",g_tenchu_physics_modified);t.insert_or_assign("physics",std::move(physics));
     tenchu::packs::Save(&t);
     tenchu::mods::Save(&t);
     tenchu::patches::Save(&t);
@@ -177,11 +207,36 @@ bool TenchuLoadShaderPreset(const std::string& name,std::string& status){
         ApplyShader(*preset);g_tenchu_shader_preset=name;g_tenchu_shader_modified=false;app::Save();status="Shader preset loaded.";return true;
     }catch(const std::exception& e){status=e.what();return false;}
 }
+std::vector<std::string> TenchuPhysicsPresets(){
+    std::vector<std::string> names;
+    try{auto file=ReadPhysicsPresets();if(auto* presets=file["presets"].as_table())for(auto&& [key,value]:*presets)if(value.is_table())names.emplace_back(key.str());}catch(...){}
+    return names;
+}
+bool TenchuSavePhysicsPreset(const std::string& name,std::string& status){
+    if(name.empty()||name.size()>64||name.find_first_not_of(' ')==std::string::npos||name.find_first_of("\r\n\t")!=std::string::npos||name.find('\0')!=std::string::npos){status="Enter a preset name (1-64 characters).";return false;}
+    try{
+        auto file=ReadPhysicsPresets();if(!file["presets"].is_table())file.insert_or_assign("presets",toml::table{});
+        file["presets"].as_table()->insert_or_assign(name,PhysicsSettings());
+        auto temp=PhysicsPresetsFile();temp+=L".tmp";
+        {std::ofstream out(temp);out<<file;out.close();if(!out)throw std::runtime_error("Cannot write physics presets.");}
+        if(!MoveFileExW(temp.c_str(),PhysicsPresetsFile().c_str(),MOVEFILE_REPLACE_EXISTING|MOVEFILE_WRITE_THROUGH))throw std::runtime_error("Cannot replace physics presets file.");
+        g_tenchu_physics_preset=name;g_tenchu_physics_modified=false;app::Save();status="Physics preset saved.";return true;
+    }catch(const std::exception& e){status=e.what();return false;}
+}
+bool TenchuLoadPhysicsPreset(const std::string& name,std::string& status){
+    try{
+        auto file=ReadPhysicsPresets();auto* presets=file["presets"].as_table();auto* preset=presets?presets->get_as<toml::table>(name):nullptr;
+        if(!preset){status="Choose a saved physics preset.";return false;}
+        ApplyPhysics(*preset);g_tenchu_physics_preset=name;g_tenchu_physics_modified=false;app::Save();status="Physics preset loaded.";return true;
+    }catch(const std::exception& e){status=e.what();return false;}
+}
+void TenchuResetPhysicsSettings(){ApplyPhysics({});g_tenchu_physics_preset.clear();g_tenchu_physics_modified=false;app::Save();}
 void TenchuRestoreDefaults(){
     auto& s=app::Get();s.display_mode=app::DisplayMode::Windowed;s.width=640;s.height=480;s.vsync=true;s.fps_cap=60;
     g_tenchu_renderer=0;g_tenchu_widescreen=false;tenchu::wide::enabled=false;TenchuSetInternalPercent(100);
     g_tenchu_master_volume=100;g_tenchu_mute=false;g_tenchu_performance_overlay=false;g_tenchu_remember_camera=true;g_tenchu_debug_capture=false;TenchuUpdateMasterVolume();
     tenchu::motion::original_blur=false;
+    ApplyPhysics({});g_tenchu_physics_preset.clear();g_tenchu_physics_modified=false;
     tenchu::post::Reset();g_tenchu_shader_preset.clear();g_tenchu_shader_modified=false;
     tenchu::camera::Reset();link_profiles=false;keyboard_mouse=true;tenchu::cheats::god_mode=false;
     tenchu::cheats::second_player=false;tenchu::cheats::control_second=false;tenchu::cheats::single_screen=false;tenchu::cheats::story_start=false;tenchu::cheats::two_players_next=false;

@@ -4,6 +4,8 @@
 #include <windows.h>
 #include "cpu/x86_ops.h"
 #include "game_camera.h"
+#include "game_noclip.h"
+#include "flight_input.h"
 #include <chrono>
 #include <cstring>
 #include <cstdlib>
@@ -99,26 +101,14 @@ void TenchuCameraBegin(X86Context& ctx,uint8_t* base){
     const bool override_fov=run?running_custom_fov.load():custom_fov.load();
     const float degrees=run?running_fov.load():fov.load();
     if(!menu_open.load()){
-        motion.forward=Axis(pad.ly);motion.right=Axis(pad.lx);
-        motion.look_x=Axis(pad.rx);motion.look_y=Axis(pad.ry);
-        motion.up=(pad.analog[7]-pad.analog[6])/255.f;
-        motion.multiplier=pad.analog[4]?4.f:(pad.analog[5]?.25f:1.f);
+        motion=PadFlightMotion(pad);
     }
-    DWORD foreground=0;GetWindowThreadProcessId(GetForegroundWindow(),&foreground);
-    POINT cursor{};bool cursor_ok=GetCursorPos(&cursor)!=0;
-    if(photo&&keyboard_mouse.load()&&!menu_open.load()&&foreground==GetCurrentProcessId()){
-        auto held=[](int key){return (GetAsyncKeyState(key)&0x8000)!=0;};
-        motion.forward+=float(held('W'))-float(held('S'));motion.right+=float(held('D'))-float(held('A'));
-        motion.up+=float(held('E'))-float(held('Q'));
-        motion.look_x+=float(held(VK_RIGHT))-float(held(VK_LEFT));motion.look_y+=float(held(VK_UP))-float(held(VK_DOWN));
-        if(held(VK_SHIFT))motion.multiplier=4;if(held(VK_CONTROL))motion.multiplier=.25f;
-        if(held(VK_RBUTTON)&&cursor_ok&&saved.cursor_valid){motion.mouse_x=float(cursor.x-saved.cursor.x);motion.mouse_y=float(saved.cursor.y-cursor.y);}
-    }
-    saved.cursor=cursor;saved.cursor_valid=cursor_ok;
+    KeyboardFlightMotion(motion,photo,saved.cursor,saved.cursor_valid);
+    const bool flight=!photo&&tenchu::noclip::View(player,eye,target);
     if(photo){
         if(!saved.free.initialized){saved.free.Initialize(eye,target);LOGR("Camera: free camera acquired gameplay camera %08X",cam);}
         target=saved.free.Step(motion,dt,horizontal.load(),vertical.load(),invert_x.load(),invert_y.load());eye=saved.free.eye;
-    }else{
+    }else if(!flight){
         saved.free.initialized=false;
         if(saved.scripted){
             // Paused while the game drives the camera. Keep checking with a one-step
@@ -139,6 +129,8 @@ void TenchuCameraBegin(X86Context& ctx,uint8_t* base){
         }else saved.follow={};
         if(distance_scale==1&&!override_fov&&saved.follow.yaw==0&&saved.follow.pitch==0)return;
         eye=saved.follow.Apply(eye,target,distance_scale);
+    }else{
+        saved.free.initialized=false;saved.follow={};
     }
     saved.camera=cam;saved.projection=projection;saved.focal=Read<float>(base,projection);saved.camera_focal=focal;
     saved.eye=Read<Vec>(base,cam);saved.target=Read<Vec>(base,cam+0x40);

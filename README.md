@@ -33,9 +33,9 @@ higher resolutions, widescreen, Direct3D 12 or Vulkan, texture packs, mods, chea
 > You can also report it to Microsoft as a false positive at https://www.microsoft.com/wdsi/filesubmission, which helps clear the warning for everyone.
 
 
-## Getting started (Alpha 0.1.4, Windows)
+## Getting started (Alpha 0.1.5, Windows)
 
-1. Download `TenchuRFD-0.1.4-alpha-windows.zip` from [Releases](../../releases) and extract it to a folder you can
+1. Download `TenchuRFD-0.1.5-alpha-windows.zip` from [Releases](../../releases) and extract it to a folder you can
    write to, such as Documents (not Program Files). It needs about 6 GB free for the first start.
 2. Run **`TenchuRFD.exe`** and pick your `.iso` when asked (or put the `.iso` in the `assets` folder first). The
    location is remembered.
@@ -103,3 +103,7 @@ sources: no game files, no code generated from the game, and no binaries.
 The port's own code is MIT licensed ([LICENSE](LICENSE)). It builds on
 [XboxXBERecomp](https://github.com/TGP482/XboxXBERecomp) (MIT); the release includes the licenses of everything it
 ships. *Tenchu: Return from Darkness* belongs to its rights holders; this project is not affiliated with them.
+
+## Cloth physics
+
+F6 > Physics adds optional enhanced cloth, animated body/edge collision, bend resistance and global presets. Self-collision is optional and off by default. See [the physics guide](docs/cloth_physics.md) for controls and limits.

@@ -18,10 +18,15 @@
 
 namespace tenchu::patches {
 
+enum class Operation { Value, Mask, Add, Copy, Xor };
+
 struct Write {
     uint32_t va = 0;       // game address
     uint32_t value = 0;    // little endian, as Cheat Engine shows it
     uint8_t size = 4;      // bytes: 1, 2 or 4, from the value's hex digits; floats are 4
+    Operation operation = Operation::Value;
+    uint32_t argument = 0; // owned bits for Mask, saturation limit for Add
+    bool absolute = false; // GlobalAddress/GlobalCheck use a fixed global in a pointer patch
 };
 
 struct Patch {
@@ -29,6 +34,13 @@ struct Patch {
     std::string file;      // UTF-8 file name in the patches folder
     std::vector<Write> writes;
     std::vector<std::string> problems;  // lines that could not be read
+    // Optional file/patch metadata: resolve addresses inside this original
+    // object range through a fixed game pointer, on every live update.
+    uint32_t pointer = 0, original_base = 0, object_size = 0;
+    struct Check { Write read; std::string compare; std::vector<uint32_t> values; };
+    std::vector<Check> checks;
+    bool once = false, restore = true, strict = false;
+    bool noclip = false; // Controller=NoClip: frame-driven player flight, no periodic data writes
     std::string Id() const { return file + "|" + name; }
 };
 
@@ -45,7 +57,7 @@ std::vector<Range> CodeRanges(const std::function<const uint8_t*(uint32_t va, ui
 const Range* InCode(const Patch& p, const std::vector<Range>& code);
 
 // what a patch is doing, for F6 > Patches
-enum class State { Off, Active, Waiting, Outside };
+enum class State { Off, Active, Waiting, Outside, Applied, Queued, Skipped };
 
 // the patches folder, its patches and their switches; Apply writes enabled patches through map (game memory,
 // null where it is not readable and writable) and restores the bytes of patches turned off
@@ -55,7 +67,7 @@ public:
     void Load(std::vector<Patch> patches, const Map& map);  // keeps switches by Id, restores patches that went away
     void SetEnabled(const std::string& id, bool on);
     bool Enabled(const std::string& id) const;
-    void Apply(const Map& map);
+    void Apply(const Map& map, bool menu_open = false);
     State StateOf(const std::string& id) const;
     const std::vector<Patch>& Patches() const { return patches_; }
     std::vector<std::string> EnabledIds() const { return enabled_; }
@@ -66,6 +78,7 @@ private:
         std::string id;
         std::vector<std::vector<uint8_t>> original;  // per write, empty until it was first written
         State state = State::Off;
+        uint32_t object = 0; // allocation whose original bytes were captured
     };
     Saved& Slot(const std::string& id);
     void Restore(Saved& s, const Patch& p, const Map& map);
@@ -78,12 +91,15 @@ private:
 std::filesystem::path Folder();
 void Rescan();
 void Start();  // once the game is loaded: scans and starts writing
+void SetMenuOpen(bool open); // defer one-shot actions until the F6 menu closes
+bool MenuOpen();
 struct Status {
     std::string id, name, author, notes, file;
     std::vector<std::string> problems;
     std::string code;  // the code section a write lands in, empty when none
     bool enabled = false;
     State state = State::Off;
+    bool once = false;
 };
 std::vector<Status> List();
 void SetEnabled(const std::string& id, bool on);

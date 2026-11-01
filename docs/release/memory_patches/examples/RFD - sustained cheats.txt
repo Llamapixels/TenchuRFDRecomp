@@ -1,0 +1,224 @@
+Requires the updated RFD data-action patch loader. Older loaders ignore DataAddress.
+One-shots stay checked while F6 is open, run once when it closes, and automatically uncheck.
+Other checkboxes sustain effects until unchecked. All new entries start off.
+
+[Keep Kuji meter full - P1]
+Author=RFD executable research
+Notes=Keeps the meter at 36 in gameplay. Uncheck to stop refilling; leaves the current meter amount.
+Restore=No
+GlobalCheck,008E38BC,value,0003
+DataAddress,008E40AA,value,0024,2 bytes
+
+[Attack power x5 until unchecked - P1]
+Author=RFD executable research
+Notes=Owns only this player power bit. Uncheck restores its previous state; unrelated cheat flags are preserved.
+GlobalCheck,008E38BC,value,0003
+DataAddress,01BAA8C0,mask,00100000,00100000,4 bytes
+
+[Keep Kuji meter full - P2]
+Author=RFD executable research
+Notes=Keeps the meter at 36 in gameplay. Uncheck to stop refilling; leaves the current meter amount.
+Restore=No
+GlobalCheck,008E38BC,value,0003
+DataAddress,008E40C6,value,0024,2 bytes
+
+[Attack power x5 until unchecked - P2]
+Author=RFD executable research
+Notes=Owns only this player power bit. Uncheck restores its previous state; unrelated cheat flags are preserved.
+GlobalCheck,008E38BC,value,0003
+DataAddress,01BAA8C0,mask,00200000,00200000,4 bytes
+
+[Unlimited item capacity until unchecked]
+Author=RFD executable research
+Notes=Use on item selection. Holds the original unlimited-capacity flag; uncheck restores only that bit. Already selected inventory is retained.
+GlobalCheck,008E38BC,value,0008
+DataAddress,01BAA8C0,mask,00001000,00001000,4 bytes
+
+[Show score until unchecked]
+Author=RFD executable research
+Notes=Holds the original score/time display bit and restores its prior state when unchecked.
+GlobalCheck,008E38BC,value,0003
+DataAddress,01BAADAC,mask,00000001,00000001,4 bytes
+
+[Unlock all missions while browsing]
+Author=RFD executable research
+Notes=Keep enabled on mission selection. Repeats the original request as you browse characters/missions. Uncheck stops requests; earned unlocks remain.
+GlobalCheck,008E38BC,value,0009
+DataAddress,01BAA8C0,mask,00004000,00004000,4 bytes
+
+[Unlock all layouts while browsing]
+Author=RFD executable research
+Notes=Keep enabled on mission selection. Repeats the original request as you browse characters/missions. Uncheck stops requests; earned unlocks remain.
+GlobalCheck,008E38BC,value,0009
+DataAddress,01BAA8C0,mask,00008000,00008000,4 bytes
+
+[Keep all ninja-item stock full - Rikimaru]
+Author=RFD executable research
+Notes=Unlock all ninja items first. Keeps each stored item at its original maximum on item selection; waits unless every item in this character list is unlocked. Does not replace carried inventory.
+Restore=No
+GlobalCheck,008E38BC,value,0008
+GlobalCheck,008E40A8,value,0000
+GlobalCheck,01BD02E4,mask,0002
+GlobalCheck,01BD02DC,mask,0002
+GlobalCheck,01BD02F0,mask,0002
+GlobalCheck,01BD02F8,mask,0002
+GlobalCheck,01BD02FC,mask,0002
+GlobalCheck,01BD0350,mask,0002
+GlobalCheck,01BD02E8,mask,0002
+GlobalCheck,01BD02F4,mask,0002
+GlobalCheck,01BD0300,mask,0002
+GlobalCheck,01BD0354,mask,0002
+GlobalCheck,01BD034C,mask,0002
+GlobalCheck,01BD0344,mask,0002
+GlobalCheck,01BD02B4,mask,0002
+GlobalCheck,01BD02AC,mask,0002
+GlobalCheck,01BD02C0,mask,0002
+GlobalCheck,01BD02D4,mask,0002
+GlobalCheck,01BD02BC,mask,0002
+GlobalCheck,01BD02CC,mask,0002
+GlobalCheck,01BD02C4,mask,0002
+GlobalCheck,01BD02D0,mask,0002
+GlobalCheck,01BD02C8,mask,0002
+GlobalCheck,01BD02B0,mask,0002
+GlobalCheck,01BD0318,mask,0002
+GlobalCheck,01BD02D8,mask,0002
+GlobalCheck,01BD02A8,mask,0002
+GlobalCheck,01BD0348,mask,0002
+GlobalCheck,01BD032C,mask,0002
+GlobalCheck,01BD0330,mask,0002
+GlobalCheck,01BD038C,mask,0002
+GlobalCheck,01BD0388,mask,0002
+DataAddress,01BD02E6,value,0063,2 bytes
+DataAddress,01BD02DE,value,0063,2 bytes
+DataAddress,01BD02F2,value,0063,2 bytes
+DataAddress,01BD02FA,value,0063,2 bytes
+DataAddress,01BD02FE,value,0063,2 bytes
+DataAddress,01BD0352,value,0001,2 bytes
+DataAddress,01BD02EA,value,0063,2 bytes
+DataAddress,01BD02F6,value,0001,2 bytes
+DataAddress,01BD0302,value,0063,2 bytes
+DataAddress,01BD0356,value,0001,2 bytes
+DataAddress,01BD034E,value,0063,2 bytes
+DataAddress,01BD0346,value,0063,2 bytes
+DataAddress,01BD02B6,value,0063,2 bytes
+DataAddress,01BD02AE,value,0063,2 bytes
+DataAddress,01BD02C2,value,0063,2 bytes
+DataAddress,01BD02D6,value,0063,2 bytes
+DataAddress,01BD02BE,value,0063,2 bytes
+DataAddress,01BD02CE,value,0063,2 bytes
+DataAddress,01BD02C6,value,0063,2 bytes
+DataAddress,01BD02D2,value,0063,2 bytes
+DataAddress,01BD02CA,value,0063,2 bytes
+DataAddress,01BD02B2,value,0063,2 bytes
+DataAddress,01BD031A,value,0063,2 bytes
+DataAddress,01BD02DA,value,0063,2 bytes
+DataAddress,01BD02AA,value,0063,2 bytes
+DataAddress,01BD034A,value,0063,2 bytes
+DataAddress,01BD032E,value,0001,2 bytes
+DataAddress,01BD0332,value,0001,2 bytes
+DataAddress,01BD038E,value,0063,2 bytes
+DataAddress,01BD038A,value,0063,2 bytes
+
+[Keep all ninja-item stock full - Ayame]
+Author=RFD executable research
+Notes=Unlock all ninja items first. Keeps each stored item at its original maximum on item selection; waits unless every item in this character list is unlocked. Does not replace carried inventory.
+Restore=No
+GlobalCheck,008E38BC,value,0008
+GlobalCheck,008E40A8,value,0001
+GlobalCheck,01BD02E4,mask,0002
+GlobalCheck,01BD02DC,mask,0002
+GlobalCheck,01BD02F0,mask,0002
+GlobalCheck,01BD02F8,mask,0002
+GlobalCheck,01BD02FC,mask,0002
+GlobalCheck,01BD0350,mask,0002
+GlobalCheck,01BD02E8,mask,0002
+GlobalCheck,01BD02F4,mask,0002
+GlobalCheck,01BD0300,mask,0002
+GlobalCheck,01BD0354,mask,0002
+GlobalCheck,01BD034C,mask,0002
+GlobalCheck,01BD0344,mask,0002
+GlobalCheck,01BD02B4,mask,0002
+GlobalCheck,01BD02AC,mask,0002
+GlobalCheck,01BD02C0,mask,0002
+GlobalCheck,01BD02D4,mask,0002
+GlobalCheck,01BD02BC,mask,0002
+GlobalCheck,01BD02CC,mask,0002
+GlobalCheck,01BD02C4,mask,0002
+GlobalCheck,01BD02D0,mask,0002
+GlobalCheck,01BD02C8,mask,0002
+GlobalCheck,01BD02B0,mask,0002
+GlobalCheck,01BD0318,mask,0002
+GlobalCheck,01BD02D8,mask,0002
+GlobalCheck,01BD02A8,mask,0002
+GlobalCheck,01BD0348,mask,0002
+GlobalCheck,01BD0338,mask,0002
+GlobalCheck,01BD033C,mask,0002
+GlobalCheck,01BD038C,mask,0002
+GlobalCheck,01BD0388,mask,0002
+DataAddress,01BD02E6,value,0063,2 bytes
+DataAddress,01BD02DE,value,0063,2 bytes
+DataAddress,01BD02F2,value,0063,2 bytes
+DataAddress,01BD02FA,value,0063,2 bytes
+DataAddress,01BD02FE,value,0063,2 bytes
+DataAddress,01BD0352,value,0001,2 bytes
+DataAddress,01BD02EA,value,0063,2 bytes
+DataAddress,01BD02F6,value,0001,2 bytes
+DataAddress,01BD0302,value,0063,2 bytes
+DataAddress,01BD0356,value,0001,2 bytes
+DataAddress,01BD034E,value,0063,2 bytes
+DataAddress,01BD0346,value,0063,2 bytes
+DataAddress,01BD02B6,value,0063,2 bytes
+DataAddress,01BD02AE,value,0063,2 bytes
+DataAddress,01BD02C2,value,0063,2 bytes
+DataAddress,01BD02D6,value,0063,2 bytes
+DataAddress,01BD02BE,value,0063,2 bytes
+DataAddress,01BD02CE,value,0063,2 bytes
+DataAddress,01BD02C6,value,0063,2 bytes
+DataAddress,01BD02D2,value,0063,2 bytes
+DataAddress,01BD02CA,value,0063,2 bytes
+DataAddress,01BD02B2,value,0063,2 bytes
+DataAddress,01BD031A,value,0063,2 bytes
+DataAddress,01BD02DA,value,0063,2 bytes
+DataAddress,01BD02AA,value,0063,2 bytes
+DataAddress,01BD034A,value,0063,2 bytes
+DataAddress,01BD033A,value,0001,2 bytes
+DataAddress,01BD033E,value,0001,2 bytes
+DataAddress,01BD038E,value,0063,2 bytes
+DataAddress,01BD038A,value,0063,2 bytes
+
+[Keep all ninja-item stock full - Tesshu]
+Author=RFD executable research
+Notes=Unlock all ninja items first. Keeps each stored item at its original maximum on item selection; waits unless every item in this character list is unlocked. Does not replace carried inventory.
+Restore=No
+GlobalCheck,008E38BC,value,0008
+GlobalCheck,008E40A8,value,0002
+GlobalCheck,01BD0308,mask,0002
+GlobalCheck,01BD0304,mask,0002
+GlobalCheck,01BD0314,mask,0002
+GlobalCheck,01BD02E8,mask,0002
+GlobalCheck,01BD030C,mask,0002
+GlobalCheck,01BD02A4,mask,0002
+GlobalCheck,01BD02B8,mask,0002
+GlobalCheck,01BD02AC,mask,0002
+GlobalCheck,01BD02BC,mask,0002
+GlobalCheck,01BD02CC,mask,0002
+GlobalCheck,01BD02C4,mask,0002
+GlobalCheck,01BD02B0,mask,0002
+GlobalCheck,01BD02D8,mask,0002
+GlobalCheck,01BD038C,mask,0002
+GlobalCheck,01BD0388,mask,0002
+DataAddress,01BD030A,value,0063,2 bytes
+DataAddress,01BD0306,value,0063,2 bytes
+DataAddress,01BD0316,value,0063,2 bytes
+DataAddress,01BD02EA,value,0063,2 bytes
+DataAddress,01BD030E,value,0063,2 bytes
+DataAddress,01BD02A6,value,0063,2 bytes
+DataAddress,01BD02BA,value,0063,2 bytes
+DataAddress,01BD02AE,value,0063,2 bytes
+DataAddress,01BD02BE,value,0063,2 bytes
+DataAddress,01BD02CE,value,0063,2 bytes
+DataAddress,01BD02C6,value,0063,2 bytes
+DataAddress,01BD02B2,value,0063,2 bytes
+DataAddress,01BD02DA,value,0063,2 bytes
+DataAddress,01BD038E,value,0063,2 bytes
+DataAddress,01BD038A,value,0063,2 bytes

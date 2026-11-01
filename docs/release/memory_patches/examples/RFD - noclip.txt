@@ -1,0 +1,10 @@
+Requires the RFD noclip flight runtime update. Older loaders ignore this entry.
+
+[No clip flight - P1]
+Author=RFD executable research
+Notes=PhotoCam controls: left stick move, right stick look, RT/LT up/down, RB/LB fast/slow. Keyboard: WASD move, E/Q up/down, arrows or hold right mouse to look, Shift/Ctrl fast/slow. Holds height with no input; jump/actions are withheld. PhotoCam and F6 pause flight movement. Uncheck in open space to resume normal physics.
+Controller=NoClip
+Pointer=01BAB110,00EC7D10,000007D8
+GlobalCheck,008E38BC,value,0003
+Check,00EC7D2B,value,59414C50
+Check,00EC80A3,value,00

@@ -15,8 +15,8 @@ void TenchuInitializeDisplayMenu();
 void TenchuRenderDisplayMenu(double);
 
 // Shown in the window title and the log, so every report names its build.
-#define TENCHU_VERSION "0.1.4"
-#define TENCHU_VERSION_W L"0.1.4"
+#define TENCHU_VERSION "0.1.5"
+#define TENCHU_VERSION_W L"0.1.5"
 
 namespace {
 void Loaded() {

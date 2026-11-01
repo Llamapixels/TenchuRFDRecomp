@@ -1,5 +1,35 @@
 # Changelog
 
+
+## 0.1.5-alpha
+
+### New
+- **F6 > Physics**: optional enhanced cloth simulation using existing models,
+  with smaller simulation steps, repeated stretch constraints and bend
+  resistance based on the original loaded cloth shape.
+- Animated body collision capsules and additional collision checks along cloth
+  edges. Capsule size and edge correction strength are adjustable.
+- Optional self-collision between nonlocal points and edges within each panel,
+  with adjustable strength and thickness. Self-collision starts off.
+- Global response speed, motion retention, gravity, stiffness and collision
+  controls, plus named physics presets with startup persistence.
+- Pointer-based memory patches that follow the current player allocation,
+  with guards and examples for player effects and items.
+- Original cheat action examples, including one-shot actions that run when F6
+  closes and automatically uncheck, and sustained checkbox variants.
+- No clip flight through the supplied patch example, using PhotoCam-style
+  controls and holding position when movement is released.
+
+### Packaging and testing
+- Keeps the existing Windows release layout, bundled first-start compiler,
+  Vulkan runtime, Visual C++ runtime, RFD Switchblade and patch examples.
+- No game files, generated game DLL, saves, personal settings or installed
+  mods/texture packs are included. Testers supply their own supported disc.
+- Physics is opt-in. Body capsules are approximate; self-collision is limited
+  to individual panels. Visual quality and model coverage need tester feedback.
+- Includes PHYSICS.txt, updated setup instructions and checksums. Matching
+  debug symbols are retained separately for crash analysis.
+
 ## 0.1.4-alpha
 
 ### New

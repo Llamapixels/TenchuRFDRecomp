@@ -10,6 +10,7 @@
 #include "graphics/screenshot.h"
 #include "graphics/post_processing.h"
 #include "graphics/cutscene_motion_blur.h"
+#include "cloth_solver.h"
 #include <imgui.h>
 #include <algorithm>
 #include <cstdio>
@@ -149,6 +150,76 @@ void TenchuRenderExtraTabs(){
         ImGui::TextWrapped("Restores the F6 settings, resets the camera and disables cheats. Game saves and saved graphics profiles are kept.");
         if(reset)ImGui::TextWrapped("Defaults restored. Restart to apply a renderer change.");
         if(ImGui::Button("Restart game##system")){app::Save();TenchuRequestRestart();}
+        ImGui::EndTabItem();
+    }
+    if(ImGui::BeginTabItem("Physics")){
+        auto modified=[](){g_tenchu_physics_modified=!g_tenchu_physics_preset.empty();};
+        bool enhanced=tenchu::cloth::enhanced.load();
+        if(ImGui::Checkbox("Enhanced cloth solver (experimental)",&enhanced)){tenchu::cloth::enhanced=enhanced;modified();app::Save();}
+        ImGui::TextWrapped("Global settings apply to all loaded cloth, including supported memory-patched characters. Hair needs existing cloth data.");
+        static char physics_name[65]="My physics";
+        static std::vector<std::string> physics_presets;
+        static std::string selected_physics,physics_status;
+        static int physics_frame=-2;
+        if(ImGui::GetFrameCount()!=physics_frame+1){
+            physics_presets=TenchuPhysicsPresets();
+            if(!g_tenchu_physics_preset.empty()){
+                selected_physics=g_tenchu_physics_preset;
+                std::snprintf(physics_name,sizeof(physics_name),"%s",selected_physics.c_str());
+            }
+        }
+        physics_frame=ImGui::GetFrameCount();
+        ImGui::InputText("Physics preset name",physics_name,sizeof(physics_name));
+        if(ImGui::Button("Save physics preset")&&TenchuSavePhysicsPreset(physics_name,physics_status)){
+            physics_presets=TenchuPhysicsPresets();selected_physics=physics_name;
+        }
+        if(ImGui::IsItemHovered())ImGui::SetTooltip("Saves every physics control. Saving with an existing name replaces that preset.");
+        if(ImGui::BeginCombo("Saved physics presets",selected_physics.empty()?"Choose a preset":selected_physics.c_str())){
+            for(const auto& name:physics_presets)if(ImGui::Selectable(name.c_str(),selected_physics==name)){
+                selected_physics=name;std::snprintf(physics_name,sizeof(physics_name),"%s",name.c_str());
+            }
+            ImGui::EndCombo();
+        }
+        ImGui::BeginDisabled(selected_physics.empty());
+        if(ImGui::Button("Load physics preset"))TenchuLoadPhysicsPreset(selected_physics,physics_status);
+        ImGui::EndDisabled();ImGui::SameLine();
+        if(ImGui::Button("Reset physics settings")){TenchuResetPhysicsSettings();physics_status="Physics defaults restored. Saved presets are kept.";}
+        if(!g_tenchu_physics_preset.empty())ImGui::Text("Active: %s%s",g_tenchu_physics_preset.c_str(),g_tenchu_physics_modified?" (modified)":"");
+        if(!physics_status.empty())ImGui::TextWrapped("%s",physics_status.c_str());
+        enhanced=tenchu::cloth::enhanced.load();
+        ImGui::BeginDisabled(!enhanced);
+        auto slider=[&](const char* label,std::atomic<float>& setting,float low,float high){
+            float value=setting.load()*100;
+            if(ImGui::SliderFloat(label,&value,low,high,"%.0f%%",ImGuiSliderFlags_AlwaysClamp)){setting=value/100;modified();}
+            if(ImGui::IsItemDeactivatedAfterEdit())app::Save();
+        };
+        ImGui::SeparatorText("Body collision");
+        bool collision=tenchu::cloth::body_collision.load();
+        if(ImGui::Checkbox("Cloth body collision",&collision)){tenchu::cloth::body_collision=collision;modified();app::Save();}
+        if(collision){
+            slider("Body collision size",tenchu::cloth::body_size,50,150);
+            bool edges=tenchu::cloth::edge_collision.load();
+            if(ImGui::Checkbox("Cloth edge collision",&edges)){tenchu::cloth::edge_collision=edges;modified();app::Save();}
+            if(edges)slider("Edge collision strength",tenchu::cloth::edge_strength,0,100);
+        }
+        ImGui::SeparatorText("Motion and shape");
+        slider("Cloth response speed",tenchu::cloth::response_speed,25,100);
+        slider("Motion retention",tenchu::cloth::settling_drag,50,100);
+        if(ImGui::IsItemHovered())ImGui::SetTooltip("Lower retention adds drag and settles flutter sooner. This multiplies the model's own damping.");
+        slider("Cloth gravity",tenchu::cloth::gravity_scale,0,200);
+        slider("Stretch stiffness",tenchu::cloth::stretch_stiffness,25,100);
+        slider("Bend resistance",tenchu::cloth::bend_resistance,0,100);
+        if(ImGui::IsItemHovered())ImGui::SetTooltip("Resists folding away from the original loaded cloth shape. Higher values can look stiff.");
+        ImGui::SeparatorText("Self-collision");
+        bool self=tenchu::cloth::self_collision.load();
+        if(ImGui::Checkbox("Cloth self-collision",&self)){tenchu::cloth::self_collision=self;modified();app::Save();}
+        if(self){
+            slider("Self-collision strength",tenchu::cloth::self_strength,0,100);
+            slider("Self-collision thickness",tenchu::cloth::self_thickness,1,30);
+        }
+        ImGui::TextWrapped("Self-collision separates distant points and edges within each cloth panel. Start with a small thickness; it can cost performance or cause bunching on coarse models.");
+        ImGui::EndDisabled();
+        ImGui::TextWrapped("Body capsules approximate the animated skeleton. Reduce their size if cloth sits too far from the body. Turn off the enhanced solver for original behavior.");
         ImGui::EndTabItem();
     }
 }

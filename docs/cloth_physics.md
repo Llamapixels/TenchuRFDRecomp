@@ -1,0 +1,59 @@
+# Cloth physics
+
+```text
+TENCHU RFD - OPTIONAL ENHANCED CLOTH PHYSICS
+=========================================
+
+Open F6 > Physics and enable "Enhanced cloth solver (experimental)".
+The original solver remains the default on a clean installation. Switch
+the enhanced solver off at any time to compare with the original.
+
+Controls
+--------
+  Cloth response speed: lower values slow flutter and follow-through.
+    The enhanced default is 60%.
+  Motion retention: lower values add drag and settle excess motion.
+  Cloth gravity: scales the model's original cloth gravity.
+  Stretch stiffness: controls resistance to stretching.
+  Bend resistance: resists folding away from the model's loaded shape.
+  Cloth body collision: blocks cloth against rounded shapes following
+    the animated skeleton. Body collision size adjusts their thickness.
+  Cloth edge collision: also checks between connected vertices; strength
+    controls how firmly those edges are pushed outside the body.
+  Cloth self-collision: optional separation of distant points and edges
+    within a panel. Initially OFF. Strength controls correction and
+    thickness controls spacing relative to the model's cloth links.
+
+Presets
+-------
+  Enter a name and choose "Save physics preset" to save all physics
+  controls, including the enabled switches. Select a saved name and
+  choose "Load physics preset" to apply it. Reusing a name replaces it.
+  Presets apply globally, with no per-character assignments.
+
+  Named presets are stored in physics_presets.toml. Share that file to
+  share presets. Your current tuning is also saved in tenchu_startup.toml.
+  Physics reset preserves named presets. Camera, graphics, audio, cheats
+  and game saves are not part of a physics preset.
+
+Limits and suggested tests
+--------------------------
+  Models must already contain cloth simulation data. A mesh name alone
+  does not create physics. Body capsules use the loaded model's supported
+  body joints, including standard characters loaded through memory patches.
+  Custom skeletons and unusual outfits may need additional support or
+  a different collision size.
+
+  Body capsules approximate the body rather than matching its triangles.
+  Self-collision currently works within each cloth panel, not between
+  separate panels or against complete triangle surfaces. Coarse meshes
+  can still clip. High self-collision thickness can bunch cloth and dense
+  panels can cost performance. Start with small adjustments.
+
+  Compare standing, running, sharp turns, jumping and landing. Try the
+  original and enhanced solvers, then test bend and collision controls
+  separately. Save/load a preset and check that it survives a restart.
+  For a report, include the character/model, mission, preset/settings,
+  whether the character was memory-patched, and a video if practical.
+
+```

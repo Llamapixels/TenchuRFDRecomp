@@ -1,0 +1,195 @@
+Requires the updated RFD data-action patch loader. Older loaders ignore DataAddress.
+One-shots stay checked while F6 is open, run once when it closes, and automatically uncheck.
+Other checkboxes sustain effects until unchecked. All new entries start off.
+
+[Unlock Super Shuriken]
+Author=RFD executable research
+Notes=Tick this, then close F6 to run once. Activate on item selection. Unlocks this item and adds one to stored stock, capped at 99. Refresh/reopen the list if needed; normal game saving can retain it.
+Mode=Once
+GlobalCheck,008E38BC,value,0008
+DataAddress,01BD02FC,mask,0002,0002,2 bytes
+DataAddress,01BD02FE,add,0001,0063,2 bytes
+
+[Keep Super Shuriken stock full]
+Author=RFD executable research
+Notes=Keeps already-unlocked stored stock at its original maximum while on item selection. Does not replace carried inventory. Uncheck leaves the current amount.
+Restore=No
+GlobalCheck,008E38BC,value,0008
+GlobalCheck,01BD02FC,mask,0002
+DataAddress,01BD02FE,value,0063,2 bytes
+
+[Unlock Exploding Arrows]
+Author=RFD executable research
+Notes=Tick this, then close F6 to run once. Activate on item selection. Unlocks this item and adds one to stored stock, capped at 99. Refresh/reopen the list if needed; normal game saving can retain it.
+Mode=Once
+GlobalCheck,008E38BC,value,0008
+DataAddress,01BD02E8,mask,0002,0002,2 bytes
+DataAddress,01BD02EA,add,0001,0063,2 bytes
+
+[Keep Exploding Arrows stock full]
+Author=RFD executable research
+Notes=Keeps already-unlocked stored stock at its original maximum while on item selection. Does not replace carried inventory. Uncheck leaves the current amount.
+Restore=No
+GlobalCheck,008E38BC,value,0008
+GlobalCheck,01BD02E8,mask,0002
+DataAddress,01BD02EA,value,0063,2 bytes
+
+[Unlock Chameleon Spell]
+Author=RFD executable research
+Notes=Tick this, then close F6 to run once. Activate on item selection. Unlocks this item and adds one to stored stock, capped at 99. Refresh/reopen the list if needed; normal game saving can retain it.
+Mode=Once
+GlobalCheck,008E38BC,value,0008
+DataAddress,01BD02F0,mask,0002,0002,2 bytes
+DataAddress,01BD02F2,add,0001,0063,2 bytes
+
+[Keep Chameleon Spell stock full]
+Author=RFD executable research
+Notes=Keeps already-unlocked stored stock at its original maximum while on item selection. Does not replace carried inventory. Uncheck leaves the current amount.
+Restore=No
+GlobalCheck,008E38BC,value,0008
+GlobalCheck,01BD02F0,mask,0002
+DataAddress,01BD02F2,value,0063,2 bytes
+
+[Unlock Flash Bomb]
+Author=RFD executable research
+Notes=Tick this, then close F6 to run once. Activate on item selection. Unlocks this item and adds one to stored stock, capped at 99. Refresh/reopen the list if needed; normal game saving can retain it.
+Mode=Once
+GlobalCheck,008E38BC,value,0008
+DataAddress,01BD038C,mask,0002,0002,2 bytes
+DataAddress,01BD038E,add,0001,0063,2 bytes
+
+[Keep Flash Bomb stock full]
+Author=RFD executable research
+Notes=Keeps already-unlocked stored stock at its original maximum while on item selection. Does not replace carried inventory. Uncheck leaves the current amount.
+Restore=No
+GlobalCheck,008E38BC,value,0008
+GlobalCheck,01BD038C,mask,0002
+DataAddress,01BD038E,value,0063,2 bytes
+
+[Unlock Dog Bone]
+Author=RFD executable research
+Notes=Tick this, then close F6 to run once. Activate on item selection. Unlocks this item and adds one to stored stock, capped at 99. Refresh/reopen the list if needed; normal game saving can retain it.
+Mode=Once
+GlobalCheck,008E38BC,value,0008
+DataAddress,01BD0300,mask,0002,0002,2 bytes
+DataAddress,01BD0302,add,0001,0063,2 bytes
+
+[Keep Dog Bone stock full]
+Author=RFD executable research
+Notes=Keeps already-unlocked stored stock at its original maximum while on item selection. Does not replace carried inventory. Uncheck leaves the current amount.
+Restore=No
+GlobalCheck,008E38BC,value,0008
+GlobalCheck,01BD0300,mask,0002
+DataAddress,01BD0302,value,0063,2 bytes
+
+[Unlock Invisibility Spell]
+Author=RFD executable research
+Notes=Tick this, then close F6 to run once. Activate on item selection. Unlocks this item and adds one to stored stock, capped at 99. Refresh/reopen the list if needed; normal game saving can retain it.
+Mode=Once
+GlobalCheck,008E38BC,value,0008
+DataAddress,01BD02E4,mask,0002,0002,2 bytes
+DataAddress,01BD02E6,add,0001,0063,2 bytes
+
+[Keep Invisibility Spell stock full]
+Author=RFD executable research
+Notes=Keeps already-unlocked stored stock at its original maximum while on item selection. Does not replace carried inventory. Uncheck leaves the current amount.
+Restore=No
+GlobalCheck,008E38BC,value,0008
+GlobalCheck,01BD02E4,mask,0002
+DataAddress,01BD02E6,value,0063,2 bytes
+
+[Unlock Fire Spell]
+Author=RFD executable research
+Notes=Tick this, then close F6 to run once. Activate on item selection. Unlocks this item and adds one to stored stock, capped at 99. Refresh/reopen the list if needed; normal game saving can retain it.
+Mode=Once
+GlobalCheck,008E38BC,value,0008
+DataAddress,01BD02DC,mask,0002,0002,2 bytes
+DataAddress,01BD02DE,add,0001,0063,2 bytes
+
+[Keep Fire Spell stock full]
+Author=RFD executable research
+Notes=Keeps already-unlocked stored stock at its original maximum while on item selection. Does not replace carried inventory. Uncheck leaves the current amount.
+Restore=No
+GlobalCheck,008E38BC,value,0008
+GlobalCheck,01BD02DC,mask,0002
+DataAddress,01BD02DE,value,0063,2 bytes
+
+[Unlock Viper Potion]
+Author=RFD executable research
+Notes=Tick this, then close F6 to run once. Activate on item selection. Unlocks this item and adds one to stored stock, capped at 99. Refresh/reopen the list if needed; normal game saving can retain it.
+Mode=Once
+GlobalCheck,008E38BC,value,0008
+DataAddress,01BD0388,mask,0002,0002,2 bytes
+DataAddress,01BD038A,add,0001,0063,2 bytes
+
+[Keep Viper Potion stock full]
+Author=RFD executable research
+Notes=Keeps already-unlocked stored stock at its original maximum while on item selection. Does not replace carried inventory. Uncheck leaves the current amount.
+Restore=No
+GlobalCheck,008E38BC,value,0008
+GlobalCheck,01BD0388,mask,0002
+DataAddress,01BD038A,value,0063,2 bytes
+
+[Unlock Ninja Armor]
+Author=RFD executable research
+Notes=Tick this, then close F6 to run once. Activate on item selection. Unlocks this item and adds one to stored stock, capped at 99. Refresh/reopen the list if needed; normal game saving can retain it.
+Mode=Once
+GlobalCheck,008E38BC,value,0008
+DataAddress,01BD02F4,mask,0002,0002,2 bytes
+DataAddress,01BD02F6,add,0001,0063,2 bytes
+
+[Keep Ninja Armor stock full]
+Author=RFD executable research
+Notes=Keeps already-unlocked stored stock at its original maximum while on item selection. Does not replace carried inventory. Uncheck leaves the current amount.
+Restore=No
+GlobalCheck,008E38BC,value,0008
+GlobalCheck,01BD02F4,mask,0002
+DataAddress,01BD02F6,value,0001,2 bytes
+
+[Unlock Fireworks]
+Author=RFD executable research
+Notes=Tick this, then close F6 to run once. Activate on item selection. Unlocks this item and adds one to stored stock, capped at 99. Refresh/reopen the list if needed; normal game saving can retain it.
+Mode=Once
+GlobalCheck,008E38BC,value,0008
+DataAddress,01BD0348,mask,0002,0002,2 bytes
+DataAddress,01BD034A,add,0001,0063,2 bytes
+
+[Keep Fireworks stock full]
+Author=RFD executable research
+Notes=Keeps already-unlocked stored stock at its original maximum while on item selection. Does not replace carried inventory. Uncheck leaves the current amount.
+Restore=No
+GlobalCheck,008E38BC,value,0008
+GlobalCheck,01BD0348,mask,0002
+DataAddress,01BD034A,value,0063,2 bytes
+
+[Unlock Decoy Whistle]
+Author=RFD executable research
+Notes=Tick this, then close F6 to run once. Activate on item selection. Unlocks this item and adds one to stored stock, capped at 99. Refresh/reopen the list if needed; normal game saving can retain it.
+Mode=Once
+GlobalCheck,008E38BC,value,0008
+DataAddress,01BD0350,mask,0002,0002,2 bytes
+DataAddress,01BD0352,add,0001,0063,2 bytes
+
+[Keep Decoy Whistle stock full]
+Author=RFD executable research
+Notes=Keeps already-unlocked stored stock at its original maximum while on item selection. Does not replace carried inventory. Uncheck leaves the current amount.
+Restore=No
+GlobalCheck,008E38BC,value,0008
+GlobalCheck,01BD0350,mask,0002
+DataAddress,01BD0352,value,0001,2 bytes
+
+[Unlock Binding Spell]
+Author=RFD executable research
+Notes=Tick this, then close F6 to run once. Activate on item selection. Unlocks this item and adds one to stored stock, capped at 99. Refresh/reopen the list if needed; normal game saving can retain it.
+Mode=Once
+GlobalCheck,008E38BC,value,0008
+DataAddress,01BD034C,mask,0002,0002,2 bytes
+DataAddress,01BD034E,add,0001,0063,2 bytes
+
+[Keep Binding Spell stock full]
+Author=RFD executable research
+Notes=Keeps already-unlocked stored stock at its original maximum while on item selection. Does not replace carried inventory. Uncheck leaves the current amount.
+Restore=No
+GlobalCheck,008E38BC,value,0008
+GlobalCheck,01BD034C,mask,0002
+DataAddress,01BD034E,value,0063,2 bytes

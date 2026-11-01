@@ -4,6 +4,7 @@
 #include "audio/master_volume.h"
 #include "game_camera.h"
 #include "game_cheats.h"
+#include "cloth_solver.h"
 #include "graphics/widescreen.h"
 #include "graphics/post_processing.h"
 #include "graphics/cutscene_motion_blur.h"
@@ -32,6 +33,24 @@ uint32_t kernel::Disc::Read(const Entry&,uint64_t,void*,uint32_t) const{return 0
 void TenchuSetInternalPercent(uint32_t value){g_tenchu_internal_percent=tenchu::ClampInternalPercent(value);}
 int main(){try{
     auto check=[](bool ok,const char* why){if(!ok)throw std::runtime_error(why);};
+    std::filesystem::remove(app::ExeDir()/"physics_presets.toml");
+    toml::table clothSaved;tenchu::cloth::enhanced=true;tenchu::cloth::body_collision=false;
+    tenchu::cloth::response_speed=.4f;tenchu::cloth::body_size=1.2f;TenchuSavePortSettings(&clothSaved);
+    tenchu::cloth::enhanced=false;TenchuLoadPortSettings(&clothSaved);
+    check(tenchu::cloth::enhanced,"enhanced cloth preference must roundtrip");
+    check(!tenchu::cloth::body_collision&&tenchu::cloth::response_speed==.4f&&tenchu::cloth::body_size==1.2f,"cloth speed and body collision settings must roundtrip");
+    toml::table legacy;TenchuLoadPortSettings(&legacy);
+    check(!tenchu::cloth::enhanced,"existing settings must retain original cloth by default");
+    check(tenchu::cloth::body_collision&&tenchu::cloth::response_speed==.6f&&tenchu::cloth::body_size==1.f,"cloth collision and heavier response defaults must apply to old settings");
+    toml::table invalidCloth{{"physics",toml::table{{"cloth_response_speed",std::numeric_limits<double>::infinity()},{"cloth_body_size",99.}}}};
+    TenchuLoadPortSettings(&invalidCloth);
+    check(tenchu::cloth::response_speed==.6f&&tenchu::cloth::body_size==1.5f,"cloth controls must reject nonfinite values and clamp unsafe sizes");
+    toml::table invalidShape{{"physics",toml::table{{"cloth_bend_resistance",99.},{"cloth_self_thickness",-2.},
+        {"cloth_stretch_stiffness",std::numeric_limits<double>::quiet_NaN()},{"cloth_gravity_scale",5.}}}};
+    TenchuLoadPortSettings(&invalidShape);
+    check(tenchu::cloth::bend_resistance==1&&tenchu::cloth::self_thickness==.01f&&
+        tenchu::cloth::stretch_stiffness==1&&tenchu::cloth::gravity_scale==2,"shape and collision sliders must validate serialized values");
+    TenchuLoadPortSettings(&legacy);
     std::filesystem::remove(app::ExeDir()/"graphics_profiles.toml");
     std::filesystem::remove(app::ExeDir()/"shader_presets.toml");
     g_tenchu_master_volume=150;TenchuUpdateMasterVolume();check(g_tenchu_master_volume==100&&tenchu::audio::master_gain==1,"volume must clamp");
@@ -89,11 +108,29 @@ int main(){try{
     check(TenchuSaveShaderPreset("My night look",status)&&TenchuShaderPresets().size()==1,"resaving preset must replace existing name");
     tenchu::post::values[9]=0;check(TenchuLoadShaderPreset("My night look",status)&&tenchu::post::values[9]==.6f,"overwrite must persist updated values");
     check(!TenchuSaveShaderPreset("",status)&&!TenchuSaveShaderPreset("  ",status)&&!TenchuLoadShaderPreset("missing",status)&&tenchu::post::values[9]==.6f,"invalid preset operations must not change current shader");
+    using namespace tenchu::cloth;
+    enhanced=true;body_collision=true;response_speed=.4f;body_size=1.2f;settling_drag=.8f;gravity_scale=1.3f;
+    stretch_stiffness=.75f;bend_resistance=.65f;edge_collision=false;edge_strength=.6f;
+    self_collision=true;self_strength=.7f;self_thickness=.12f;
+    check(TenchuSavePhysicsPreset("Heavy cloth",status),"physics preset must save to disk");
+    TenchuResetPhysicsSettings();check(!enhanced&&self_thickness==.08f&&TenchuPhysicsPresets().size()==1,"physics reset must keep named presets");
+    check(TenchuLoadPhysicsPreset("Heavy cloth",status),"physics preset must load from disk");
+    check(enhanced&&body_collision&&response_speed==.4f&&body_size==1.2f&&settling_drag==.8f&&gravity_scale==1.3f&&
+        stretch_stiffness==.75f&&bend_resistance==.65f&&!edge_collision&&edge_strength==.6f&&self_collision&&self_strength==.7f&&self_thickness==.12f,
+        "physics preset must roundtrip every solver control");
+    check(g_tenchu_master_volume==50&&horizontal==3,"physics presets must not change audio or camera");
+    bend_resistance=.2f;g_tenchu_physics_modified=true;toml::table physicsRestart;TenchuSavePortSettings(&physicsRestart);
+    TenchuResetPhysicsSettings();TenchuLoadPortSettings(&physicsRestart);
+    check(g_tenchu_physics_preset=="Heavy cloth"&&g_tenchu_physics_modified&&bend_resistance==.2f,"restart must retain preset identity and modified physics tuning");
+    check(TenchuSavePhysicsPreset("Heavy cloth",status)&&TenchuPhysicsPresets().size()==1,"saving a physics preset name again must replace it");
+    check(!TenchuSavePhysicsPreset("",status)&&!TenchuSavePhysicsPreset("   ",status)&&!TenchuLoadPhysicsPreset("missing",status)&&bend_resistance==.2f,
+        "invalid physics preset operations must not change current tuning");
     auto sentinel=app::ExeDir()/"game_save_sentinel.txt";{std::ofstream f(sentinel);f<<"keep";}
     g_tenchu_performance_overlay=true;g_tenchu_mute=true;free_requested=true;tenchu::cheats::god_mode=true;
     TenchuRestoreDefaults();
     check(settings.display_mode==app::DisplayMode::Windowed&&settings.width==640&&settings.height==480&&settings.vsync&&settings.fps_cap==60,"reset must restore display defaults");
     check(g_tenchu_renderer==0&&!g_tenchu_widescreen&&g_tenchu_internal_percent==100&&g_tenchu_master_volume==100&&!g_tenchu_mute&&!g_tenchu_performance_overlay&&!free_requested&&!tenchu::cheats::god_mode,"reset must restore F6 preferences");
     check(TenchuGraphicsProfiles().size()==1&&TenchuShaderPresets().size()==1&&g_tenchu_shader_preset.empty()&&std::filesystem::exists(sentinel),"reset must preserve profiles and saves");
+    check(TenchuPhysicsPresets().size()==1&&g_tenchu_physics_preset.empty()&&!enhanced,"system reset must preserve saved physics presets");
     puts("PASS: stereo volume/mute, safe camera persistence, autosave timing, profile disk roundtrip, screenshots and non-destructive defaults");
 }catch(const std::exception& e){puts(e.what());return 1;}}
