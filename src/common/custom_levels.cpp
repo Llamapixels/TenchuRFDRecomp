@@ -49,6 +49,7 @@ struct Patch {
 };
 struct Prepared {
     std::string folder;
+    int stage = -1;
     std::vector<Patch> patches;
     int32_t enemy_offset = -1;  // where enemies.bin is served in EN_SDATA.BIN, -1 without one
     uint32_t enemy_size = 0;
@@ -578,6 +579,7 @@ bool Activate(const std::string& folder, std::string& status) {
                     entry[1] = int32_t(next->enemy_size);
                     std::memcpy(p, entry, 8);
                 }
+        next->stage = info.stage;
         g_active = next;
         g_any = true;
         status = info.name + " loads with stage " + std::to_string(info.stage) + "'s mission";
@@ -596,6 +598,12 @@ bool Activate(const std::string& folder, std::string& status) {
 std::string Active() {
     std::lock_guard l(g_lock);
     return g_active ? g_active->folder : std::string();
+}
+
+int ActiveStage() {
+    if (!g_any.load(std::memory_order_relaxed)) return -1;
+    std::lock_guard l(g_lock);
+    return g_active ? g_active->stage : -1;
 }
 
 void PatchRead(const std::string& xbox_path, uint64_t offset, uint8_t* data, size_t size) {

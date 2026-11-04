@@ -108,6 +108,7 @@ const MissionEnemies& StageEnemies(const StageInfo& stage);
 // what a kind is: its model folder in m.con and character type, e.g. "EM00 (type 2E)"; EM are enemies,
 // BS bosses and story characters, NPC people
 std::string EnemyKindName(int kind);
+const std::vector<int>& EnemyKinds();
 // a light the stage's own code places from a table in default.xbe (candles, lanterns, torches, paper
 // lanterns); a level can move it or take it away, the stage keeps its number of each
 struct Light {
@@ -129,6 +130,7 @@ struct MissionItems {
     int room = 0;             // how many a level can have: the stage's longest list
 };
 const MissionItems& StageItems(const StageInfo& stage);  // read once; story stages 0-9
+std::string ItemName(int id);
 struct Level;
 fs::path ModelPath(const Level& level, const Model& model);
 fs::path LevelFile(const Level& level, const std::string& file);  // a model or picture path as the level keeps it

@@ -1,0 +1,53 @@
+TENCHU RFD - JOIN CODES (EARLY TESTING)
+
+Multiplayer is in early testing. Co-op, versus and joining again right after a
+match work, on one PC and over the internet between two PCs. Known problems:
+  - Player 2's own movement and attacks respond late. The host plays player 2
+    from the inputs it receives, so every move travels to the host and back.
+    This version shortens the waiting the game adds on each side; the trip
+    itself remains, and grows with the distance between the players.
+  - With the modern third-person camera on (F6 > Camera), player 2's view does
+    not follow. Turn it off on player 2's PC.
+After a session, please send the logs folder from both PCs: tenchu_startup.log
+has "Online queue" lines that show how long each side waited.
+
+Use the normal TenchuRFD.exe on each PC. Each player needs the same compatible
+online build and their own game files, saves and local player profile.
+
+Internet play
+1. Both players: open F6 > Online and enable experimental online play. Set your
+   player name before signing in. Click Get my join code and wait for the router
+   result. This opts in to UPnP port forwarding, restored on subsequent launches.
+2. Host: click Use this PC as host, then Copy beside Your join code. Send that
+   code to your friend. Open Xbox Live from the title menu, choose your local
+   account and Create Match (co-op or versus).
+3. Guest: Paste the host's code in F6 > Online and click Join. Open Xbox Live and
+   use Quick Match or OptiMatch. Select the host; Host accepts the join request.
+
+Join selects the target for the game's matchmaking menu. It does not bypass
+the host's approval or automatically start a mission. Recent hosts remembers
+your last five selected codes. Clear / Use this PC as host returns to LAN search.
+
+Router result
+The status shows whether automatic forwarding succeeded. If it failed, a public
+code alone does not establish reachability. Enable UPnP on your router, forward
+the ports manually, or use a virtual LAN. Manual forwarding on each PC's router:
+UDP 1000, UDP 1001, TCP 1002 and UDP 47626 (default session directory).
+Allow TenchuRFD.exe through Windows Firewall. Both players must use the same
+directory port; a custom value is shown under LAN and advanced settings.
+
+Stop automatic router setup removes forwards still owned by this app on this
+PC and stops restoring them at startup. Normal shutdown also removes its rules.
+Existing manual rules and rules belonging to other applications are preserved.
+Some routers or providers (CGNAT / double NAT) prevent incoming connections;
+join codes do not provide a relay or a global Xbox Live match directory.
+
+LAN / virtual LAN
+Expand LAN and advanced settings. Share the host's LAN code when on the same
+network. For a VPN, enter this PC's virtual LAN IPv4 in Network address on each
+copy, save and restart; share the host's Network join code. No automatic router
+setup is needed. An empty host target also searches the local network.
+
+Codes use the same eight-character IPv4/checksum format as the Tenchu Z port.
+A code represents an address, so it changes if that address changes. It is not
+a private password. RFD's matches and native game ports remain specific to RFD.

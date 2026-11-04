@@ -49,7 +49,14 @@ Opened& Archive(const char* name) {
         const fs::path path = Extracted() / "Media" / name;
         std::error_code ec;
         std::string error;
-        slot->source = con::FileSource(path);
+        // FileSource owns a seekable stream. Thumbnail workers and the UI can
+        // request the same archive concurrently; serialize each complete read.
+        const auto source = con::FileSource(path);
+        const auto source_lock = std::make_shared<std::mutex>();
+        slot->source = [source, source_lock](uint64_t offset, void* out, uint32_t len) {
+            std::lock_guard read(*source_lock);
+            return source(offset, out, len);
+        };
         slot->ok = con::Parse(slot->source, fs::file_size(path, ec), slot->archive, error);
         for (const auto& e : slot->archive.entries) slot->by_key[Upper(e.name)] = &e;
     }
@@ -535,8 +542,7 @@ std::string EnemyKindName(int kind) {
     char type[16];
     std::snprintf(type, sizeof(type), "type %02X", kind & 0xFF);
     name = type;
-    Xbe x;
-    if (!LoadXbe(x)) return name;
+    static const Xbe x = [] { Xbe image; LoadXbe(image); return image; }();
     const uint32_t definition = x.Word(0x49BDC8 + uint32_t(kind & 0xFF) * 4);
     const uint8_t* model = x.At(definition + 1, 1);
     if (!model) return name;
@@ -544,6 +550,65 @@ std::string EnemyKindName(int kind) {
     if (auto slash = file.find('\\'); slash != std::string::npos) file.resize(slash);
     if (!file.empty()) name = file + " (" + type + ")";
     return name;
+}
+
+namespace {
+const auto& EnemyTemplates() {
+    static const auto templates = [] {
+        std::map<int, std::array<uint8_t, kEnemyEntry>> out;
+        Xbe x;
+        std::vector<uint8_t> file;
+        if (!LoadXbe(x) || !ReadFile(Extracted() / "Media" / "k2" / "ARC" / "EN_SDATA.BIN", file)) return out;
+        for (int layout = 0; layout < 9; ++layout) {
+            for (int stage = 0; stage < 10; ++stage) {
+                const uint32_t header = kEnemyChunks + layout * 0x50 + stage * 8;
+                const uint32_t offset = x.Word(header), size = x.Word(header + 4);
+                if (offset > file.size() || size > file.size() - offset) continue;
+                std::vector<uint8_t> chunk(file.begin() + offset, file.begin() + offset + size);
+                ChunkLayout parsed;
+                if (!ParseEnemyChunk(chunk, parsed)) continue;
+                for (int i = 0; i < parsed.enemies; ++i) {
+                    const auto* entry = chunk.data() + parsed.entries + size_t(i) * kEnemyEntry;
+                    const int kind = U32(entry) & 0xffff;
+                    auto [it, inserted] = out.try_emplace(kind);
+                    if (inserted) std::memcpy(it->second.data(), entry, kEnemyEntry);
+                }
+            }
+        }
+        return out;
+    }();
+    return templates;
+}
+}
+
+const std::vector<int>& EnemyKinds() {
+    static const auto kinds = [] {
+        std::vector<int> out;
+        for (const auto& [kind, entry] : EnemyTemplates()) out.push_back(kind);
+        return out;
+    }();
+    return kinds;
+}
+
+std::string ItemName(int id) {
+    // Retail pickup IDs use the model table at 0x458AC0. Reward names are
+    // cross-checked against the game's item-unlock table.
+    static const std::map<int, const char*> names{
+        {10000, "Grappling Hook"}, {10001, "Grappling Hook"}, {10002, "Grappling Hook"},
+        {10003, "Healing Potion"}, {10004, "Poison Antidote"}, {10005, "Shuriken"},
+        {10006, "Throwing Needle"}, {10007, "Blowgun"}, {10008, "Caltrops"},
+        {10009, "Grenade"}, {10010, "Mine"}, {10011, "Smoke Bomb"}, {10012, "Poison Rice"},
+        {10013, "Colored Rice"}, {10014, "Strength Potion"}, {10015, "Fire Spell"},
+        {10017, "Invisibility Spell"}, {10018, "Exploding Arrows"}, {10020, "Chameleon Spell"},
+        {10021, "Ninja Armor"}, {10023, "Super Shuriken"}, {10024, "Dog Bone"},
+        {10025, "Decoy Scroll"}, {10026, "Bamboo Gun"}, {10027, "Needle"},
+        {10041, "Bear Trap"}, {10042, "Fireworks"}, {10043, "Binding Spell"},
+        {10046, "Egg"}, {10048, "Rice Ball"}, {10049, "Gate Key"}, {10050, "Powder Box"},
+        {10051, "Mission Scroll"}, {10052, "Iron Ball"}, {10053, "Box"},
+        {10056, "Gold Coin"}, {10057, "Money Chest"}, {10058, "Viper Potion"}, {10059, "Flash Bomb"}
+    };
+    if (const auto found = names.find(id); found != names.end()) return found->second;
+    return {};
 }
 
 std::vector<uint8_t> EnemyChunk(const Level& level, const StageInfo& stage, std::string& error) {
@@ -556,15 +621,22 @@ std::vector<uint8_t> EnemyChunk(const Level& level, const StageInfo& stage, std:
     std::vector<std::vector<uint8_t>> entries, patrols;
     std::vector<std::vector<uint8_t>> lists;  // per enemy: its patrols' new numbers
     for (const Enemy& e : level.enemies) {
-        int from = e.source >= 0 && e.source < k.enemies ? e.source : -1;
+        int from = e.source >= 0 && e.source < k.enemies && mission.enemies[e.source].kind == e.kind ? e.source : -1;
         if (from < 0)  // a new one copies the mission's first enemy of its kind
             for (int i = 0; i < k.enemies && from < 0; i++)
                 if (mission.enemies[i].kind == e.kind) from = i;
-        if (from < 0) { error = "no enemy of kind " + std::to_string(e.kind) + " in " + StageLabel(stage); return {}; }
-        std::vector<uint8_t> en(entry(from), entry(from) + kEnemyEntry);
-        const Enemy& was = mission.enemies[from];
-        const bool unmoved = e.source == from && std::fabs(e.x - was.x) < 0.5f && std::fabs(e.y - was.y) < 0.5f &&
-                             std::fabs(e.z - was.z) < 0.5f && std::fabs(e.facing - was.facing) < 0.5f;
+        const uint8_t* model = from >= 0 ? entry(from) : nullptr;
+        if (!model) {
+            const auto& templates = EnemyTemplates();
+            const auto found = templates.find(e.kind);
+            if (found == templates.end()) { error = "unknown enemy kind " + std::to_string(e.kind); return {}; }
+            model = found->second.data();
+        }
+        std::vector<uint8_t> en(model, model + kEnemyEntry);
+        const Enemy& was = from >= 0 ? mission.enemies[from] : e;
+        const bool unmoved = from >= 0 && e.source == from && std::fabs(e.x - was.x) < 0.5f &&
+                             std::fabs(e.y - was.y) < 0.5f && std::fabs(e.z - was.z) < 0.5f &&
+                             std::fabs(e.facing - was.facing) < 0.5f;
         float pos[3] = {e.x, e.y, e.z};
         if (e.removed) { pos[0] = 0; pos[1] = -100000; pos[2] = 0; }  // where the mission keeps its unused ones
         const int16_t facing = int16_t(std::lround(e.facing));
@@ -763,6 +835,11 @@ std::vector<Triangle> LevelTriangles(const Level& level) {
             out.push_back(t);
         }
     }
+    // Ground/boxes can use portable pictures too. Resolve them after placement,
+    // so saved image:images/... references work just like model material pictures.
+    for (auto& triangle : out)
+        if (triangle.texture.rfind(kImage, 0) == 0)
+            triangle.texture = kImage + U8(LevelFile(level, triangle.texture.substr(sizeof(kImage) - 1)));
     return out;
 }
 
@@ -982,16 +1059,22 @@ bool SaveLevel(Level& level, const StageInfo& stage, std::string& error) {
         fs::path file;
         std::vector<uint8_t> px;
         uint32_t w = 0, h = 0;
+        std::vector<std::string> aliases;
     };
     std::vector<Picture> pictures;
-    for (const Model& m : level.models)
-        for (const std::string& image : m.images) {
-            if (image.empty()) continue;
-            Picture p{kImage + U8(LevelFile(level, image)), LevelFile(level, image)};
-            if (std::any_of(pictures.begin(), pictures.end(), [&](const Picture& q) { return q.texture == p.texture; })) continue;
-            if (!tenchu::packs::ReadImage(p.file, p.px, p.w, p.h)) { error = "cannot read the picture " + U8(p.file); return false; }
-            pictures.push_back(std::move(p));
-        }
+    std::set<std::string> picture_keys;
+    for (const Triangle& triangle : LevelTriangles(level)) {
+        if (triangle.texture.rfind(kImage, 0) != 0 || !picture_keys.insert(triangle.texture).second) continue;
+        Picture p{triangle.texture, FromU8(triangle.texture.substr(sizeof(kImage) - 1))};
+        if (!tenchu::packs::ReadImage(p.file, p.px, p.w, p.h)) { error = "cannot read the picture " + U8(p.file); return false; }
+        const auto same = std::find_if(pictures.begin(), pictures.end(), [&](const Picture& q) {
+            return p.w == q.w && p.h == q.h && p.px == q.px;
+        });
+        // A newly placed copy may still name the cache file while older copies
+        // name images/ in the saved level. Identical pixels share one game slot.
+        if (same != pictures.end()) same->aliases.push_back(p.texture);
+        else pictures.push_back(std::move(p));
+    }
     std::vector<FreeTexture> spare = pictures.empty() ? std::vector<FreeTexture>{} : FreeTextures(level, stage);
     if (pictures.size() > spare.size()) {
         error = std::to_string(pictures.size()) + " pictures, but " + StageLabel(stage) + " has " + std::to_string(spare.size()) +
@@ -1015,6 +1098,7 @@ bool SaveLevel(Level& level, const StageInfo& stage, std::string& error) {
         if (dds.empty() || dds.size() > t.file.size()) { error = "converting " + U8(p.file.filename()) + " did not fit the texture"; return false; }
         dds.resize(t.file.size(), 0);  // the game's files end in zeros up to whole 2048-byte sectors
         slots[p.texture] = t.entry;
+        for (const auto& alias : p.aliases) slots[alias] = t.entry;
         converted.push_back({t.entry.substr(t.entry.find_last_of('\\') + 1), std::move(dds)});
     }
     std::vector<std::vector<uint8_t>> meshes;
@@ -1041,22 +1125,40 @@ bool SaveLevel(Level& level, const StageInfo& stage, std::string& error) {
     // and their pictures into images\ (a different picture with a name already taken gets a number)
     std::map<std::string, std::string> copied;  // source -> path in the level
     std::set<std::string> names;
-    for (Model& m : level.models)
-        for (std::string& image : m.images) {
-            const fs::path from = FromU8(image);
-            if (image.empty() || !from.is_absolute()) continue;
-            std::string& to = copied[U8(from)];
-            if (to.empty()) {
-                fs::path name = from.filename();
-                for (int n = 2; names.count(Upper(U8(name))); n++)
-                    name = FromU8(U8(from.stem()) + "_" + std::to_string(n) + U8(from.extension()));
-                names.insert(Upper(U8(name)));
-                fs::create_directories(dir / "images", ec);
-                if (!fs::equivalent(from, dir / "images" / name, ec)) fs::copy_file(from, dir / "images" / name, fs::copy_options::overwrite_existing, ec);
-                to = U8(fs::path("images") / name);
-            }
-            image = to;
+    // Reserve existing names too: adding another cached texture.png after reopening
+    // a level must not overwrite the picture already used by a different surface.
+    for (const auto& e : fs::directory_iterator(dir / "images", ec)) names.insert(Upper(U8(e.path().filename())));
+    auto copy_picture = [&](std::string& image) {
+        const fs::path from = FromU8(image);
+        if (image.empty() || !from.is_absolute()) return true;
+        std::string& to = copied[U8(from)];
+        if (to.empty()) {
+            fs::path name = from.filename();
+            for (int n = 2; names.count(Upper(U8(name))); n++)
+                name = FromU8(U8(from.stem()) + "_" + std::to_string(n) + U8(from.extension()));
+            names.insert(Upper(U8(name)));
+            fs::create_directories(dir / "images", ec);
+            if (ec) { error = "cannot create the level's images folder"; return false; }
+            fs::copy_file(from, dir / "images" / name, fs::copy_options::overwrite_existing, ec);
+            if (ec) { error = "cannot copy the picture " + U8(from); return false; }
+            to = U8(fs::path("images") / name);
         }
+        image = to;
+        return true;
+    };
+    auto copy_texture = [&](std::string& texture) {
+        if (texture.rfind(kImage, 0) != 0) return true;
+        std::string image = texture.substr(sizeof(kImage) - 1);
+        if (!copy_picture(image)) return false;
+        texture = kImage + image;
+        return true;
+    };
+    if (!copy_texture(level.ground_texture)) return false;
+    for (Box& b : level.boxes) if (!copy_texture(b.texture)) return false;
+    for (Model& m : level.models) {
+        for (std::string& image : m.images) if (!copy_picture(image)) return false;
+        for (std::string& texture : m.textures) if (!copy_texture(texture)) return false;
+    }
     // the converted textures, named as the stage textures they replace; none left from an earlier save
     for (auto& e : fs::directory_iterator(dir / "textures", ec))
         if (Upper(U8(e.path().extension())) == ".DDS") fs::remove(e.path(), ec);

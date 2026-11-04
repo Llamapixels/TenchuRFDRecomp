@@ -8,6 +8,7 @@
 #include "graphics/frame_readback.h"
 #include "graphics/renderer_selection.h"
 #include "port/port_settings.h"
+#include "game_controls.h"
 #include <cstdlib>
 bool TenchuDisplayMenuMessage(uint32_t,uintptr_t,intptr_t,intptr_t*);
 
@@ -15,7 +16,8 @@ void TenchuCaptureCameraFrame(int phase){
     tenchu::camera_capture_phase=phase;
     tenchu::capture_next_presentation=true;
 }
-bool TenchuDiagnosticMessage(void*,uint32_t msg,uintptr_t key,intptr_t flags,intptr_t* result){
+bool TenchuDiagnosticMessage(void* window,uint32_t msg,uintptr_t key,intptr_t flags,intptr_t* result){
+    if(tenchu::controls::Message(window,msg,key,flags,result))return true;
     if(TenchuRendererMessage(msg,key,flags,result))return true;
     if(TenchuDisplayMenuMessage(msg,key,flags,result))return true;
     if(msg!=WM_KEYDOWN||key!=VK_F3)return false;

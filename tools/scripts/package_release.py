@@ -64,6 +64,8 @@ readme = (root / 'docs/release/README.txt').read_text(encoding='utf-8').replace(
 copy(root / 'tools/XboxXBERecomp/THIRD_PARTY.txt', out / 'licenses/THIRD_PARTY.txt')
 copy(root / 'tools/XboxXBERecomp/LICENSE', out / 'licenses/XboxXBERecomp-LICENSE.txt')
 copy(root / 'LICENSE', out / 'licenses/TenchuRFD-LICENSE.txt')
+copy(root / 'docs/release/TenchuZ-networking-LICENSE.txt', out / 'licenses/TenchuZ-networking-LICENSE.txt')
+copy(root / 'docs/release/ONLINE.txt', out / 'ONLINE.txt')
 copy(root / 'CHANGELOG.md', out / 'CHANGELOG.md')
 (out / 'PHYSICS.txt').write_text((root / 'docs/release/PHYSICS.txt').read_text(encoding='utf-8'), encoding='utf-8', newline='\r\n')
 copy(root / 'docs/pointer_patches.md', out / 'pointer_patches.md')

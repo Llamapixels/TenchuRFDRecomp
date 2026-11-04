@@ -46,11 +46,21 @@ bool TenchuVulkanAvailable(){
     return std::filesystem::is_regular_file(path/"dxgi.dll")&&std::filesystem::is_regular_file(path/"d3d12.dll")&&std::filesystem::is_regular_file(path/"d3d12core.dll");
 }
 void TenchuInitializeRenderer(){
-    if(g_tenchu_renderer>1)g_tenchu_renderer=0;
+    if(g_tenchu_renderer>1)g_tenchu_renderer=0;  // 2 was the removed RTX Remix renderer
     uint32_t choice=g_tenchu_renderer;
     wchar_t override_name[32]{};
     if(GetEnvironmentVariableW(L"TENCHU_RENDERER",override_name,32))choice=std::wstring(override_name)==L"vulkan"?1:0;
     active=choice;
+    // OBS's and Wallpaper Engine's capture hooks register as Vulkan implicit layers
+    // (C:\ProgramData\obs-studio-hook) and load into every Vulkan program, OBS running or not.
+    // With them in the present path, resizing a Vulkan window froze the game (the render thread
+    // inside both hooks, the window unanswered); without them it resizes cleanly. Both honour this
+    // switch. TENCHU_OBS_CAPTURE=1 keeps them, for OBS game capture of the Vulkan renderer.
+    if(choice==1){
+        wchar_t keep[8]{};
+        if(!GetEnvironmentVariableW(L"TENCHU_OBS_CAPTURE",keep,8)||std::wstring(keep)!=L"1")
+            SetEnvironmentVariableW(L"DISABLE_VULKAN_OBS_CAPTURE",L"1");
+    }
     if(choice==1){
         const auto log=app::ExeDir()/"logs"/"vulkan.log";
         SetEnvironmentVariableW(L"VKD3D_LOG_FILE",log.c_str());

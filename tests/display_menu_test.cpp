@@ -4,6 +4,7 @@
 #endif
 #include <windows.h>
 #include "app/app.h"
+void TenchuRenderOnlineTab(){} // online services have their own isolated transport/ABI fixture
 #include "core/log.h"
 #include "kernel/disc.h"
 #include "graphics/internal_resolution.h"
@@ -13,6 +14,7 @@
 #include <stdexcept>
 #include "game_cheats.h"
 #include "game_camera.h"
+#include "hud_settings.h"
 #include "graphics/widescreen.h"
 #include "port/port_settings.h"
 #include "port/memory_patches.h"
@@ -24,6 +26,7 @@ extern uint32_t g_tenchu_internal_percent;
 void TenchuInitializeDisplayMenu();
 void TenchuRenderDisplayMenu(double);
 bool TenchuDisplayMenuMessage(uint32_t,uintptr_t,intptr_t,intptr_t*);
+void TenchuDisplayMenuHotkey(bool);
 float TenchuInternalScale(uint32_t);
 static unsigned saves=0;static uint32_t saved=0;
 uint32_t g_tenchu_renderer=0;
@@ -39,6 +42,7 @@ app::Settings& app::Get(){static app::Settings settings;return settings;}
 void app::ApplyDisplay(){}
 std::filesystem::path app::ExeDir(){auto p=std::filesystem::current_path()/"test_artifacts"/"menu_test";std::filesystem::create_directories(p);return p;}
 void* app::Window(){return nullptr;}
+input::Pad input::Poll(int){return {};}
 namespace logx {void Write(Level,const char*,...){} }
 uint8_t* kernel::g_base=nullptr;  // memory patches: no game memory in this test
 const kernel::Disc* kernel::MountedDisc(){return nullptr;}
@@ -58,6 +62,12 @@ int main(){
         check(!(io.ConfigFlags&(ImGuiConfigFlags_NavEnableKeyboard|ImGuiConfigFlags_NavEnableGamepad)),"F6 menu must disable keyboard/controller navigation");
         check(TenchuDisplayMenuMessage(WM_KEYDOWN,VK_F6,0,&result),"F6 must be handled");
         frame();frame();check(ImGui::GetDrawData()->TotalVtxCount>0,"F6 must show menu");
+        TenchuDisplayMenuMessage(WM_KEYUP,VK_F6,0,&result);
+        TenchuDisplayMenuHotkey(true);TenchuDisplayMenuMessage(WM_KEYDOWN,VK_F6,0,&result);
+        frame();check(ImGui::GetDrawData()->TotalVtxCount==0,"poll and window message for one F6 press must not toggle twice");
+        TenchuDisplayMenuHotkey(false);TenchuDisplayMenuHotkey(true);TenchuDisplayMenuHotkey(true);
+        frame();frame();check(ImGui::GetDrawData()->TotalVtxCount>0,"polled F6 must work without a window message and ignore held repeats");
+        TenchuDisplayMenuHotkey(false);
         check(tenchu::patches::MenuOpen(),"F6 must defer one-shot patches while open");
         ImGui::SetWindowSize(ImGui::FindWindowByName("Tenchu: Return from Darkness (F6)"),{780,570});frame();frame();
         auto* nav_window=ImGui::FindWindowByName("Tenchu: Return from Darkness (F6)");
@@ -69,7 +79,7 @@ int main(){
             auto* window=ImGui::FindWindowByName("Tenchu: Return from Darkness (F6)");
             check(window!=nullptr,"menu window missing");
             auto* tabs=GImGui->TabBars.GetByKey(window->GetID("Display settings"));
-            check(tabs&&tabs->Tabs.Size==13,"menu categories missing");
+        check(tabs&&tabs->Tabs.Size==14,"menu categories missing");
             ImGui::ActivateItemByID(ImHashStr(label,0,tabs->Tabs[0].ID));frame();
         };
         activate("Restart game");check(restarts==1,"restart button must queue one game restart");
@@ -87,6 +97,8 @@ int main(){
         activate("16:9 widescreen (experimental)");
         check(!tenchu::wide::enabled&&app::Get().width==640&&app::Get().height==480,"disabling widescreen must restore native presentation");
         ImGui::SetScrollY(display_window,0);frame();frame();
+        activate("Show HUD");check(!tenchu::hud::shown,"Display HUD toggle must hide the gameplay overlay");
+        activate("Show HUD");check(tenchu::hud::shown,"Display HUD toggle must restore the overlay");
         auto* window=ImGui::FindWindowByName("Tenchu: Return from Darkness (F6)");
         auto* tabs=GImGui->TabBars.GetByKey(window->GetID("Display settings"));
         tabs->NextSelectedTabId=tabs->Tabs[1].ID;frame();frame();
@@ -125,7 +137,7 @@ int main(){
         check(!TenchuDisplayMenuMessage(WM_KEYDOWN,VK_ESCAPE,0,&result),"screenshot must hide F6 before capture");
         check(!tenchu::shots::NextFrame()&&!tenchu::shots::NextFrame()&&tenchu::shots::NextFrame(),"capture must wait until menu has disappeared");tenchu::shots::saving=false;
         frame();check(ImGui::GetDrawData()->TotalVtxCount>0,"performance overlay must remain visible with F6 closed");
-        TenchuDisplayMenuMessage(WM_KEYDOWN,VK_F6,0,&result);frame();frame();tab(6);
+        TenchuDisplayMenuMessage(WM_KEYDOWN,VK_F6,0,&result);TenchuDisplayMenuMessage(WM_KEYUP,VK_F6,0,&result);frame();frame();tab(6);
         click(6,"Enable shader preset");check(tenchu::post::enabled,"shader toggle must enable rendering controls");
         click(6,"Save shader preset");check(g_tenchu_shader_preset=="My shader"&&!TenchuShaderPresets().empty(),"shader save button must write named preset");
         click(6,"Split-screen compare");check(tenchu::post::compare,"split compare checkbox must reach renderer");
@@ -151,6 +163,10 @@ int main(){
         click(12,"Enhanced cloth solver (experimental)");
         check(!tenchu::cloth::enhanced,"Physics checkbox must restore original solver");
         click(12,"Enhanced cloth solver (experimental)");
+        tab(13);auto controls=tenchu::controls::Snapshot();
+        click(13,"Keyboard and mouse gameplay");check(tenchu::controls::Snapshot().keyboard!=controls.keyboard,"Controls tab must toggle gameplay keyboard support");
+        click(13,"Mouse look (capture during gameplay)");check(tenchu::controls::Snapshot().mouse!=controls.mouse,"Controls tab must toggle mouse capture");
+        click(13,"Reset all bindings");check(tenchu::controls::Snapshot().keyboard&&tenchu::controls::Snapshot().mouse,"Controls reset must restore usable defaults");
         tab(11);
         tenchu::cheats::god_mode=true;click(11,"Restore default settings");
         check(!g_tenchu_performance_overlay&&!g_tenchu_debug_capture&&!g_tenchu_mute&&g_tenchu_master_volume==100&&!tenchu::cheats::god_mode&&g_tenchu_renderer==0&&g_tenchu_internal_percent==100,"System reset must restore port defaults and disable cheats");
@@ -165,3 +181,4 @@ int main(){
         ImGui::DestroyContext();std::puts("PASS: F6 menu, real ImGui button activation, live scale, save/reset, repeat guard and restore");
     }catch(const std::exception& e){std::printf("FAIL: %s\n",e.what());return 1;}
 }
+

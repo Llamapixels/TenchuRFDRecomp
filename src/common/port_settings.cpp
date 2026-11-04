@@ -2,6 +2,7 @@
 #include "app/app.h"
 #include "audio/master_volume.h"
 #include "game_camera.h"
+#include "hud_settings.h"
 #include "game_cheats.h"
 #include "cloth_solver.h"
 #include "graphics/widescreen.h"
@@ -28,12 +29,12 @@ extern bool g_tenchu_widescreen;
 namespace {
 using namespace tenchu::camera;
 struct CameraSettings {
-    std::array<float,8> values;
+    std::array<float,10> values;
     std::array<bool,7> flags;
     bool operator==(const CameraSettings&)const=default;
 };
 CameraSettings Snapshot(){
-    return {{horizontal.load(),vertical.load(),fov.load(),distance.load(),running_horizontal.load(),running_vertical.load(),running_fov.load(),running_distance.load()},
+    return {{horizontal.load(),vertical.load(),fov.load(),distance.load(),running_horizontal.load(),running_vertical.load(),running_fov.load(),running_distance.load(),world_draw_distance.load(),enemy_draw_distance.load()},
         {invert_x.load(),invert_y.load(),custom_fov.load(),running_custom_fov.load(),link_profiles.load(),follow_control.load(),keyboard_mouse.load()}};
 }
 CameraSettings previous=Snapshot();bool previous_remember=true;
@@ -86,7 +87,7 @@ toml::table ReadProfiles(){
 }
 void ApplyGraphics(const toml::table& p){
     auto& s=app::Get();
-    g_tenchu_renderer=std::min(p["renderer"].value_or(0u),1u);
+    g_tenchu_renderer=std::min(p["renderer"].value_or(0u),2u);
     g_tenchu_widescreen=p["widescreen"].value_or(false);tenchu::wide::enabled=g_tenchu_widescreen;
     TenchuSetInternalPercent(p["internal_resolution_percent"].value_or(100u));
     s.display_mode=app::DisplayMode(std::min(p["display_mode"].value_or(2u),2u));
@@ -104,6 +105,9 @@ void TenchuUpdateMasterVolume(){
 void TenchuInitializePortSettings(){TenchuUpdateMasterVolume();tenchu::packs::Rescan();tenchu::mods::Rescan();previous=Snapshot();previous_remember=g_tenchu_remember_camera;}
 void TenchuLoadPortSettings(const void* value){
     const auto& t=*static_cast<const toml::table*>(value);
+    tenchu::hud::shown=t["hud"]["show"].value_or(true);
+    if(const auto* hud=t["hud"].as_table())tenchu::hud::opacity_percent=unsigned(Number(*hud,"opacity_percent",100,0,100));
+    else tenchu::hud::opacity_percent=100;
     if(auto* shader=t["shader"].as_table()){
         ApplyShader(*shader);
         g_tenchu_shader_preset=(*shader)["last_preset"].value_or(std::string{});
@@ -116,25 +120,56 @@ void TenchuLoadPortSettings(const void* value){
     tenchu::packs::Load(&t);
     tenchu::mods::Load(&t);
     tenchu::patches::Load(&t);
+    tenchu::controls::Settings controls;
+    if(const auto* c=t["controls"].as_table()){
+        controls.keyboard=(*c)["keyboard_mouse"].value_or(true);controls.mouse=(*c)["mouse_look"].value_or(true);
+        controls.deadzone=Number(*c,"right_stick_deadzone",.18f,0,.5f);
+        controls.mouse_speed=Number(*c,"mouse_sensitivity",1,.1f,4);controls.aim_speed=Number(*c,"aim_sensitivity",1,.1f,4);
+        controls.walk_speed=Number(*c,"walk_speed",.45f,.1f,1);
+        controls.walk_key=std::clamp((*c)["walk_key"].value_or(0x10),0,255);
+        controls.confirm_key=std::clamp((*c)["menu_confirm"].value_or(0x0D),0,255);controls.cancel_key=std::clamp((*c)["menu_cancel"].value_or(0x1B),0,255);
+        if(tenchu::controls::ReservedKey(controls.walk_key))controls.walk_key=0;
+        if(tenchu::controls::ReservedKey(controls.confirm_key))controls.confirm_key=0;
+        if(tenchu::controls::ReservedKey(controls.cancel_key))controls.cancel_key=0;
+        for(int i=0;i<tenchu::controls::Count;++i){
+            int key=(*c)["keyboard"][tenchu::controls::keys[i]].value_or(controls.keyboard_bindings[i]);
+            if(key<0||key>255||tenchu::controls::ReservedKey(key))key=0;
+            controls.keyboard_bindings[i]=key;
+            int button=(*c)["controller"][tenchu::controls::keys[i]].value_or(i);
+            controls.controller_bindings[i]=button>=-1&&button<tenchu::controls::Count?button:i;
+        }
+    }
+    tenchu::controls::Configure(controls);
+    // Migrate the old disabled experimental camera to the new working controls.
+    const bool modern=t["controls"]["version"].value_or(0)>=1;
+    if(!modern){follow_control=true;link_profiles=true;}
     const auto* p=t["camera"].as_table();
     if(!g_tenchu_remember_camera||!p)return;
     horizontal=Number(*p,"horizontal_speed",1,.1f,4);vertical=Number(*p,"vertical_speed",1,.1f,4);
+    world_draw_distance=Number(*p,"world_draw_distance",1,.25f,4);enemy_draw_distance=Number(*p,"enemy_draw_distance",1,.25f,4);
     fov=Number(*p,"fov",48,20,120);distance=Number(*p,"distance",1,.25f,4);
     running_horizontal=Number(*p,"running_horizontal_speed",1,.1f,4);running_vertical=Number(*p,"running_vertical_speed",1,.1f,4);
     running_fov=Number(*p,"running_fov",48,20,120);running_distance=Number(*p,"running_distance",1,.25f,4);
     invert_x=(*p)["invert_horizontal"].value_or(false);invert_y=(*p)["invert_vertical"].value_or(false);
     custom_fov=(*p)["custom_fov"].value_or(false);running_custom_fov=(*p)["running_custom_fov"].value_or(false);
-    link_profiles=(*p)["linked"].value_or(false);follow_control=(*p)["custom_follow"].value_or(false);keyboard_mouse=(*p)["keyboard_mouse"].value_or(true);
+    link_profiles=modern?(*p)["linked"].value_or(true):true;follow_control=modern?(*p)["custom_follow"].value_or(true):true;keyboard_mouse=(*p)["keyboard_mouse"].value_or(true);
     SyncLinked();
 }
 void TenchuSavePortSettings(void* value){
     auto& t=*static_cast<toml::table*>(value);
+    t.insert_or_assign("hud",toml::table{{"show",tenchu::hud::shown.load()},{"opacity_percent",std::min(tenchu::hud::opacity_percent.load(),100u)}});
     t.insert_or_assign("cutscene",toml::table{{"original_motion_blur",tenchu::motion::original_blur.load()}});
     auto physics=PhysicsSettings();physics.insert_or_assign("last_preset",g_tenchu_physics_preset);
     physics.insert_or_assign("preset_modified",g_tenchu_physics_modified);t.insert_or_assign("physics",std::move(physics));
     tenchu::packs::Save(&t);
     tenchu::mods::Save(&t);
     tenchu::patches::Save(&t);
+    auto controls=tenchu::controls::Snapshot();toml::table keyboard,controller;
+    for(int i=0;i<tenchu::controls::Count;++i){keyboard.insert_or_assign(tenchu::controls::keys[i],controls.keyboard_bindings[i]);controller.insert_or_assign(tenchu::controls::keys[i],controls.controller_bindings[i]);}
+    t.insert_or_assign("controls",toml::table{{"version",1},{"keyboard_mouse",controls.keyboard},{"mouse_look",controls.mouse},
+        {"right_stick_deadzone",controls.deadzone},{"mouse_sensitivity",controls.mouse_speed},{"aim_sensitivity",controls.aim_speed},
+        {"walk_speed",controls.walk_speed},{"walk_key",controls.walk_key},{"menu_confirm",controls.confirm_key},{"menu_cancel",controls.cancel_key},
+        {"keyboard",std::move(keyboard)},{"controller",std::move(controller)}});
     auto shader=ShaderSettings();
     shader.insert_or_assign("last_preset",g_tenchu_shader_preset);
     shader.insert_or_assign("preset_modified",g_tenchu_shader_modified);
@@ -144,6 +179,7 @@ void TenchuSavePortSettings(void* value){
     t.insert_or_assign("camera",toml::table{
         {"horizontal_speed",c.values[0]},{"vertical_speed",c.values[1]},{"fov",c.values[2]},{"distance",c.values[3]},
         {"running_horizontal_speed",c.values[4]},{"running_vertical_speed",c.values[5]},{"running_fov",c.values[6]},{"running_distance",c.values[7]},
+        {"world_draw_distance",c.values[8]},{"enemy_draw_distance",c.values[9]},
         {"invert_horizontal",c.flags[0]},{"invert_vertical",c.flags[1]},{"custom_fov",c.flags[2]},{"running_custom_fov",c.flags[3]},
         {"linked",c.flags[4]},{"custom_follow",c.flags[5]},{"keyboard_mouse",c.flags[6]}});
 }
@@ -236,9 +272,10 @@ void TenchuRestoreDefaults(){
     g_tenchu_renderer=0;g_tenchu_widescreen=false;tenchu::wide::enabled=false;TenchuSetInternalPercent(100);
     g_tenchu_master_volume=100;g_tenchu_mute=false;g_tenchu_performance_overlay=false;g_tenchu_remember_camera=true;g_tenchu_debug_capture=false;TenchuUpdateMasterVolume();
     tenchu::motion::original_blur=false;
+    tenchu::hud::Reset();
     ApplyPhysics({});g_tenchu_physics_preset.clear();g_tenchu_physics_modified=false;
     tenchu::post::Reset();g_tenchu_shader_preset.clear();g_tenchu_shader_modified=false;
-    tenchu::camera::Reset();link_profiles=false;keyboard_mouse=true;tenchu::cheats::god_mode=false;
+    tenchu::camera::Reset();link_profiles=true;keyboard_mouse=true;tenchu::controls::Reset();tenchu::cheats::god_mode=false;
     tenchu::cheats::second_player=false;tenchu::cheats::control_second=false;tenchu::cheats::single_screen=false;tenchu::cheats::story_start=false;tenchu::cheats::two_players_next=false;
     for(const auto& p:tenchu::patches::List())if(p.enabled)tenchu::patches::SetEnabled(p.id,false);
     previous=Snapshot();previous_remember=true;app::ApplyDisplay();app::Save();

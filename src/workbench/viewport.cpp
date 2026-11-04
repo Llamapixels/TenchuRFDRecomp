@@ -264,4 +264,23 @@ void Viewport::Ray(float px, float py, float origin[3], float direction[3]) cons
     direction[0] = d.x; direction[1] = d.y; direction[2] = d.z;
 }
 
+bool Viewport::Project(const float point[3], float out[3]) const {  // the inverse of Ray
+    const Impl& m = *impl_;
+    Vec eye, right, up, forward;
+    Axes(m.last, eye, right, up, forward);
+    const Vec rel{point[0] - eye.x, point[1] - eye.y, point[2] - eye.z};
+    const float depth = DotV(rel, forward);
+    if (depth < kNear) return false;
+    const float t = std::tan(kFov / 2), aspect = float(m.width) / std::max(1, m.height);
+    const float nx = DotV(rel, right) / (depth * t * aspect), ny = DotV(rel, up) / (depth * t);
+    out[0] = (nx + 1) / 2 * m.width;
+    out[1] = (1 - ny) / 2 * m.height;
+    out[2] = depth;
+    return true;
+}
+
+float Viewport::PixelSize(float depth) const {
+    return 2 * depth * std::tan(kFov / 2) / std::max(1, impl_->height);
+}
+
 }  // namespace wb

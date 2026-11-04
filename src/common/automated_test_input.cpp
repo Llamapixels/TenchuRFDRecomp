@@ -48,6 +48,7 @@ void TenchuAutomatedPad(int port,input::Pad& pad){
         if(phase>=1&&phase<=4)pad.rx=16384;
         if(phase==3||phase==4)pad.ly=32767;
     }
+    tenchu::controls::Apply(port,pad);
     tenchu::camera::FilterPad(port,pad);
     SecondPlayer(port,pad);
 }

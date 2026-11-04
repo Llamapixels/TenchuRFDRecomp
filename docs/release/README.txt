@@ -1,6 +1,13 @@
 TENCHU: RETURN FROM DARKNESS - NATIVE PC PORT (ALPHA {VERSION})
 ===========================================================
 
+MULTIPLAYER IS IN EARLY TESTING
+Online co-op and versus (F6 > Online, with join codes) are new. Connecting
+and playing a mission work, between two PCs over the internet too, but expect
+problems: player 2's own moves still respond late, more so the farther apart
+the players are. Both players need this same version. Start with ONLINE.txt,
+and please report how it goes.
+
 Thanks for testing. This is an early alpha of the original Xbox game,
 recompiled to run natively on Windows. Expect bugs and crashes, and please
 report them (see "Reporting a problem" below).
@@ -8,8 +15,8 @@ report them (see "Reporting a problem" below).
 What you need
 -------------
   - Windows 10 or 11, 64-bit, and a GPU with Direct3D 12 support.
-  - A controller (Xbox, PlayStation or Switch). Keyboard and mouse only
-    drive the free camera so far.
+  - A controller (Xbox, PlayStation or Switch), or keyboard and mouse.
+    Remapping and mouse options are in F6 > Controls.
   - Your own copy of the game as an Xbox disc image (.iso):
     Tenchu: Return from Darkness (USA). Other releases will not work.
   - About 6 GB of free disk space for the first start (the game files are
@@ -46,7 +53,10 @@ What to test
   - Levels beyond mission 1, and both characters.
   - Saving and loading your progress.
   - Cutscenes (with and without a custom FOV in F6 > Camera).
-  - Multiplayer modes on one PC.
+  - Online co-op/versus between two PCs, using F6 > Online join codes.
+    See ONLINE.txt for setup, router status and the host's join approval.
+    Test playing a mission, ending it, and joining again immediately, and
+    tell us how late player 2's moves feel.
   - Both renderers (F6 > Display: Direct3D 12 and Vulkan).
   - Enhanced cloth (F6 > Physics): compare movement, collisions, bending
     and saved presets. See PHYSICS.txt for the controls and limitations.
@@ -191,7 +201,11 @@ Known issues
     may crash.
   - The custom right-stick camera option does not work yet (off by
     default).
-  - Xbox Live is gone and its menu option is disabled.
+  - Multiplayer is in early testing. The Xbox Live menu connects straight
+    to a friend's PC (F6 > Online); there is no Microsoft service or
+    matchmaking. Player 2's own moves respond late, and with the modern
+    third-person camera on (F6 > Camera) player 2's view does not follow,
+    so turn it off on player 2's PC.
 
 Starting over
 -------------

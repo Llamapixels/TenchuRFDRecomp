@@ -1,4 +1,6 @@
 #include "port/mods.h"
+#include <algorithm>
+#include <cmath>
 #include "app/app.h"
 #include "core/log.h"
 #include "kernel/disc.h"

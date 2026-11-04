@@ -20,7 +20,7 @@ int main(){try{
     g_tenchu_renderer=1;TenchuInitializeRenderer();check(TenchuActiveRenderer()==1,"saved Vulkan renderer must initialize");
     SetEnvironmentVariableW(L"TENCHU_RENDERER",L"d3d12");TenchuInitializeRenderer();check(TenchuActiveRenderer()==0,"native test override must win without changing saved option");
     SetEnvironmentVariableW(L"TENCHU_RENDERER",L"vulkan");TenchuInitializeRenderer();check(TenchuActiveRenderer()==1,"Vulkan override must initialize");
-    SetEnvironmentVariableW(L"TENCHU_RENDERER",nullptr);
+    SetEnvironmentVariableW(L"TENCHU_RENDERER",nullptr);g_tenchu_renderer=2;TenchuInitializeRenderer();check(g_tenchu_renderer==0&&TenchuActiveRenderer()==0,"a saved RTX Remix choice falls back to Direct3D 12");g_tenchu_renderer=1;TenchuInitializeRenderer();
     check(TenchuVulkanAvailable(),"packaged Vulkan runtime missing");
     window=CreateWindowExW(0,L"STATIC",L"Tenchu restart test",0,0,0,0,0,HWND_MESSAGE,nullptr,GetModuleHandleW(nullptr),nullptr);
     check(window!=nullptr,"message-only test window unavailable");

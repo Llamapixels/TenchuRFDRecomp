@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.1.6-alpha
+
+### Multiplayer (early testing)
+- **Online co-op and versus.** The game's Xbox Live menus now work with local
+  player profiles and connect straight to a friend's PC. No Microsoft service,
+  matchmaking or relay is involved.
+- **F6 > Online**: join codes (Get/Copy, Paste/Join), five recent hosts, LAN and
+  virtual-LAN codes, and optional automatic router setup (UPnP) with a status
+  report when forwarding fails. See ONLINE.txt.
+- Joining again straight after a match works.
+- Player 2's inputs are sent every frame instead of every fourth, when both
+  players have this version.
+- Both sides now keep their replay queues short: before, every late packet
+  added delay that never went away. Button presses are never skipped.
+- Known problems: player 2's own moves still respond late (the trip to the
+  host and back remains), and player 2 should turn off the modern
+  third-person camera. Both players need the same version.
+
+### New
+- **F6 > Controls**: keyboard and mouse play, with remapping.
+- **F6 > Camera > Draw distance**: separate world and character sliders from
+  0.25x to 4x, lower for weaker PCs.
+- **F6 > Display > HUD**: show or hide the HUD and set its opacity.
+- **RFD Switchblade > Levels**: browse the game's own models and textures and
+  place them in a custom level; pick enemy types from any mission, and name
+  items.
+- F6 > Mods notices a new mod folder while it is open.
+- The Vulkan renderer leaves out OBS's and Wallpaper Engine's capture layers,
+  which could freeze the game while resizing the window
+  (`TENCHU_OBS_CAPTURE=1` keeps them for OBS Game Capture).
 
 ## 0.1.5-alpha
 
@@ -32,44 +62,7 @@
 
 ## 0.1.4-alpha
 
-### New
-- **Custom levels** (F6 > Levels): a level replaces the map of a story mission, its look, collision and lighting,
-  while the mission itself stays. Pick one in F6 > Levels, then start the mission it is built on.
-- **RFD Switchblade > Levels**: view every stage in 3D and build levels from a ground, boxes and OBJ models exported
-  from Blender, with the pictures from their `.mtl` files packed in automatically on save.
-  - Lighting: a light colour and a sun, baked into the level.
-  - Per model "Ledges": hang from its edges, or switch it off for buildings you walk into.
-  - The mission's enemies, items and candles, lanterns and torches: move, add or remove them.
-  - No size limit on a level's map or collision, and the ground can be any size (or none).
-- **Multiplayer alone** (F6 > Cheats, experimental): two players in a story mission with one controller.
-
-### Changed
-- The Mod Workbench is now **RFD Switchblade** (`tools\RFD Switchblade.exe`). Its settings carry over.
-- Scrolling sky and water textures keep repeating instead of stretching into streaks.
-- Files in `mods` come before edits made directly in `extracted`.
-
-## 0.1.3-alpha
-
-- Fixed whole-archive mods being undone by the unpacked original files.
-
-## 0.1.2-alpha
-
-- **F6 > Patches**: memory patches in the format people share for Cheat Engine, from `memory_patches\*.txt`, each
-  with an on/off switch remembered between starts.
-
-## 0.1.1-alpha
-
-- Texture replacements: edited dumps count as replaced, a dump put in a pack folder replaces exactly its own
-  texture, and dumps hold only the full-size image.
-
-## 0.1.0-alpha
-
-- First tester release: pick your `.iso` on the first start; the game's code is prepared on your PC from your own
-  disc.
-- Every disc file unpacked into `extracted`, and archives into folders, so everything can be modded; per-file mods
-  in `mods`.
-- The Mod Workbench: game files browser and texture pack matching.
-- PS2 *Tenchu: Wrath of Heaven* texture packs, matched in game (F6 > Textures).
-- Direct3D 12 and Vulkan, internal resolution, widescreen, shader presets, graphics profiles, camera options, photo
-  mode, cheats and volume.
-- Fixed far walls flickering black, cutscene camera freezes and the Xbox Live menu option trapping the player.
+- Custom levels, RFD Switchblade level building, lighting and mission objects.
+- Multiplayer alone with two players and one controller (experimental).
+- Mod Workbench renamed to RFD Switchblade.
+- Scrolling sky/water textures repeat, and mods take priority over loose files.

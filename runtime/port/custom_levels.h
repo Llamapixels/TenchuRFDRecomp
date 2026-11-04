@@ -59,6 +59,7 @@ std::vector<LevelInfo> List();
 // the replaced bytes. False, with the reason in status, when it cannot be used.
 bool Activate(const std::string& folder, std::string& status);
 std::string Active();
+int ActiveStage(); // -1 when no custom map is active
 // called for every read of a game file (its Xbox path): replaces the bytes the active pack changes
 void PatchRead(const std::string& xbox_path, uint64_t offset, uint8_t* data, size_t size);
 // past the end of a file: the active level's bytes there (blocks bigger than the stage's), how many

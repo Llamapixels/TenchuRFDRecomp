@@ -24,15 +24,26 @@ GAME
   [ok]   Options and Saves menus.
   [ok]   Story Mode, character select, loading and gameplay (one level
          played so far).
-  [test] Xbox Live (shut down in 2010) is disabled: choosing its title
-         menu option just reopens the menu instead of the stuck Account
-         Selection screen.
+  [ok]   Experimental direct online mode with local accounts in F6 > Online.
+         Co-op, versus and immediate repeat joining confirmed on one PC;
+         internet gameplay also confirmed with a UK peer. P2 input delay
+         remains under investigation.
+  [test] Shorter online delay: the host's queue of P2's inputs and the
+         guest's world playback no longer build up to 8 frames each; spare
+         frames are skipped (never a button press). TENCHU_ONLINE_TRIM=0
+         turns it off.
+  [test] Z-style join codes: Get/Copy, Paste/Join, recent hosts, LAN/VPN codes,
+         automatic UPnP router setup and public IP detection. P2 camera
+         correction and network timing need further testing. See ONLINE.txt.
   [test] Other levels, both characters, saving/loading progress.
          Report any "has no recompiled function" crash with its log.
 
 
 DISPLAY  (F6 > Display)
 -----------------------
+  [test] Show HUD toggle and 0-100% HUD opacity, live and remembered. Only
+         gameplay HUD sprite callbacks are faded; menus, subtitles, screen
+         fades and F6 stay visible. Hiding retains the chosen opacity.
   [ok]   Internal resolution 0.5x - 4x (640x480 native, 4x = 2560x1920),
          applies live.
   [ok]   Renderer: Direct3D 12 or Vulkan (vkd3d-proton). Restart game
@@ -100,15 +111,33 @@ CAMERA  (F6 > Camera)
   [test] Field of view and camera distance, separate standing and
          running profiles.
   [test] Invert horizontal / vertical, stick diagnostics.
-  [bug]  Follow-camera speed sliders have little visible effect.
+  [test] Modern third-person camera: horizontal and vertical right-stick/mouse
+         orbit, speed sliders, inversion, left-stick-click recenter. Manual
+         heading persists as the native follow camera turns. Original mode
+         remains selectable; first-person aiming and lock-on retain native view.
   [test] Fixed: the mission 1 intro cutscene froze (audio kept playing)
          when a custom FOV, distance or right-stick orbit was set, and
          then flickered twice a second. The custom camera now pauses while
          the game moves the camera itself, checking with an invisible
          one-step focal change instead of re-applying the custom FOV.
-  [test] Custom right-stick camera is off by default (labelled
-         experimental); off uses the game's own right-stick camera.
+  [test] Legacy camera settings migrate to modern orbit with standing/running
+         sliders linked. Subsequent camera/profile choices are remembered.
   [test] Remember camera settings between sessions.
+
+
+CONTROLS  (F6 > Controls)
+-------------------------
+  [test] Gameplay keyboard and mouse: WASD, Space jump, left mouse attack,
+         right mouse block, F item, Ctrl stealth, Mouse 4 lock-on, Alt look.
+         Shift walks. WASD/arrows navigate game menus; Enter/Esc confirm/back.
+  [test] Independent keyboard/mouse and controller remapping, including
+         trigger pressure and stick directions; persistent global bindings.
+  [test] Mouse/aim sensitivity, right-stick deadzone and keyboard walking speed.
+         Raw mouse capture releases on Esc, F6, focus loss and leaving gameplay.
+  [test] First-person and projectile mouse/right-stick aiming feed the retail
+         left-stick aiming path. Default right-stick click keeps detonation.
+  [test] Neutral keyboard virtual controller stays connected during F6/Alt-Tab.
+         Controls do not leak into gameplay while using F6. See docs/controls.md.
 
 
 AUDIO  (F6 > Audio)
@@ -226,6 +255,19 @@ CUSTOM LEVELS  (F6 > Levels, RFD Switchblade > Levels)
          game meshes as props, fog and sky settings, editing the original
          stages.
 
+RTX REMIX  (removed Nov 4, 2026)
+--------------------------------
+  [gone] The Direct3D 9 / RTX Remix renderer, F6 > RTX, lighting mods
+         (remix_lighting\*.toml), Switchblade's Lighting view, its RTX point
+         lights in Make level, and the Normal maps page. Too unstable to
+         keep. Everything is in git history (commit 12285e9) to bring back.
+  [ok]   Kept: F6 > Mods notices a new mod folder by itself while it is open.
+  [ok]   Kept: OBS's and Wallpaper Engine's Vulkan capture layers stay out of
+         the Vulkan renderer (they froze window resizing under RTX; OBS Game
+         Capture then cannot see the game, Window Capture can).
+         TENCHU_OBS_CAPTURE=1 keeps them.
+
+
 MODS  (F6 > Mods)
 -----------------
   [test] File-replacement mods: each folder in mods mirrors the disc, a
@@ -267,7 +309,7 @@ MEMORY PATCHES  (F6 > Patches)
   [test] Pointer metadata and guarded PointerAddress writes for allocated
          player objects. Shared bow patches follow the current player;
          original numeric Address patches keep their existing behavior.
-  [ok]   User confirmed in game (2026-10-31): bow equips and ammunition
+  [ok]   Confirmed in game (2026-10-31): bow equips and ammunition
          stays at 3 after firing with the pointer-based bow patches enabled.
   [test] 68 researched cheat entries: original actions, sustained Kuji/health,
          invisibility, player-two variants and individual reward-item unlocks.

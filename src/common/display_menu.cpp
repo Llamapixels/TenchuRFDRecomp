@@ -11,7 +11,9 @@
 #include <cstdlib>
 #include <cstdio>
 #include "game_cheats.h"
+void TenchuRenderOnlineTab();
 #include "game_camera.h"
+#include "hud_settings.h"
 #include "graphics/widescreen.h"
 #include "graphics/renderer_selection.h"
 #include "graphics/screenshot.h"
@@ -23,10 +25,18 @@ bool g_tenchu_widescreen=false;
 namespace {
 std::atomic<uint32_t> active_percent{100};
 std::atomic<bool> visible{false};
-void SetVisible(bool open){visible=open;tenchu::patches::SetMenuOpen(open);}
+bool f6_down=false;
+void SetVisible(bool open){visible=open;tenchu::patches::SetMenuOpen(open);tenchu::camera::menu_open=open;tenchu::controls::SetMenuOpen(open);}
 ImVec4 Color(float r,float g,float b){return {r,g,b,1};}
 }
+// F6 can arrive both as a window message and from polling. Share an edge latch
+// so either route opens the menu once.
+void TenchuDisplayMenuHotkey(bool down){
+    if(down&&!f6_down)SetVisible(!visible.load());
+    f6_down=down;
+}
 void TenchuInitializeDisplayMenu(){
+    f6_down=false;
     g_tenchu_internal_percent=tenchu::ClampInternalPercent(g_tenchu_internal_percent);
     active_percent=g_tenchu_internal_percent;
     tenchu::wide::enabled=g_tenchu_widescreen;
@@ -36,7 +46,8 @@ void TenchuInitializeDisplayMenu(){
 }
 void TenchuSetInternalPercent(uint32_t value){g_tenchu_internal_percent=tenchu::ClampInternalPercent(value);active_percent=g_tenchu_internal_percent;}
 void TenchuTakeScreenshot(){SetVisible(false);tenchu::shots::Request();}
-void TenchuInitializeMenuWindow(void*){
+void TenchuInitializeMenuWindow(void* window){
+    tenchu::controls::InitializeWindow(window);
     ImGui::GetIO().ConfigFlags&=~(ImGuiConfigFlags_NavEnableKeyboard|ImGuiConfigFlags_NavEnableGamepad);
 }
 float TenchuInternalScale(uint32_t){
@@ -46,6 +57,7 @@ float TenchuInternalScale(uint32_t){
     return active_percent.load(std::memory_order_relaxed)/100.f;
 }
 bool TenchuDisplayMenuMessage(uint32_t msg,uintptr_t key,intptr_t flags,intptr_t* result){
+    if(msg==WM_KEYUP&&key==VK_F6){TenchuDisplayMenuHotkey(false);*result=0;return true;}
     if(msg!=WM_KEYDOWN&&!(key==VK_F10&&msg==WM_SYSKEYDOWN))return false;
     if(key==VK_F12){if(!(flags&(intptr_t(1)<<30)))TenchuTakeScreenshot();*result=0;return true;}
     if(key==VK_F10){
@@ -53,14 +65,21 @@ bool TenchuDisplayMenuMessage(uint32_t msg,uintptr_t key,intptr_t flags,intptr_t
         *result=0;return true;
     }
     if(key==VK_F6){
-        if(!(flags&(intptr_t(1)<<30)))SetVisible(!visible.load());
+        if(!(flags&(intptr_t(1)<<30)))TenchuDisplayMenuHotkey(true);
         *result=0;return true;
     }
     if(key==VK_ESCAPE&&visible){SetVisible(false);*result=0;return true;}
     return false;
 }
 void TenchuRenderDisplayMenu(double fps){
+    if(TenchuActiveRenderer()==2&&app::Window()){
+        DWORD process=0;GetWindowThreadProcessId(GetForegroundWindow(),&process);
+        if(process==GetCurrentProcessId())TenchuDisplayMenuHotkey((GetAsyncKeyState(VK_F6)&0x8000)!=0);
+    }
     TenchuInitializeMenuWindow(nullptr);
+    if(tenchu::controls::MouseCaptured())ImGui::GetIO().ConfigFlags|=ImGuiConfigFlags_NoMouseCursorChange;
+    else ImGui::GetIO().ConfigFlags&=~ImGuiConfigFlags_NoMouseCursorChange;
+    tenchu::controls::UpdateWindow();
     TenchuRenderPerformanceOverlay(fps);
     static bool was_visible=false;
     static int draft=100;
@@ -98,13 +117,20 @@ void TenchuRenderDisplayMenu(double fps){
                 ImGui::SeparatorText("Renderer");
                 int renderer=int(g_tenchu_renderer);
                 if(ImGui::Combo("Renderer (restart)",&renderer,"Direct3D 12\0Vulkan (vkd3d-proton)\0")){
-                    if(renderer==0||TenchuVulkanAvailable()){g_tenchu_renderer=uint32_t(renderer);app::Save();}
+                    if(renderer==0||(renderer==1&&TenchuVulkanAvailable())){g_tenchu_renderer=uint32_t(renderer);app::Save();}
                 }
                 ImGui::Text("Active: %s",TenchuActiveRenderer()==1?"Vulkan":"Direct3D 12");
                 if(g_tenchu_renderer!=TenchuActiveRenderer())ImGui::TextUnformatted("Restart to apply the selected renderer.");
                 if(ImGui::Button("Restart game")){app::Save();TenchuRequestRestart();}
                 ImGui::TextWrapped("Restart returns to the title screen. Vulkan uses vkd3d-proton / DXVK.");
                 TenchuRenderWindowOptions();
+                ImGui::SeparatorText("HUD");
+                bool show_hud=tenchu::hud::shown.load();
+                if(ImGui::Checkbox("Show HUD",&show_hud)){tenchu::hud::shown=show_hud;app::Save();}
+                int hud_opacity=int(tenchu::hud::opacity_percent.load());
+                if(ImGui::SliderInt("HUD opacity",&hud_opacity,0,100,"%d%%"))tenchu::hud::opacity_percent=unsigned(hud_opacity);
+                if(ImGui::IsItemDeactivatedAfterEdit())app::Save();
+                ImGui::TextWrapped("0%% is invisible; 100%% keeps the original opacity. Hiding the HUD keeps your chosen opacity. Menus, subtitles and screen fades stay visible.");
                 ImGui::SeparatorText("Internal resolution");
                 ImGui::TextUnformatted("Native frame: 640 x 480");
                 const uint32_t current=active_percent.load();
@@ -208,8 +234,8 @@ void TenchuRenderDisplayMenu(double fps){
                     ImGui::TreePop();
                 }
                 ImGui::Separator();
-                toggle("Custom right-stick camera (experimental)",follow_control);
-                ImGui::TextWrapped("Off (default): the game's original right-stick camera. On: the speed sliders drive right-stick look instead; this does not work reliably yet.");
+                toggle("Modern third-person camera",follow_control);
+                ImGui::TextWrapped("Right stick and mouse orbit horizontally and vertically. Speed sliders below control the turn rate. First-person aiming and lock-on retain the original camera. Off selects the original third-person camera.");
                 bool linked=link_profiles.load();
                 if(ImGui::Checkbox("Link standing and running sliders",&linked)){
                     link_profiles=linked;SyncLinked();
@@ -223,7 +249,7 @@ void TenchuRenderDisplayMenu(double fps){
                 if(ImGui::SliderFloat("Field of view",&degrees,20,120,"%.0f deg")){fov=degrees;custom_fov=true;}
                 slider("Distance",distance,.25f,4.f,"%.2fx");
                 SyncLinked();
-                ImGui::TextWrapped("Standing camera settings above. Right stick orbits the follow camera; click the right stick to recenter. Close F6 to look around.");
+                ImGui::TextWrapped("Standing camera settings above. Click the left stick to return to the original camera position. Right-stick click still detonates sticky bombs. Close F6 to look around.");
                 if(ImGui::TreeNode("Moving / running camera")){
                     ImGui::TextWrapped("Separate controls while the left stick is pushed past 65%%. Includes the game's moving camera modes.");
                     slider("Running horizontal speed",running_horizontal,.1f,4.f,"%.2fx");
@@ -236,15 +262,22 @@ void TenchuRenderDisplayMenu(double fps){
                     ImGui::TreePop();
                 }
                 ImGui::TextWrapped("FOV/distance apply live to gameplay. Photo mode keeps the active FOV profile and uses the main speed sliders. Scripted cameras keep their original framing.");
+                ImGui::SeparatorText("Draw distance");
+                slider("World draw distance",world_draw_distance,.25f,4.f,"%.2fx");
+                slider("Enemy / NPC draw distance",enemy_draw_distance,.25f,4.f,"%.2fx");
+                ImGui::TextWrapped("1x is original. Lower values reduce distant rendering; higher values extend visibility. Works with modern camera off. AI and detection keep their original ranges. Fog and scripted visibility can still limit the view.");
+                if(ImGui::Button("Reset draw distance")){world_draw_distance=1;enemy_draw_distance=1;}
                 if(ImGui::Button("Reset camera"))Reset();
-                if(ImGui::CollapsingHeader("Keyboard & mouse")){
-                    toggle("Enable keyboard & mouse",keyboard_mouse);
-                    ImGui::TextWrapped("Free camera: WASD move, Q/E down/up, arrow keys look, hold right mouse button and drag to look. Shift fast, Ctrl slow. Close F6 to move the camera.");
+                if(ImGui::CollapsingHeader("Photo mode keyboard & mouse")){
+                    toggle("Enable photo mode keyboard & mouse",keyboard_mouse);
+                    ImGui::TextWrapped("Photo mode: WASD move, Q/E down/up, arrow keys look, hold right mouse and drag to look. Shift fast, Ctrl slow. Gameplay bindings are in Controls.");
                 }
                 TenchuSaveCameraIfChanged(ImGui::IsAnyItemActive());
                 ImGui::EndTabItem();
             }
             TenchuRenderExtraTabs();
+            tenchu::controls::RenderMenu();
+            TenchuRenderOnlineTab();
             ImGui::EndTabBar();
         }
         ImGui::Separator();

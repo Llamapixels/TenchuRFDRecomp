@@ -38,6 +38,9 @@ public:
     ImTextureID Render(int width, int height, const Camera& camera);
     // a ray from the camera through a pixel of the last render: origin and direction
     void Ray(float px, float py, float origin[3], float direction[3]) const;
+    // where a point lands in the last render: pixel x, y and its depth; false behind the camera
+    bool Project(const float point[3], float out[3]) const;
+    float PixelSize(float depth) const;  // the world size of one pixel at that depth
 
 private:
     struct Impl;

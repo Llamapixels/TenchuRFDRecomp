@@ -15,6 +15,52 @@ library = "TenchuRFD.dll"  # <exe>.dll, which the executable delay loads
 
 # extra entry points
 [functions]
+"0x0031564C" = "" # native session voice components; verified static vtables
+"0x00315663" = "" # native session voice components; verified static vtables
+"0x0031574E" = "" # native session voice components; verified static vtables
+"0x0031581E" = "" # native session voice components; verified static vtables
+"0x0031589B" = "" # native session voice components; verified static vtables
+"0x00315943" = "" # native session voice components; verified static vtables
+"0x00315994" = "" # native session voice components; verified static vtables
+"0x00315AC1" = "" # native session voice components; verified static vtables
+"0x00315BCC" = "" # native session voice components; verified static vtables
+"0x00315C3F" = "" # native session voice components; verified static vtables
+"0x00315C64" = "" # native session voice components; verified static vtables
+"0x00315C9A" = "" # native session voice components; verified static vtables
+"0x00315EDB" = "" # native session voice components; verified static vtables
+"0x00315EDF" = "" # native session voice components; verified static vtables
+"0x00315EE3" = "" # native session voice components; verified static vtables
+"0x00315EF3" = "" # native session voice components; verified static vtables
+"0x00315F0E" = "" # native session voice components; verified static vtables
+"0x00315F2F" = "" # native session voice components; verified static vtables
+"0x00315FA7" = "" # native session voice components; verified static vtables
+"0x00316012" = "" # native session voice components; verified static vtables
+"0x00316105" = "" # native session voice components; verified static vtables
+"0x00316208" = "" # native session voice components; verified static vtables
+"0x00316214" = "" # native session voice components; verified static vtables
+"0x00316220" = "" # native session voice components; verified static vtables
+"0x00316259" = "" # native session voice components; verified static vtables
+"0x00316354" = "" # native session voice components; verified static vtables
+"0x003163A0" = "" # native session voice components; verified static vtables
+"0x003163B9" = "" # native session voice components; verified static vtables
+"0x00314518" = "" # native voice-engine vtable 0040DB98; online match acceptance
+"0x003155CC" = "" # native voice-engine vtable 0040DB98; online match acceptance
+"0x0031561C" = "" # native voice-engine vtable 0040DB98; online match acceptance
+"0x00315624" = "" # native voice-engine vtable 0040DB98; online match acceptance
+"0x00315627" = "" # native voice-engine vtable 0040DB98; online match acceptance
+"0x0031562C" = "" # native voice-engine vtable 0040DB98; online match acceptance
+"0x00315634" = "" # native voice-engine vtable 0040DB98; online match acceptance
+"0x0031563C" = "" # native voice-engine vtable 0040DB98; online match acceptance
+"0x00315644" = "" # native voice-engine vtable 0040DB98; online match acceptance
+"0x00316CDC" = "" # native voice-engine vtable 0040DB98; online match acceptance
+"0x00316CE5" = "" # native voice-engine vtable 0040DB98; online match acceptance
+"0x00316D1D" = "" # native voice-engine vtable 0040DB98; online match acceptance
+"0x00316D78" = "" # native voice-engine vtable 0040DB98; online match acceptance
+"0x00316DBD" = "" # native voice-engine vtable 0040DB98; online match acceptance
+"0x00316DD0" = "" # native voice-engine vtable 0040DB98; online match acceptance
+"0x00316DDC" = "" # native voice-engine vtable 0040DB98; online match acceptance
+"0x00316DFB" = "" # native voice-engine vtable 0040DB98; online match acceptance
+"0x00316E07" = "" # native voice-engine vtable 0040DB98; online match acceptance
 "0x00210F00" = "" # verified task registration analysis/task_registration_inventory.json
 "0x001F7040" = "" # global static callback analysis/static_callback_inventory.json
 "0x00071410" = "" # global static callback analysis/static_callback_inventory.json
@@ -1809,7 +1855,7 @@ XNetRandom                                           = 0x3E54DE
 XNetRegisterKey                                      = 0x3E54E9
 XNetStartup                                          = 0x3E58A1
 XNetUnregisterKey                                    = 0x3E54F4
-XNetXnAddrToInAddr                                   = 0
+XNetXnAddrToInAddr                                   = 0x003E54FF
 XOnlineCleanup                                       = 0x003CBDA0
 XOnlineStartup                                       = 0x003CBCB5
 [data]
@@ -1831,6 +1877,27 @@ XPP_MemoryUnitType          = 0x3F80E0
 [abi]
 
 # Gameplay camera: scope overrides to original view/projection setup.
+# HUD sprites: adjust the completed record before incrementing its count.
+[[hook]]
+at = 0x000119B7
+call = "TenchuHudSpriteEnqueue"
+
+[[hook]]
+at = 0x00011C94
+call = "TenchuHudSpriteEnqueue"
+
+[[hook]]
+at = 0x000121EC
+call = "TenchuHudSpriteEnqueue"
+
+[[hook]]
+at = 0x00012553
+call = "TenchuHudSpriteEnqueue"
+
+[[hook]]
+at = 0x000127B6
+call = "TenchuHudSpriteEnqueue"
+
 [[hook]]
 at = 0x002A1929
 call = "TenchuCameraBegin"
@@ -1838,6 +1905,16 @@ call = "TenchuCameraBegin"
 [[hook]]
 at = 0x002A1400
 call = "TenchuCameraEnd"
+
+# Online P2 restores its network camera after simulation. Control its actual
+# rendered view for the whole render scope, independently of buffered input.
+[[hook]]
+at = 0x00235B80
+call = "TenchuCameraRenderBegin"
+
+[[hook]]
+at = 0x00236BAC
+call = "TenchuCameraRenderEnd"
 
 # Xbox Live is gone: the boot-time availability check (0003D940) reports it unusable.
 [[hook]]
@@ -3525,3 +3602,21 @@ at = 0x00302043
 call = "TenchuProtectHealth_ecx"
 after = true
 
+
+# Render-only distance limits; all hooks run before COMISS.
+
+[[hook]]
+at = 0x00044525
+call = "TenchuWorldDrawLimit"
+
+[[hook]]
+at = 0x00044550
+call = "TenchuWorldDrawLimit"
+
+[[hook]]
+at = 0x0004456F
+call = "TenchuWorldDrawLimit"
+
+[[hook]]
+at = 0x00050389
+call = "TenchuObjectDrawLimit"

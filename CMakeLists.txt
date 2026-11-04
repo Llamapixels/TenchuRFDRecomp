@@ -37,6 +37,19 @@ if(TENCHU_BUILD_RUNTIME)
     "${TENCHU_AUDIO_OVERLAY}" COMMAND_ERROR_IS_FATAL ANY)
   list(REMOVE_ITEM XBE_RUNTIME_SOURCES "${XBE_SDK_DIR}/runtime/xdk/dsound.cpp")
   list(APPEND XBE_RUNTIME_SOURCES "${TENCHU_AUDIO_OVERLAY}")
+  set(TENCHU_NETWORK_OVERLAY "${CMAKE_CURRENT_BINARY_DIR}/runtime_overlay/xnet.cpp")
+  set(TENCHU_NETWORK_BOOT "${CMAKE_CURRENT_BINARY_DIR}/runtime_overlay/online_boot.cpp")
+  set(TENCHU_NETWORK_TEST "${CMAKE_CURRENT_BINARY_DIR}/runtime_overlay/xnet_socket_test.cpp")
+  set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
+    tools/scripts/prepare_network_overlay.py tests/prepare_xnet_socket_test.py tools/XboxXBERecomp/runtime/xdk/xnet.cpp tools/XboxXBERecomp/runtime/kernel/boot.cpp)
+  execute_process(COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/scripts/prepare_network_overlay.py"
+    "${TENCHU_NETWORK_OVERLAY}" "${TENCHU_NETWORK_BOOT}" COMMAND_ERROR_IS_FATAL ANY)
+  execute_process(COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/prepare_xnet_socket_test.py"
+    "${TENCHU_NETWORK_OVERLAY}" "${TENCHU_NETWORK_TEST}" COMMAND_ERROR_IS_FATAL ANY)
+  list(REMOVE_ITEM XBE_RUNTIME_SOURCES "${XBE_SDK_DIR}/runtime/xdk/xnet.cpp")
+  list(APPEND XBE_RUNTIME_SOURCES "${TENCHU_NETWORK_OVERLAY}")
+  list(REMOVE_ITEM XBE_RUNTIME_SOURCES "${XBE_SDK_DIR}/runtime/kernel/boot.cpp")
+  list(APPEND XBE_RUNTIME_SOURCES "${TENCHU_NETWORK_BOOT}")
   set(TENCHU_GRAPHICS_OVERLAY "${CMAKE_CURRENT_BINARY_DIR}/graphics_overlay")
   set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
     tools/scripts/prepare_graphics_overlay.py runtime/graphics/post_processing.hlsl tools/XboxXBERecomp/runtime/core/diag.h tools/scripts/resize_swap_overlay.inc tools/XboxXBERecomp/runtime/gpu/state.h
@@ -48,9 +61,16 @@ if(TENCHU_BUILD_RUNTIME)
     list(REMOVE_ITEM XBE_RUNTIME_SOURCES "${XBE_SDK_DIR}/runtime/${source}")
     list(APPEND XBE_RUNTIME_SOURCES "${TENCHU_GRAPHICS_OVERLAY}/${source}")
   endforeach()
+  list(APPEND XBE_IMGUI_SOURCES "${imgui_SOURCE_DIR}/backends/imgui_impl_dx9.cpp")
   set(XBE_HOST_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/common/game_info.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/common/online.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/common/online_service.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/common/online_menu.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/common/online_router.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/common/math_exports.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/common/automated_test_input.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/common/game_controls.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/common/controls_menu.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/common/render_diagnostics.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/common/display_menu.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/common/renderer_selection.cpp"
@@ -89,7 +109,7 @@ if(TENCHU_BUILD_RUNTIME)
   target_link_libraries(TenchuRFD PRIVATE comdlg32)
   # RFD Switchblade (the mod and level tool): a separate program, shipped in tools\ beside the game
   add_executable(RFDSwitchblade WIN32 src/workbench/main.cpp src/workbench/workbench.cpp src/workbench/files_page.cpp src/workbench/pictures.cpp src/workbench/pack_model.cpp
-    src/workbench/packs_page.cpp src/workbench/images.cpp src/workbench/level_model.cpp src/workbench/viewport.cpp src/workbench/levels_page.cpp
+    src/workbench/packs_page.cpp src/workbench/images.cpp src/workbench/level_model.cpp src/workbench/game_assets.cpp src/workbench/viewport.cpp src/workbench/levels_page.cpp
     src/common/connect_file.cpp src/common/texture_match.cpp
     "${imgui_SOURCE_DIR}/imgui.cpp" "${imgui_SOURCE_DIR}/imgui_draw.cpp" "${imgui_SOURCE_DIR}/imgui_tables.cpp" "${imgui_SOURCE_DIR}/imgui_widgets.cpp"
     "${imgui_SOURCE_DIR}/backends/imgui_impl_win32.cpp" "${imgui_SOURCE_DIR}/backends/imgui_impl_dx11.cpp")
@@ -99,6 +119,41 @@ if(TENCHU_BUILD_RUNTIME)
   add_executable(audio_rolloff_test tests/audio_rolloff_test.cpp)
   target_include_directories(audio_rolloff_test PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/runtime")
   enable_testing()
+  add_executable(online_test tests/online_test.cpp src/common/online.cpp src/common/online_service.cpp)
+  target_include_directories(online_test PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/runtime")
+  target_link_libraries(online_test PRIVATE tomlplusplus::tomlplusplus ws2_32)
+  add_test(NAME online COMMAND online_test)
+  add_executable(online_input_window_test tests/online_input_window_test.cpp)
+  target_include_directories(online_input_window_test PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/runtime")
+  add_test(NAME online_input_window COMMAND online_input_window_test)
+  add_executable(online_jitter_test tests/online_jitter_test.cpp)
+  target_include_directories(online_jitter_test PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/runtime")
+  add_test(NAME online_jitter COMMAND online_jitter_test)
+  add_executable(online_input_bridge_test tests/online_input_bridge_test.cpp src/startup/online_input_hooks.cpp)
+  target_include_directories(online_input_bridge_test PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/runtime" "${XBE_SDK_DIR}/runtime")
+  add_test(NAME online_input_bridge COMMAND online_input_bridge_test)
+  add_executable(online_discovery_compat_test tests/online_discovery_compat_test.cpp src/common/online.cpp)
+  target_include_directories(online_discovery_compat_test PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/runtime")
+  target_link_libraries(online_discovery_compat_test PRIVATE tomlplusplus::tomlplusplus ws2_32)
+  add_test(NAME online_discovery_compat COMMAND online_discovery_compat_test)
+  add_executable(online_router_test tests/online_router_test.cpp src/common/online.cpp)
+  target_include_directories(online_router_test PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/runtime" "${XBE_SDK_DIR}/runtime")
+  target_link_libraries(online_router_test PRIVATE tomlplusplus::tomlplusplus ws2_32)
+  add_test(NAME online_router COMMAND online_router_test)
+  set_tests_properties(online_router PROPERTIES TIMEOUT 20)
+  add_executable(online_menu_test tests/online_menu_test.cpp src/common/online_menu.cpp src/common/online.cpp
+    "${imgui_SOURCE_DIR}/imgui.cpp" "${imgui_SOURCE_DIR}/imgui_draw.cpp" "${imgui_SOURCE_DIR}/imgui_tables.cpp" "${imgui_SOURCE_DIR}/imgui_widgets.cpp")
+  target_include_directories(online_menu_test PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/runtime" "${XBE_SDK_DIR}/runtime" "${imgui_SOURCE_DIR}")
+  target_link_libraries(online_menu_test PRIVATE tomlplusplus::tomlplusplus ws2_32)
+  add_test(NAME online_menu COMMAND online_menu_test)
+  add_test(NAME online_bindings COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/online_bindings_test.py")
+  if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/analysis/xbe.json")  # reads the analysis of the game executable
+    add_test(NAME online_voice_vtable COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/online_voice_vtable_test.py")
+  endif()
+  add_executable(xnet_socket_test "${TENCHU_NETWORK_TEST}")
+  target_link_libraries(xnet_socket_test PRIVATE ws2_32)
+  add_test(NAME xnet_socket COMMAND xnet_socket_test)
+  set_tests_properties(xnet_socket PROPERTIES TIMEOUT 10)
   add_test(NAME audio_rolloff COMMAND audio_rolloff_test)
   add_executable(audio_stream_adapter_test tests/audio_stream_adapter_test.cpp src/startup/audio_stream_adapter.cpp src/startup/audio_pause_adapter.cpp)
   target_include_directories(audio_stream_adapter_test PRIVATE "${XBE_SDK_DIR}/runtime" "${CMAKE_CURRENT_SOURCE_DIR}/generated/startup")
@@ -125,6 +180,7 @@ if(TENCHU_BUILD_RUNTIME)
   target_include_directories(autoplay_input_test PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/runtime" "${XBE_SDK_DIR}/runtime")
   add_test(NAME autoplay_input COMMAND autoplay_input_test)
   add_executable(display_menu_test tests/display_menu_test.cpp src/common/display_menu.cpp src/common/port_settings.cpp src/common/menu_options.cpp
+    src/common/game_controls.cpp src/common/controls_menu.cpp
     src/common/texture_packs.cpp src/common/texture_match.cpp src/common/textures_menu.cpp src/common/mods.cpp src/common/mods_menu.cpp src/common/custom_levels.cpp src/common/custom_levels_menu.cpp src/common/open_folder.cpp src/common/connect_file.cpp
     src/common/memory_patches.cpp src/common/memory_patches_menu.cpp
     "${imgui_SOURCE_DIR}/imgui.cpp" "${imgui_SOURCE_DIR}/imgui_draw.cpp" "${imgui_SOURCE_DIR}/imgui_tables.cpp" "${imgui_SOURCE_DIR}/imgui_widgets.cpp")
@@ -134,10 +190,13 @@ if(TENCHU_BUILD_RUNTIME)
   add_executable(game_cheats_test tests/game_cheats_test.cpp)
   target_include_directories(game_cheats_test PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/runtime")
   add_test(NAME game_cheats COMMAND game_cheats_test)
-  add_executable(camera_hooks_test tests/camera_hooks_test.cpp src/startup/camera_hooks.cpp)
+  add_executable(draw_distance_hooks_test tests/draw_distance_hooks_test.cpp src/startup/draw_distance_hooks.cpp)
+  target_include_directories(draw_distance_hooks_test PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/runtime" "${XBE_SDK_DIR}/runtime")
+  add_test(NAME draw_distance_hooks COMMAND draw_distance_hooks_test)
+  add_executable(camera_hooks_test tests/camera_hooks_test.cpp src/startup/camera_hooks.cpp src/common/game_controls.cpp)
   target_include_directories(camera_hooks_test PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/runtime" "${XBE_SDK_DIR}/runtime")
   add_test(NAME camera_hooks COMMAND camera_hooks_test)
-  add_executable(noclip_hooks_test tests/noclip_hooks_test.cpp src/startup/noclip_hooks.cpp src/common/memory_patches.cpp)
+  add_executable(noclip_hooks_test tests/noclip_hooks_test.cpp src/startup/noclip_hooks.cpp src/common/memory_patches.cpp src/common/game_controls.cpp)
   target_include_directories(noclip_hooks_test PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/runtime" "${XBE_SDK_DIR}/runtime")
   target_link_libraries(noclip_hooks_test PRIVATE tomlplusplus::tomlplusplus)
   target_compile_definitions(noclip_hooks_test PRIVATE TENCHU_SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}")
@@ -155,7 +214,7 @@ if(TENCHU_BUILD_RUNTIME)
   add_executable(presentation_resize_test tests/presentation_resize_test.cpp)
   target_include_directories(presentation_resize_test PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/runtime")
   add_test(NAME presentation_resize COMMAND presentation_resize_test)
-  add_executable(port_settings_test tests/port_settings_test.cpp src/common/port_settings.cpp src/common/texture_packs.cpp src/common/texture_match.cpp src/common/mods.cpp src/common/connect_file.cpp src/common/memory_patches.cpp)
+  add_executable(port_settings_test tests/port_settings_test.cpp src/common/port_settings.cpp src/common/texture_packs.cpp src/common/texture_match.cpp src/common/mods.cpp src/common/connect_file.cpp src/common/memory_patches.cpp src/common/game_controls.cpp)
   target_include_directories(port_settings_test PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/runtime" "${XBE_SDK_DIR}/runtime")
   target_link_libraries(port_settings_test PRIVATE tomlplusplus::tomlplusplus windowscodecs ole32)
   add_executable(texture_packs_test tests/texture_packs_test.cpp src/common/texture_packs.cpp src/common/texture_match.cpp)
@@ -174,6 +233,9 @@ if(TENCHU_BUILD_RUNTIME)
   target_include_directories(workbench_test PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/runtime" "${CMAKE_CURRENT_SOURCE_DIR}/src/workbench")
   target_link_libraries(workbench_test PRIVATE tomlplusplus::tomlplusplus windowscodecs ole32)
   add_test(NAME workbench COMMAND workbench_test)
+  add_executable(game_assets_test EXCLUDE_FROM_ALL tests/game_assets_test.cpp src/workbench/game_assets.cpp src/workbench/level_model.cpp src/workbench/images.cpp src/common/texture_match.cpp src/common/connect_file.cpp)
+  target_include_directories(game_assets_test PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/runtime" "${CMAKE_CURRENT_SOURCE_DIR}/src/workbench" "${imgui_SOURCE_DIR}")
+  target_link_libraries(game_assets_test PRIVATE tomlplusplus::tomlplusplus windowscodecs ole32)
   add_executable(workbench_probe EXCLUDE_FROM_ALL tests/workbench_probe.cpp src/workbench/images.cpp src/common/texture_match.cpp src/common/connect_file.cpp)
   target_include_directories(workbench_probe PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/runtime" "${CMAKE_CURRENT_SOURCE_DIR}/src/workbench")
   target_link_libraries(workbench_probe PRIVATE tomlplusplus::tomlplusplus windowscodecs ole32)
@@ -184,6 +246,13 @@ if(TENCHU_BUILD_RUNTIME)
   target_include_directories(texture_pack_probe PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/runtime" "${XBE_SDK_DIR}/runtime")
   target_link_libraries(texture_pack_probe PRIVATE tomlplusplus::tomlplusplus windowscodecs ole32)
   add_test(NAME port_settings COMMAND port_settings_test)
+  add_executable(game_controls_test tests/game_controls_test.cpp src/common/game_controls.cpp)
+  target_include_directories(game_controls_test PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/runtime" "${XBE_SDK_DIR}/runtime")
+  add_test(NAME game_controls COMMAND game_controls_test)
+  add_executable(hud_hooks_test tests/hud_hooks_test.cpp src/startup/hud_hooks.cpp)
+  target_include_directories(hud_hooks_test PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/runtime" "${XBE_SDK_DIR}/runtime")
+  add_test(NAME hud_hooks COMMAND hud_hooks_test)
+  add_test(NAME hud_hook_sites COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/hud_hook_sites_test.py")
   add_executable(memory_patches_test tests/memory_patches_test.cpp src/common/memory_patches.cpp)
   target_include_directories(memory_patches_test PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/runtime" "${XBE_SDK_DIR}/runtime")
   target_link_libraries(memory_patches_test PRIVATE tomlplusplus::tomlplusplus)

@@ -8,6 +8,7 @@
 #include "port/open_folder.h"
 #include "graphics/renderer_selection.h"
 #include <imgui.h>
+#include <filesystem>
 #include <string>
 #include <vector>
 
@@ -15,6 +16,13 @@ void TenchuRenderModsTab(){
     namespace mods=tenchu::mods;
     static std::vector<mods::ModStatus> list;static bool scanned=false;static std::string status;
     if(!scanned){list=mods::List();scanned=true;}
+    // a mod folder added or removed while the game runs (an RFD Switchblade lighting mod, say) shows by itself
+    static std::filesystem::file_time_type seen{};static double checked=-10;
+    if(ImGui::GetTime()-checked>1){
+        checked=ImGui::GetTime();std::error_code ec;
+        const auto folder=std::filesystem::last_write_time(mods::ModsDir(),ec);
+        if(!ec&&folder!=seen){if(seen!=std::filesystem::file_time_type{}){mods::Rescan();list=mods::List();}seen=folder;}
+    }
     ImGui::SeparatorText("Mods");
     ImGui::TextWrapped("Each folder in mods next to the game is a mod. A file inside it replaces the disc file at the same path, "
         "for example mods\\My mod\\<folder>\\<file>. Mods higher in the list win when two replace the same file.");

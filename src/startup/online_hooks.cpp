@@ -1,5 +1,6 @@
 #include "cpu/x86_context.h"
 #include <cstring>
+#include "port/online.h"
 // Xbox Live for the original Xbox closed in 2010, and the SDK only stubs its
 // startup. At boot, 0003D940 checks whether Live is usable and stores the result
 // at 005AC8EC; the title screen (002342B2) reads it to offer the Live features.
@@ -7,7 +8,7 @@
 // empty Account Selection screen with no way back. Report "not usable", as on a
 // console without Live, so the title keeps to its offline path.
 void TenchuXboxLiveUnavailable(X86Context&,uint8_t* base){
-    const uint32_t unavailable=0;
+    const uint32_t unavailable=tenchu::online::enabled.load()?1:0;
     std::memcpy(base+0x005AC8EC,&unavailable,sizeof(unavailable));
 }
 
@@ -19,6 +20,11 @@ void TenchuXboxLiveUnavailable(X86Context&,uint8_t* base){
 // 0x0D act on the choice), so the menu simply reopens. State 0 restarted the
 // whole title sequence, intro movie included.
 void TenchuBlockXboxLiveMenu(X86Context& ctx,uint8_t* base){
+    if(tenchu::online::enabled.load()){
+        const uint32_t available=1;
+        std::memcpy(base+0x005AC8EC,&available,4);
+        return;
+    }
     const uint32_t menu_list=0x0A;
     std::memcpy(base+ctx.ecx+0x28,&menu_list,sizeof(menu_list));
 }

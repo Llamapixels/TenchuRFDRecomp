@@ -1,6 +1,7 @@
 // The Levels page: the game's stages in 3D, and custom levels made for F6 > Levels in the game
 // (runtime/port/custom_levels.h). Data in level_model.cpp, drawing in viewport.cpp.
 #include "level_model.h"
+#include "game_assets.h"
 #include "ui.h"
 #include "viewport.h"
 #include <imgui.h>
@@ -9,6 +10,7 @@
 #include <cmath>
 #include <cstdio>
 #include <cstring>
+#include <fstream>
 #include <map>
 #include <mutex>
 #include <thread>
@@ -38,6 +40,12 @@ struct State {
     lv::Level level;
     bool has_level = false, unsaved = false;
     int selected_box = -1, selected_model = -1, selected_enemy = -1, selected_light = -1, selected_item = -1;
+    const char* reveal_section = nullptr;  // viewport selection opens its properties
+    bool assets_open = false, assets_current_stage = true;
+    int assets_tab = 0, selected_asset = -1, pending_asset = -1;
+    int texture_target = 0, texture_material = 0;
+    char assets_search[128]{};
+    std::string assets_folder;
     uint64_t revision = 0;  // goes up with every change to the level
     struct Budget {         // what the pack takes, worked out once per revision (it cuts every triangle)
         uint64_t revision = ~0ull;
@@ -49,6 +57,7 @@ struct State {
     } budget;
     std::vector<std::string> level_textures;  // for the level's stage
     std::string status;
+    int place_entity = 0; // 1 enemy, 2 item
     Viewport viewport;
     Camera camera;
 };
@@ -151,7 +160,7 @@ void Rebuild() {
     if (data && stage && data == s.stage_data && s.loaded_stage == stage->stage && (s.show_map || !making)) {
         const bool dim = making;  // the stage's own map under a level is a reference, drawn darker
         std::map<std::string, DrawBatch> by_texture;
-        for (const auto& m : data->meshes)
+        for (const auto& m : data->meshes) {
             for (const auto& g : m.groups) {
                 DrawBatch& b = by_texture[g.texture_entry];
                 for (uint32_t i : g.triangles) {
@@ -161,6 +170,7 @@ void Rebuild() {
                     b.vertices.push_back({v.x, v.y, v.z, c, v.u, v.v});
                 }
             }
+        }
         for (auto& [entry, b] : by_texture) {
             b.texture = Texture(entry);
             batches.push_back(std::move(b));
@@ -399,6 +409,7 @@ void MakePanel() {
         return;
     }
     lv::Level& l = s.level;
+    if (IconButton(ICON_PACKAGE, "Browse game assets...")) s.assets_open = true;
     char text[256];
     auto edit = [&](const char* label, std::string& value, bool multiline = false) {
         std::snprintf(text, sizeof(text), "%s", value.c_str());
@@ -407,354 +418,412 @@ void MakePanel() {
                                  : ImGui::InputTextWithHint(label, label + 2, text, sizeof(text));
         if (changed) { value = text; Changed(); }
     };
-    Heading("Level");
-    edit("##Name", l.name);
-    edit("##Author", l.author);
-    edit("##Description", l.description, true);
-    ImGui::TextUnformatted("Loads on");
-    ImGui::SetNextItemWidth(-1);
-    if (StageCombo("##loads", l.stage)) {
-        if (const lv::StageInfo* st = StageByNumber(l.stage)) {
-            const lv::Level fresh = lv::NewLevel(*st);
-            std::memcpy(l.spawn, fresh.spawn, sizeof(l.spawn));
-            l.ground_y = fresh.ground_y;
-            l.ground_texture = fresh.ground_texture;
-            for (auto& b : l.boxes) b.texture.clear();
+    const bool collapse_all = ImGui::Button("Collapse all");
+    if (collapse_all) s.reveal_section = nullptr;
+    auto section = [&](const char* label) {
+        const bool reveal = s.reveal_section && std::strcmp(s.reveal_section, label) == 0;
+        if (collapse_all || reveal) ImGui::SetNextItemOpen(reveal);
+        const bool open = ImGui::CollapsingHeader(label);
+        if (reveal) ImGui::SetScrollHereY(0.0f);
+        return open;
+    };
+    if (section("Level")) {
+        ImGui::PushID("Level");
+        edit("##Name", l.name);
+        edit("##Author", l.author);
+        edit("##Description", l.description, true);
+        ImGui::TextUnformatted("Loads on");
+        ImGui::SetNextItemWidth(-1);
+        if (StageCombo("##loads", l.stage)) {
+            if (const lv::StageInfo* st = StageByNumber(l.stage)) {
+                const lv::Level fresh = lv::NewLevel(*st);
+                std::memcpy(l.spawn, fresh.spawn, sizeof(l.spawn));
+                l.ground_y = fresh.ground_y;
+                l.ground_texture = fresh.ground_texture;
+                for (auto& b : l.boxes) b.texture.clear();
+            }
+            SetLevelStage(l.stage);
+            Changed();
+            FrameStage();
         }
-        SetLevelStage(l.stage);
-        Changed();
-        FrameStage();
+        Hint("Its mission, enemies and items stay; the map is replaced. Textures come from that stage's first area.");
+        ImGui::PopID();
     }
-    Hint("Its mission, enemies and items stay; the map is replaced. Textures come from that stage's first area.");
 
-    Heading("Ground");
-    ImGui::SetNextItemWidth(-1);
-    if (ImGui::DragFloat("##size", &l.ground_size, 50, 0, 200000, l.ground_size > 0 ? "Size %.0f" : "No ground")) Changed();
-    if (l.ground_size <= 0) Hint("No ground: the level is its boxes and models (give the player start something to stand on).");
-    ImGui::SetNextItemWidth(-1);
-    if (ImGui::DragFloat("##height", &l.ground_y, 5, -20000, 20000, "Height %.0f")) Changed();
-    ImGui::SetNextItemWidth(-1);
-    if (TextureCombo("##ground texture", l.ground_texture)) Changed();
-    ImGui::SetNextItemWidth(-1);
-    if (ImGui::DragFloat("##scale", &l.texture_scale, 5, 50, 4000, "Texture repeat %.0f")) Changed();
+    if (section("Ground")) {
+        ImGui::PushID("Ground");
+        ImGui::SetNextItemWidth(-1);
+        if (ImGui::DragFloat("##size", &l.ground_size, 50, 0, 200000, l.ground_size > 0 ? "Size %.0f" : "No ground")) Changed();
+        if (l.ground_size <= 0) Hint("No ground: the level is its boxes and models (give the player start something to stand on).");
+        ImGui::SetNextItemWidth(-1);
+        if (ImGui::DragFloat("##height", &l.ground_y, 5, -20000, 20000, "Height %.0f")) Changed();
+        ImGui::SetNextItemWidth(-1);
+        if (TextureCombo("##ground texture", l.ground_texture)) Changed();
+        ImGui::SetNextItemWidth(-1);
+        if (ImGui::DragFloat("##scale", &l.texture_scale, 5, 50, 4000, "Texture repeat %.0f")) Changed();
+        ImGui::PopID();
+    }
 
-    Heading("Lighting");
-    ImGui::SetNextItemWidth(-1);
-    if (ImGui::ColorEdit3("##light", l.light)) Changed();
-    if (ImGui::Button("Plain")) { l.light[0] = l.light[1] = l.light[2] = .5f; Changed(); }
-    ImGui::SameLine();
-    if (ImGui::Button("Night")) { l.light[0] = .14f; l.light[1] = .15f; l.light[2] = .17f; Changed(); }  // the stages' own colours
-    ImGui::SetNextItemWidth(-1);
-    if (ImGui::SliderFloat("##sun", &l.sun, 0, 1, "Sun shading %.2f")) Changed();
-    ImGui::BeginDisabled(l.sun <= 0);
-    ImGui::SetNextItemWidth(-1);
-    if (ImGui::SliderAngle("##sun yaw", &l.sun_yaw, -180, 180, "Sun from %.0f deg")) Changed();
-    ImGui::SetNextItemWidth(-1);
-    if (ImGui::SliderAngle("##sun height", &l.sun_height, 0, 90, "Sun height %.0f deg")) Changed();
-    ImGui::EndDisabled();
-    Hint("The light colours every surface: 128 is the plain brightness, higher is brighter (up to twice). "
-         "Sun shading darkens the sides turned away from the sun.");
+    if (section("Lighting")) {
+        ImGui::PushID("Lighting");
+        ImGui::SetNextItemWidth(-1);
+        if (ImGui::ColorEdit3("##light", l.light)) Changed();
+        if (ImGui::Button("Plain")) { l.light[0] = l.light[1] = l.light[2] = .5f; Changed(); }
+        ImGui::SameLine();
+        if (ImGui::Button("Night")) { l.light[0] = .14f; l.light[1] = .15f; l.light[2] = .17f; Changed(); }  // the stages' own colours
+        ImGui::SetNextItemWidth(-1);
+        if (ImGui::SliderFloat("##sun", &l.sun, 0, 1, "Sun shading %.2f")) Changed();
+        ImGui::BeginDisabled(l.sun <= 0);
+        ImGui::SetNextItemWidth(-1);
+        if (ImGui::SliderAngle("##sun yaw", &l.sun_yaw, -180, 180, "Sun from %.0f deg")) Changed();
+        ImGui::SetNextItemWidth(-1);
+        if (ImGui::SliderAngle("##sun height", &l.sun_height, 0, 90, "Sun height %.0f deg")) Changed();
+        ImGui::EndDisabled();
+        Hint("The light colours every surface: 128 is the plain brightness, higher is brighter (up to twice). "
+             "Sun shading darkens the sides turned away from the sun.");
+        ImGui::PopID();
+    }
 
-    Heading("Player start");
     // the mission's own start: a start elsewhere can land where the mission does something at the
     // start (stage 3's river kept the screen white), so only the facing is the level's
     lv::LockStart(l, StageByNumber(l.stage));
-    ImGui::Text("%.0f, %.0f, %.0f", l.spawn[0], l.spawn[1], l.spawn[2]);
-    ImGui::SetNextItemWidth(-1);
-    if (ImGui::SliderAngle("##facing", &l.spawn[3], -180, 180, "Facing %.0f deg")) Changed();
-    Hint("Fixed at the mission's own start, on the ground: build the level around it. "
-         "Heights are the game's: smaller is higher (y points down).");
 
-    Heading("Boxes");
-    if (IconButton(ICON_IMPORT, "Add box")) {
-        lv::Box b;
-        ViewCentre(b.x, b.z);
-        b.bottom = l.ground_y;
-        b.texture = l.ground_texture;
-        l.boxes.push_back(b);
-        s.selected_box = int(l.boxes.size()) - 1;
-        s.selected_model = -1;
-        Changed();
-    }
-    for (int i = 0; i < int(l.boxes.size()); i++) {
-        ImGui::PushID(i);
-        char name[48];
-        std::snprintf(name, sizeof(name), "Box %d  (%.0f x %.0f x %.0f)", i + 1, l.boxes[i].width, l.boxes[i].depth, l.boxes[i].height);
-        if (ImGui::Selectable(name, s.selected_box == i)) { s.selected_box = i; s.selected_model = -1; s.dirty_scene = true; }
+    if (section("Player start")) {
+        ImGui::PushID("Player start");
+        ImGui::Text("%.0f, %.0f, %.0f", l.spawn[0], l.spawn[1], l.spawn[2]);
+        ImGui::SetNextItemWidth(-1);
+        if (ImGui::SliderAngle("##facing", &l.spawn[3], -180, 180, "Facing %.0f deg")) Changed();
+        Hint("Fixed at the mission's own start, on the ground: build the level around it. "
+             "Heights are the game's: smaller is higher (y points down).");
         ImGui::PopID();
     }
-    if (s.selected_box >= 0 && s.selected_box < int(l.boxes.size())) {
-        lv::Box& b = l.boxes[s.selected_box];
-        float pos[3] = {b.x, b.bottom, b.z}, size[3] = {b.width, b.height, b.depth};
-        ImGui::SetNextItemWidth(-1);
-        if (ImGui::DragFloat3("##pos", pos, 5, -100000, 100000, "%.0f")) { b.x = pos[0]; b.bottom = pos[1]; b.z = pos[2]; Changed(); }
-        ImGui::SetNextItemWidth(-1);
-        if (ImGui::DragFloat3("##size", size, 5, 20, 20000, "%.0f")) { b.width = size[0]; b.height = size[1]; b.depth = size[2]; Changed(); }
-        Hint("x, base height, z; then width, height, depth.");
-        ImGui::SetNextItemWidth(-1);
-        if (TextureCombo("##box texture", b.texture)) Changed();
-        if (IconButton(ICON_CANCEL, "Remove box")) { l.boxes.erase(l.boxes.begin() + s.selected_box); s.selected_box = -1; Changed(); }
-    }
 
-    Heading("Models");
-    if (IconButton(ICON_IMPORT, "Import OBJ")) {
-        const fs::path file = OpenFile(L"Wavefront OBJ (*.obj)\0*.obj\0", FromU8(Setting("levels_models")));
-        if (!file.empty()) {
-            SetSetting("levels_models", U8(file.parent_path()));
-            float x, z;
-            ViewCentre(x, z);
-            std::string error;
-            if (lv::AddModel(l, file, x, z, error)) {
-                s.selected_model = int(l.models.size()) - 1;
-                s.selected_box = -1;
-                Changed();
-            } else {
-                Notify("Could not import " + U8(file.filename()) + ": " + error, true);
-            }
-        }
-    }
-    Hint("Export from Blender as OBJ (Y up). Scale 100 turns metres into game units; a person is about 180 tall.");
-    for (int i = 0; i < int(l.models.size()); i++) {
-        ImGui::PushID(1000 + i);
-        if (ImGui::Selectable(l.models[i].name.c_str(), s.selected_model == i)) { s.selected_model = i; s.selected_box = -1; s.dirty_scene = true; }
-        ImGui::PopID();
-    }
-    if (s.selected_model >= 0 && s.selected_model < int(l.models.size())) {
-        lv::Model& m = l.models[s.selected_model];
-        float pos[3] = {m.x, m.y, m.z};
-        ImGui::SetNextItemWidth(-1);
-        if (ImGui::DragFloat3("##model pos", pos, 5, -100000, 100000, "%.0f")) { m.x = pos[0]; m.y = pos[1]; m.z = pos[2]; Changed(); }
-        Hint("x, height of its origin, z.");
-        ImGui::SetNextItemWidth(-1);
-        if (ImGui::SliderAngle("##model yaw", &m.yaw, -180, 180, "Facing %.0f deg")) Changed();
-        ImGui::SetNextItemWidth(-1);
-        if (ImGui::DragFloat("##model scale", &m.scale, 0.5f, 0.01f, 100000, "Scale %.2f")) Changed();
-        if (ImGui::Checkbox("Solid (collision)", &m.solid)) Changed();
-        ImGui::SameLine();
-        if (ImGui::Button("Sit on ground")) {
-            lv::Vec3 lo, hi;
-            if (lv::ModelBox(l, s.selected_model, lo, hi)) { m.y += -l.ground_y - lo.y; Changed(); }
-        }
-        ImGui::BeginDisabled(!m.solid);
-        if (ImGui::Checkbox("Ledges", &m.ledges)) Changed();
-        ImGui::EndDisabled();
-        Hint("Ledges: you can hang from its edges, but the game then treats its whole footprint as solid up to its "
-             "top. Untick for buildings to go into: only the mesh collides.");
-        auto mesh = lv::ReadModel(lv::ModelPath(l, m));
-        ImGui::Text("%zu triangles", mesh->faces.size());
-        for (size_t k = 0; k < mesh->materials.size(); k++) {
-            if (m.textures.size() < mesh->materials.size()) m.textures.resize(mesh->materials.size(), l.ground_texture);
-            if (m.images.size() < mesh->materials.size()) m.images.resize(mesh->materials.size());
-            ImGui::PushID(int(k));
-            ImGui::TextDisabled("%s", mesh->materials[k].c_str());
-            if (!m.images[k].empty()) {  // its own picture, packed into the level when saved
-                ImGui::Text("Picture %s", U8(FromU8(m.images[k]).filename()).c_str());
-                if (ImGui::Button("Use a stage texture")) { m.images[k].clear(); Changed(); }
-            } else {
-                ImGui::SetNextItemWidth(-1);
-                if (TextureCombo("##material", m.textures[k])) Changed();
-                if (ImGui::Button("Picture...")) {
-                    const fs::path file = OpenFile(L"Pictures (*.png, *.jpg, *.bmp, *.tif, *.gif)\0*.png;*.jpg;*.jpeg;*.bmp;*.tif;*.tiff;*.gif\0",
-                                                   FromU8(Setting("levels_pictures")));
-                    if (!file.empty()) {
-                        SetSetting("levels_pictures", U8(file.parent_path()));
-                        m.images[k] = U8(file);
-                        Changed();
-                    }
-                }
-            }
-            ImGui::PopID();
-        }
-        Hint("Pictures (from the .mtl or chosen here) are packed into the level when it is saved: each "
-             "replaces one of the stage's textures the level does not use, at that texture's size.");
-        if (IconButton(ICON_CANCEL, "Remove model")) { l.models.erase(l.models.begin() + s.selected_model); s.selected_model = -1; Changed(); }
-    }
-
-    Heading("Enemies");
-    static const lv::MissionEnemies kNone;
-    const lv::StageInfo* on = StageByNumber(l.stage);
-    const lv::MissionEnemies& mission = on ? lv::StageEnemies(*on) : kNone;
-    if (mission.enemies.empty()) {
-        Hint("This stage has no story enemies.");
-    } else {
-        if (ImGui::Checkbox("Own enemies", &l.own_enemies)) {
-            if (l.own_enemies && l.enemies.empty()) l.enemies = mission.enemies;  // start from the mission's
-            s.selected_enemy = -1;
+    if (section("Boxes")) {
+        ImGui::PushID("Boxes");
+        if (IconButton(ICON_IMPORT, "Add box")) {
+            lv::Box b;
+            ViewCentre(b.x, b.z);
+            b.bottom = l.ground_y;
+            b.texture = l.ground_texture;
+            l.boxes.push_back(b);
+            s.selected_box = int(l.boxes.size()) - 1;
+            s.selected_model = -1;
             Changed();
         }
-        if (ImGui::Checkbox("Show enemies", &s.show_enemies)) s.dirty_scene = true;
-        if (!l.own_enemies) {
-            Hint("The mission's enemies (dim orange) come as they are. Tick Own enemies to move, add or remove them.");
-        } else {
-            Hint("These replace the mission's for every character and layout. An enemy left where it was keeps its "
-                 "patrol; moved or turned it stands guard. Removed ones are kept out of sight, as the mission may count them. "
-                 "Names are model folders in m.con: EM enemies, BS bosses and story characters, NPC people.");
-            if (IconButton(ICON_IMPORT, "Add enemy")) {
-                lv::Enemy e = s.selected_enemy >= 0 && s.selected_enemy < int(l.enemies.size()) ? l.enemies[s.selected_enemy] : mission.enemies.back();
-                ViewCentre(e.x, e.z);
-                e.y = l.ground_y;
-                e.source = -1;
-                e.removed = false;
-                l.enemies.push_back(e);
-                s.selected_enemy = int(l.enemies.size()) - 1;
-                Changed();
+        for (int i = 0; i < int(l.boxes.size()); i++) {
+            ImGui::PushID(i);
+            char name[48];
+            std::snprintf(name, sizeof(name), "Box %d  (%.0f x %.0f x %.0f)", i + 1, l.boxes[i].width, l.boxes[i].depth, l.boxes[i].height);
+            if (ImGui::Selectable(name, s.selected_box == i)) { s.selected_box = i; s.selected_model = -1; s.dirty_scene = true; }
+            ImGui::PopID();
+        }
+        if (s.selected_box >= 0 && s.selected_box < int(l.boxes.size())) {
+            lv::Box& b = l.boxes[s.selected_box];
+            float pos[3] = {b.x, b.bottom, b.z}, size[3] = {b.width, b.height, b.depth};
+            ImGui::SetNextItemWidth(-1);
+            if (ImGui::DragFloat3("##pos", pos, 5, -100000, 100000, "%.0f")) { b.x = pos[0]; b.bottom = pos[1]; b.z = pos[2]; Changed(); }
+            ImGui::SetNextItemWidth(-1);
+            if (ImGui::DragFloat3("##size", size, 5, 20, 20000, "%.0f")) { b.width = size[0]; b.height = size[1]; b.depth = size[2]; Changed(); }
+            Hint("x, base height, z; then width, height, depth.");
+            ImGui::SetNextItemWidth(-1);
+            if (TextureCombo("##box texture", b.texture)) Changed();
+            if (IconButton(ICON_CANCEL, "Remove box")) { l.boxes.erase(l.boxes.begin() + s.selected_box); s.selected_box = -1; Changed(); }
+        }
+        ImGui::PopID();
+    }
+
+    if (section("Models")) {
+        ImGui::PushID("Models");
+        if (IconButton(ICON_IMPORT, "Import OBJ")) {
+            const fs::path file = OpenFile(L"Wavefront OBJ (*.obj)\0*.obj\0", FromU8(Setting("levels_models")));
+            if (!file.empty()) {
+                SetSetting("levels_models", U8(file.parent_path()));
+                float x, z;
+                ViewCentre(x, z);
+                std::string error;
+                if (lv::AddModel(l, file, x, z, error)) {
+                    s.selected_model = int(l.models.size()) - 1;
+                    s.selected_box = -1;
+                    Changed();
+                } else {
+                    Notify("Could not import " + U8(file.filename()) + ": " + error, true);
+                }
             }
+        }
+        Hint("Export from Blender as OBJ (Y up). Scale 100 turns metres into game units; a person is about 180 tall.");
+        for (int i = 0; i < int(l.models.size()); i++) {
+            ImGui::PushID(1000 + i);
+            if (ImGui::Selectable(l.models[i].name.c_str(), s.selected_model == i)) { s.selected_model = i; s.selected_box = -1; s.dirty_scene = true; }
+            ImGui::PopID();
+        }
+        if (s.selected_model >= 0 && s.selected_model < int(l.models.size())) {
+            lv::Model& m = l.models[s.selected_model];
+            float pos[3] = {m.x, m.y, m.z};
+            ImGui::SetNextItemWidth(-1);
+            if (ImGui::DragFloat3("##model pos", pos, 5, -100000, 100000, "%.0f")) { m.x = pos[0]; m.y = pos[1]; m.z = pos[2]; Changed(); }
+            Hint("x, height of its origin, z.");
+            ImGui::SetNextItemWidth(-1);
+            if (ImGui::SliderAngle("##model yaw", &m.yaw, -180, 180, "Facing %.0f deg")) Changed();
+            ImGui::SetNextItemWidth(-1);
+            if (ImGui::DragFloat("##model scale", &m.scale, 0.5f, 0.01f, 100000, "Scale %.2f")) Changed();
+            if (ImGui::Checkbox("Solid (collision)", &m.solid)) Changed();
             ImGui::SameLine();
-            if (ImGui::Button("Mission's enemies")) { l.enemies = mission.enemies; s.selected_enemy = -1; Changed(); }
-            for (int i = 0; i < int(l.enemies.size()); i++) {
-                const lv::Enemy& e = l.enemies[i];
-                char label[96];
-                std::snprintf(label, sizeof(label), "%d  %s%s%s", i + 1, lv::EnemyKindName(e.kind).c_str(), e.source < 0 ? "  (new)" : "", e.removed ? "  (removed)" : "");
-                ImGui::PushID(2000 + i);
-                if (ImGui::Selectable(label, s.selected_enemy == i)) { s.selected_enemy = i; s.dirty_scene = true; }
+            if (ImGui::Button("Sit on ground")) {
+                lv::Vec3 lo, hi;
+                if (lv::ModelBox(l, s.selected_model, lo, hi)) { m.y += -l.ground_y - lo.y; Changed(); }
+            }
+            ImGui::BeginDisabled(!m.solid);
+            if (ImGui::Checkbox("Ledges", &m.ledges)) Changed();
+            ImGui::EndDisabled();
+            Hint("Ledges: you can hang from its edges, but the game then treats its whole footprint as solid up to its "
+                 "top. Untick for buildings to go into: only the mesh collides.");
+            auto mesh = lv::ReadModel(lv::ModelPath(l, m));
+            ImGui::Text("%zu triangles", mesh->faces.size());
+            for (size_t k = 0; k < mesh->materials.size(); k++) {
+                if (m.textures.size() < mesh->materials.size()) m.textures.resize(mesh->materials.size(), l.ground_texture);
+                if (m.images.size() < mesh->materials.size()) m.images.resize(mesh->materials.size());
+                ImGui::PushID(int(k));
+                ImGui::TextDisabled("%s", mesh->materials[k].c_str());
+                if (!m.images[k].empty()) {  // its own picture, packed into the level when saved
+                    ImGui::Text("Picture %s", U8(FromU8(m.images[k]).filename()).c_str());
+                    if (ImGui::Button("Use a stage texture")) { m.images[k].clear(); Changed(); }
+                } else {
+                    ImGui::SetNextItemWidth(-1);
+                    if (TextureCombo("##material", m.textures[k])) Changed();
+                    if (ImGui::Button("Picture...")) {
+                        const fs::path file = OpenFile(L"Pictures (*.png, *.jpg, *.bmp, *.tif, *.gif)\0*.png;*.jpg;*.jpeg;*.bmp;*.tif;*.tiff;*.gif\0",
+                                                       FromU8(Setting("levels_pictures")));
+                        if (!file.empty()) {
+                            SetSetting("levels_pictures", U8(file.parent_path()));
+                            m.images[k] = U8(file);
+                            Changed();
+                        }
+                    }
+                }
                 ImGui::PopID();
             }
-            if (s.selected_enemy >= 0 && s.selected_enemy < int(l.enemies.size())) {
-                lv::Enemy& e = l.enemies[s.selected_enemy];
-                float pos[3] = {e.x, e.y, e.z};
-                ImGui::SetNextItemWidth(-1);
-                if (ImGui::DragFloat3("##enemy pos", pos, 5, -100000, 100000, "%.0f")) { e.x = pos[0]; e.y = pos[1]; e.z = pos[2]; Changed(); }
-                Hint("x, height, z (the game's: smaller is higher).");
-                ImGui::SetNextItemWidth(-1);
-                if (ImGui::SliderFloat("##enemy facing", &e.facing, -180, 360, "Facing %.0f deg")) Changed();
-                if (ImGui::BeginCombo("##enemy kind", lv::EnemyKindName(e.kind).c_str())) {
-                    std::map<int, int> kinds;
-                    for (const auto& m : mission.enemies) kinds[m.kind]++;
-                    for (auto& [kind, count] : kinds) {
-                        const std::string name = lv::EnemyKindName(kind) + "  (" + std::to_string(count) + " in the mission)";
-                        if (ImGui::Selectable(name.c_str(), kind == e.kind)) { e.kind = kind; if (e.source >= 0 && mission.enemies[e.source].kind != kind) e.source = -1; Changed(); }
-                    }
-                    ImGui::EndCombo();
+            Hint("Pictures (from the .mtl or chosen here) are packed into the level when it is saved: each "
+                 "replaces one of the stage's textures the level does not use, at that texture's size.");
+            if (IconButton(ICON_CANCEL, "Remove model")) { l.models.erase(l.models.begin() + s.selected_model); s.selected_model = -1; Changed(); }
+        }
+        ImGui::PopID();
+    }
+
+    const lv::StageInfo* on = StageByNumber(l.stage);
+    if (section("Enemies")) {
+        ImGui::PushID("Enemies");
+        static const lv::MissionEnemies kNone;
+        const lv::MissionEnemies& mission = on ? lv::StageEnemies(*on) : kNone;
+        if (mission.enemies.empty()) {
+            Hint("This stage has no story enemies.");
+        } else {
+            if (ImGui::Checkbox("Own enemies", &l.own_enemies)) {
+                if (l.own_enemies && l.enemies.empty()) l.enemies = mission.enemies;  // start from the mission's
+                s.selected_enemy = -1;
+                Changed();
+            }
+            if (ImGui::Checkbox("Show enemies", &s.show_enemies)) s.dirty_scene = true;
+            if (!l.own_enemies) {
+                Hint("The mission's enemies (dim orange) come as they are. Tick Own enemies to move, add or remove them.");
+            } else {
+                Hint("These replace the mission's for every character and layout. An enemy left where it was keeps its "
+                     "patrol; moved or turned it stands guard. Removed ones are kept out of sight, as the mission may count them. "
+                     "Names are model folders in m.con: EM enemies, BS bosses and story characters, NPC people.");
+                if (IconButton(ICON_IMPORT, "Add enemy")) {
+                    lv::Enemy e = s.selected_enemy >= 0 && s.selected_enemy < int(l.enemies.size()) ? l.enemies[s.selected_enemy] : mission.enemies.back();
+                    ViewCentre(e.x, e.z);
+                    e.y = l.ground_y;
+                    e.source = -1;
+                    e.removed = false;
+                    l.enemies.push_back(e);
+                    s.selected_enemy = int(l.enemies.size()) - 1;
+                    Changed();
                 }
-                if (ImGui::Button("Move here")) { ViewCentre(e.x, e.z); e.y = l.ground_y; Changed(); }
                 ImGui::SameLine();
-                if (ImGui::Button("Sit on ground")) { e.y = l.ground_y; Changed(); }
-                if (e.source >= 0) {
-                    ImGui::SameLine();
-                    if (ImGui::Button("Mission's place")) {
-                        const lv::Enemy& was = mission.enemies[e.source];
-                        e.x = was.x; e.y = was.y; e.z = was.z; e.facing = was.facing; e.kind = was.kind;
-                        Changed();
-                    }
-                }
-                if (e.source >= 0) {  // the mission's: hidden, not deleted
-                    if (IconButton(ICON_CANCEL, e.removed ? "Bring back" : "Remove enemy")) { e.removed = !e.removed; Changed(); }
-                } else if (IconButton(ICON_CANCEL, "Remove enemy")) {
-                    l.enemies.erase(l.enemies.begin() + s.selected_enemy);
+                if (ImGui::Button("Restore")) { l.enemies = mission.enemies; s.selected_enemy = -1; Changed(); }
+                if (ImGui::Button("Remove all enemies")) {
+                    l.enemies = mission.enemies;
+                    for (auto& e : l.enemies) e.removed = true;
                     s.selected_enemy = -1;
                     Changed();
                 }
+                ImGui::BeginChild("enemy list", ImVec2(0, ImGui::GetTextLineHeightWithSpacing() * 6), ImGuiChildFlags_Border);
+                for (int i = 0; i < int(l.enemies.size()); i++) {
+                    const lv::Enemy& e = l.enemies[i];
+                    char label[96];
+                    std::snprintf(label, sizeof(label), "%d  %s%s%s", i + 1, lv::EnemyKindName(e.kind).c_str(), e.source < 0 ? "  (new)" : "", e.removed ? "  (removed)" : "");
+                    ImGui::PushID(2000 + i);
+                    if (ImGui::Selectable(label, s.selected_enemy == i)) { s.selected_enemy = i; s.dirty_scene = true; }
+                    ImGui::PopID();
+                }
+                ImGui::EndChild();
+                if (s.selected_enemy >= 0 && s.selected_enemy < int(l.enemies.size())) {
+                    lv::Enemy& e = l.enemies[s.selected_enemy];
+                    float pos[3] = {e.x, e.y, e.z};
+                    ImGui::SetNextItemWidth(-1);
+                    if (ImGui::DragFloat3("##enemy pos", pos, 5, -100000, 100000, "%.0f")) { e.x = pos[0]; e.y = pos[1]; e.z = pos[2]; Changed(); }
+                    Hint("x, height, z (the game's: smaller is higher).");
+                    ImGui::SetNextItemWidth(-1);
+                    if (ImGui::SliderFloat("##enemy facing", &e.facing, -180, 360, "Facing %.0f deg")) Changed();
+                    if (ImGui::BeginCombo("##enemy kind", lv::EnemyKindName(e.kind).c_str())) {
+                        for (int kind : lv::EnemyKinds()) {
+                            ImGui::PushID(kind);
+                            const std::string name = lv::EnemyKindName(kind);
+                            if (ImGui::Selectable(name.c_str(), kind == e.kind)) { e.kind = kind; Changed(); }
+                            ImGui::PopID();
+                        }
+                        ImGui::EndCombo();
+                    }
+                    if (ImGui::Button("Move here")) { ViewCentre(e.x, e.z); e.y = l.ground_y; Changed(); }
+                    ImGui::SameLine();
+                    if (ImGui::Button("Place on map")) { s.place_entity = 1; s.pending_asset = -1; }
+                    if (e.source >= 0 && e.source < int(mission.enemies.size())) {
+                        if (ImGui::Button("Mission's place")) {
+                            const lv::Enemy& was = mission.enemies[e.source];
+                            e.x = was.x; e.y = was.y; e.z = was.z; e.facing = was.facing; e.kind = was.kind;
+                            Changed();
+                        }
+                    }
+                    if (e.source >= 0) {  // the mission's: hidden, not deleted
+                        if (IconButton(ICON_CANCEL, e.removed ? "Bring back" : "Remove enemy")) { e.removed = !e.removed; Changed(); }
+                    } else if (IconButton(ICON_CANCEL, "Remove enemy")) {
+                        l.enemies.erase(l.enemies.begin() + s.selected_enemy);
+                        s.selected_enemy = -1;
+                        Changed();
+                    }
+                }
             }
         }
+        ImGui::PopID();
     }
 
-    Heading("Items");
-    static const lv::MissionItems kNoItems;
-    const lv::MissionItems& mission_items = on ? lv::StageItems(*on) : kNoItems;
-    if (mission_items.room == 0) {
-        Hint("This stage has no items lying in its mission.");
-    } else {
-        if (ImGui::Checkbox("Own items", &l.own_items)) {
-            if (l.own_items && l.items.empty()) l.items = mission_items.items;  // start from the mission's
-            s.selected_item = -1;
-            Changed();
-        }
-        if (ImGui::Checkbox("Show items", &s.show_items)) s.dirty_scene = true;
-        if (!l.own_items) {
-            Hint("The mission's items (dim green) lie where it puts them. Tick Own items to move, add or remove them.");
+    if (section("Items")) {
+        ImGui::PushID("Items");
+        static const lv::MissionItems kNoItems;
+        const lv::MissionItems& mission_items = on ? lv::StageItems(*on) : kNoItems;
+        if (mission_items.room == 0) {
+            Hint("This stage has no items lying in its mission.");
         } else {
-            char room[160];
-            std::snprintf(room, sizeof(room), "%d of %d: these replace the mission's for every character and layout. "
-                          "Items 10049-10052 are the missions' own (stage 3's gate key is 10049).", int(l.items.size()), mission_items.room);
-            Hint(room);
-            ImGui::BeginDisabled(int(l.items.size()) >= mission_items.room);
-            if (IconButton(ICON_IMPORT, "Add item")) {
-                lv::Item item = s.selected_item >= 0 && s.selected_item < int(l.items.size()) ? l.items[s.selected_item]
-                                : !mission_items.items.empty() ? mission_items.items.front() : lv::Item{};
-                ViewCentre(item.x, item.z);
-                item.y = l.ground_y;
-                l.items.push_back(item);
-                s.selected_item = int(l.items.size()) - 1;
+            if (ImGui::Checkbox("Own items", &l.own_items)) {
+                if (l.own_items && l.items.empty()) l.items = mission_items.items;  // start from the mission's
+                s.selected_item = -1;
                 Changed();
             }
-            ImGui::EndDisabled();
-            ImGui::SameLine();
-            if (ImGui::Button("Mission's items")) { l.items = mission_items.items; s.selected_item = -1; Changed(); }
-            ImGui::SameLine();
-            if (ImGui::Button("None")) { l.items.clear(); s.selected_item = -1; Changed(); }
-            for (int i = 0; i < int(l.items.size()); i++) {
-                char label[64];
-                std::snprintf(label, sizeof(label), "%d  item %d%s", i + 1, l.items[i].id, l.items[i].id >= 10049 && l.items[i].id <= 10052 ? "  (mission's)" : "");
-                ImGui::PushID(4000 + i);
-                if (ImGui::Selectable(label, s.selected_item == i)) { s.selected_item = i; s.dirty_scene = true; }
-                ImGui::PopID();
-            }
-            if (s.selected_item >= 0 && s.selected_item < int(l.items.size())) {
-                lv::Item& item = l.items[s.selected_item];
-                float pos[3] = {item.x, item.y, item.z};
-                ImGui::SetNextItemWidth(-1);
-                if (ImGui::DragFloat3("##item pos", pos, 5, -100000, 100000, "%.0f")) { item.x = pos[0]; item.y = pos[1]; item.z = pos[2]; Changed(); }
-                Hint("x, height, z (the game's: smaller is higher).");
-                ImGui::SetNextItemWidth(-1);
-                if (ImGui::InputInt("##item id", &item.id)) { item.id = std::clamp(item.id, 10000, 10053); Changed(); }
-                Hint("The item's number (10000-10053); the mission's own are in the list under Mission's items.");
-                if (ImGui::Button("Move here")) { ViewCentre(item.x, item.z); item.y = l.ground_y; Changed(); }
-                ImGui::SameLine();
-                if (ImGui::Button("Sit on ground")) { item.y = l.ground_y; Changed(); }
-                if (IconButton(ICON_CANCEL, "Remove item")) { l.items.erase(l.items.begin() + s.selected_item); s.selected_item = -1; Changed(); }
-            }
-        }
-    }
-
-    Heading("Lights");
-    static const std::vector<lv::Light> kNoLights;
-    const std::vector<lv::Light>& stage_lights = on ? lv::StageLights(*on) : kNoLights;
-    if (stage_lights.empty()) {
-        Hint("This stage places no candles, lanterns or torches of its own.");
-    } else {
-        if (ImGui::Checkbox("Own lights", &l.own_lights)) {
-            if (l.own_lights && l.lights.size() != stage_lights.size()) l.lights = stage_lights;  // start from the stage's
-            s.selected_light = -1;
-            Changed();
-        }
-        if (ImGui::Checkbox("Show lights", &s.show_lights)) s.dirty_scene = true;
-        std::map<std::string, int> counts;
-        for (const auto& light : stage_lights) counts[light.kind]++;
-        std::string summary = lv::StageLabel(*on) + " has";
-        for (auto& [kind, count] : counts) summary += " " + std::to_string(count) + " " + kind + (count > 1 ? "s," : ",");
-        summary.back() = '.';
-        summary += l.own_lights ? " Its code sets how many of each, so move them where you want them and remove the rest."
-                                : " They stay where the stage had them (dim yellow). Tick Own lights to move or remove them.";
-        Hint(summary.c_str());
-        if (l.own_lights) {
-            if (ImGui::Button("Remove all")) { for (auto& light : l.lights) light.removed = true; Changed(); }
-            ImGui::SameLine();
-            if (ImGui::Button("Stage's lights")) { l.lights = stage_lights; s.selected_light = -1; Changed(); }
-            for (int i = 0; i < int(l.lights.size()); i++) {
-                const lv::Light& light = l.lights[i];
-                char label[96];
-                std::snprintf(label, sizeof(label), "%s %d.%d%s", light.kind.c_str(), light.group + 1, light.index + 1, light.removed ? "  (removed)" : "");
-                ImGui::PushID(3000 + i);
-                if (ImGui::Selectable(label, s.selected_light == i)) { s.selected_light = i; s.dirty_scene = true; }
-                ImGui::PopID();
-            }
-            if (s.selected_light >= 0 && s.selected_light < int(l.lights.size())) {
-                lv::Light& light = l.lights[s.selected_light];
-                float pos[3] = {light.x, light.y, light.z};
-                ImGui::SetNextItemWidth(-1);
-                if (ImGui::DragFloat3("##light pos", pos, 5, -100000, 100000, "%.0f")) { light.x = pos[0]; light.y = pos[1]; light.z = pos[2]; Changed(); }
-                Hint("x, height, z (the game's: smaller is higher).");
-                if (ImGui::Button("Move here")) { ViewCentre(light.x, light.z); light.y = l.ground_y - 150; light.removed = false; Changed(); }
-                ImGui::SameLine();
-                if (ImGui::Button("Stage's place")) {
-                    for (const auto& was : stage_lights)
-                        if (was.va == light.va) { light.x = was.x; light.y = was.y; light.z = was.z; }
+            if (ImGui::Checkbox("Show items", &s.show_items)) s.dirty_scene = true;
+            if (!l.own_items) {
+                Hint("The mission's items (dim green) lie where it puts them. Tick Own items to move, add or remove them.");
+            } else {
+                char room[160];
+                std::snprintf(room, sizeof(room), "%d of %d: these replace the mission's for every character and layout. "
+                              "Items 10049-10052 are the missions' own (stage 3's gate key is 10049).", int(l.items.size()), mission_items.room);
+                Hint(room);
+                ImGui::BeginDisabled(int(l.items.size()) >= mission_items.room);
+                if (IconButton(ICON_IMPORT, "Add item")) {
+                    lv::Item item = s.selected_item >= 0 && s.selected_item < int(l.items.size()) ? l.items[s.selected_item]
+                                    : !mission_items.items.empty() ? mission_items.items.front() : lv::Item{};
+                    ViewCentre(item.x, item.z);
+                    item.y = l.ground_y;
+                    l.items.push_back(item);
+                    s.selected_item = int(l.items.size()) - 1;
                     Changed();
                 }
-                if (IconButton(ICON_CANCEL, light.removed ? "Bring back" : "Remove light")) { light.removed = !light.removed; Changed(); }
+                ImGui::EndDisabled();
+                ImGui::SameLine();
+                if (ImGui::Button("Mission's items")) { l.items = mission_items.items; s.selected_item = -1; Changed(); }
+                ImGui::SameLine();
+                if (ImGui::Button("None")) { l.items.clear(); s.selected_item = -1; Changed(); }
+                ImGui::BeginChild("item list", ImVec2(0, ImGui::GetTextLineHeightWithSpacing() * 5), ImGuiChildFlags_Border);
+                for (int i = 0; i < int(l.items.size()); i++) {
+                    const auto name = lv::ItemName(l.items[i].id);
+                    const std::string label = std::to_string(i + 1) + "  " + (name.empty() ? "Item" : name) +
+                                              " (" + std::to_string(l.items[i].id) + ")";
+                    ImGui::PushID(4000 + i);
+                    if (ImGui::Selectable(label.c_str(), s.selected_item == i)) { s.selected_item = i; s.dirty_scene = true; }
+                    ImGui::PopID();
+                }
+                ImGui::EndChild();
+                if (s.selected_item >= 0 && s.selected_item < int(l.items.size())) {
+                    lv::Item& item = l.items[s.selected_item];
+                    float pos[3] = {item.x, item.y, item.z};
+                    ImGui::SetNextItemWidth(-1);
+                    if (ImGui::DragFloat3("##item pos", pos, 5, -100000, 100000, "%.0f")) { item.x = pos[0]; item.y = pos[1]; item.z = pos[2]; Changed(); }
+                    Hint("x, height, z (the game's: smaller is higher).");
+                    ImGui::SetNextItemWidth(-1);
+                    const auto current_name = lv::ItemName(item.id);
+                    const auto preview = (current_name.empty() ? "Item" : current_name) + " (" + std::to_string(item.id) + ")";
+                    if (ImGui::BeginCombo("##item type", preview.c_str())) {
+                        for (int id = 10000; id <= 10059; ++id) {
+                            const auto name = lv::ItemName(id);
+                            if (name.empty()) continue;
+                            const auto label = name + " (" + std::to_string(id) + ")";
+                            if (ImGui::Selectable(label.c_str(), item.id == id)) { item.id = id; Changed(); }
+                        }
+                        ImGui::EndCombo();
+                    }
+                    if (ImGui::Button("Move here")) { ViewCentre(item.x, item.z); item.y = l.ground_y; Changed(); }
+                    ImGui::SameLine();
+                    if (ImGui::Button("Place on map")) { s.place_entity = 2; s.pending_asset = -1; }
+                    if (IconButton(ICON_CANCEL, "Remove item")) { l.items.erase(l.items.begin() + s.selected_item); s.selected_item = -1; Changed(); }
+                }
             }
         }
+        ImGui::PopID();
     }
+
+    if (section("Lights")) {
+        ImGui::PushID("Lights");
+        static const std::vector<lv::Light> kNoLights;
+        const std::vector<lv::Light>& stage_lights = on ? lv::StageLights(*on) : kNoLights;
+        if (stage_lights.empty()) {
+            Hint("This stage places no candles, lanterns or torches of its own.");
+        } else {
+            if (ImGui::Checkbox("Own lights", &l.own_lights)) {
+                if (l.own_lights && l.lights.size() != stage_lights.size()) l.lights = stage_lights;  // start from the stage's
+                s.selected_light = -1;
+                Changed();
+            }
+            if (ImGui::Checkbox("Show lights", &s.show_lights)) s.dirty_scene = true;
+            std::map<std::string, int> counts;
+            for (const auto& light : stage_lights) counts[light.kind]++;
+            std::string summary = lv::StageLabel(*on) + " has";
+            for (auto& [kind, count] : counts) summary += " " + std::to_string(count) + " " + kind + (count > 1 ? "s," : ",");
+            summary.back() = '.';
+            summary += l.own_lights ? " Its code sets how many of each, so move them where you want them and remove the rest."
+                                    : " They stay where the stage had them (dim yellow). Tick Own lights to move or remove them.";
+            Hint(summary.c_str());
+            if (l.own_lights) {
+                if (ImGui::Button("Remove all")) { for (auto& light : l.lights) light.removed = true; Changed(); }
+                ImGui::SameLine();
+                if (ImGui::Button("Stage's lights")) { l.lights = stage_lights; s.selected_light = -1; Changed(); }
+                for (int i = 0; i < int(l.lights.size()); i++) {
+                    const lv::Light& light = l.lights[i];
+                    char label[96];
+                    std::snprintf(label, sizeof(label), "%s %d.%d%s", light.kind.c_str(), light.group + 1, light.index + 1, light.removed ? "  (removed)" : "");
+                    ImGui::PushID(3000 + i);
+                    if (ImGui::Selectable(label, s.selected_light == i)) { s.selected_light = i; s.dirty_scene = true; }
+                    ImGui::PopID();
+                }
+                if (s.selected_light >= 0 && s.selected_light < int(l.lights.size())) {
+                    lv::Light& light = l.lights[s.selected_light];
+                    float pos[3] = {light.x, light.y, light.z};
+                    ImGui::SetNextItemWidth(-1);
+                    if (ImGui::DragFloat3("##light pos", pos, 5, -100000, 100000, "%.0f")) { light.x = pos[0]; light.y = pos[1]; light.z = pos[2]; Changed(); }
+                    Hint("x, height, z (the game's: smaller is higher).");
+                    if (ImGui::Button("Move here")) { ViewCentre(light.x, light.z); light.y = l.ground_y - 150; light.removed = false; Changed(); }
+                    ImGui::SameLine();
+                    if (ImGui::Button("Stage's place")) {
+                        for (const auto& was : stage_lights)
+                            if (was.va == light.va) { light.x = was.x; light.y = was.y; light.z = was.z; }
+                        Changed();
+                    }
+                    if (IconButton(ICON_CANCEL, light.removed ? "Bring back" : "Remove light")) { light.removed = !light.removed; Changed(); }
+                }
+            }
+        }
+        ImGui::PopID();
+    }
+
+    s.reveal_section = nullptr;
 
     Heading("Save");
     const lv::StageInfo* st = StageByNumber(l.stage);
@@ -804,6 +873,154 @@ void MakePanel() {
     if (ImGui::Checkbox("Show its collision", &s.show_collision)) s.dirty_scene = true;
 }
 
+void PlaceAsset(int index, float x, float z) {
+    State& s = S();
+    const auto& catalogue = assets::Catalogue();
+    if (index < 0 || index >= int(catalogue.size()) || catalogue[index].kind != assets::Kind::Model) return;
+    std::string error;
+    if (!assets::PlaceModel(s.level, catalogue[index], x, z, error)) { Notify(error, true); return; }
+    s.selected_model = int(s.level.models.size()) - 1;
+    s.selected_box = -1;
+    s.reveal_section = "Models";
+    Changed();
+    Notify("Placed " + catalogue[index].name);
+}
+
+void AssetBrowser() {
+    State& s = S();
+    if (!s.assets_open || !s.has_level) return;
+    ImGui::SetNextWindowSize(ImVec2(950, 680), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSizeConstraints(ImVec2(700, 480), ImVec2(FLT_MAX, FLT_MAX));
+    if (!ImGui::Begin("Game assets", &s.assets_open)) { ImGui::End(); return; }
+    const char* tabs[] = {"Models", "Textures"};
+    Segmented("asset type", &s.assets_tab, tabs, 2);
+    ImGui::SameLine();
+    ImGui::Checkbox("Current stage", &s.assets_current_stage);
+    ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x * .6f);
+    ImGui::InputTextWithHint("##asset search", "Search game assets...", s.assets_search, sizeof(s.assets_search));
+    ImGui::SameLine();
+    const auto& catalogue = assets::Catalogue();
+    const auto kind = s.assets_tab == 0 ? assets::Kind::Model : assets::Kind::Texture;
+    std::vector<std::string> folders;
+    for (const auto& a : catalogue) if (a.kind == kind && std::find(folders.begin(), folders.end(), a.folder) == folders.end()) folders.push_back(a.folder);
+    std::sort(folders.begin(), folders.end());
+    ImGui::BeginDisabled(s.assets_current_stage);
+    ImGui::SetNextItemWidth(-1);
+    if (ImGui::BeginCombo("##asset folder", s.assets_folder.empty() ? "All folders" : s.assets_folder.c_str())) {
+        if (ImGui::Selectable("All folders", s.assets_folder.empty())) s.assets_folder.clear();
+        for (const auto& folder : folders) if (ImGui::Selectable(folder.c_str(), s.assets_folder == folder)) s.assets_folder = folder;
+        ImGui::EndCombo();
+    }
+    ImGui::EndDisabled();
+    std::vector<int> matches;
+    const auto search = Lower(s.assets_search);
+    char stage[16]; std::snprintf(stage, sizeof(stage), "st%02d", s.level.stage);
+    char props[24]; std::snprintf(props, sizeof(props), "mapobj%02d.con", s.level.stage);
+    for (int i = 0; i < int(catalogue.size()); i++) {
+        const auto& a = catalogue[i];
+        if (a.kind != kind || (!search.empty() && Lower(a.entry).find(search) == std::string::npos)) continue;
+        const auto folder = Lower(a.folder);
+        if (s.assets_current_stage) {
+            if (folder != stage && folder != std::string(stage) + ".con" && folder != props && !folder.starts_with(std::string(stage) + "_")) continue;
+        } else if (!s.assets_folder.empty() && a.folder != s.assets_folder) continue;
+        matches.push_back(i);
+    }
+    ImGui::TextDisabled("%zu matching %s", matches.size(), s.assets_tab == 0 ? "models" : "textures");
+    const float detail_width = ImGui::GetFontSize() * 16;
+    ImGui::BeginChild("asset grid", ImVec2(-detail_width - ImGui::GetStyle().ItemSpacing.x, 0), ImGuiChildFlags_Border);
+    const float side = ImGui::GetFontSize() * 6;
+    const float row_height = side + ImGui::GetFontSize() * 2 + ImGui::GetStyle().ItemSpacing.y * 2;
+    const int columns = std::max(1, int(ImGui::GetContentRegionAvail().x / (side + ImGui::GetStyle().ItemSpacing.x)));
+    if (matches.empty()) Hint("No matching assets. Clear the search or turn off Current stage to browse the whole game.");
+    if (ImGui::BeginTable("asset tiles", columns, ImGuiTableFlags_SizingFixedFit)) {
+        for (int i = 0; i < columns; i++) ImGui::TableSetupColumn("", ImGuiTableColumnFlags_WidthFixed, side);
+        ImGuiListClipper clipper;
+        clipper.Begin(int((matches.size() + columns - 1) / columns), row_height);
+        while (clipper.Step()) for (int row = clipper.DisplayStart; row < clipper.DisplayEnd; row++) {
+            ImGui::TableNextRow(ImGuiTableRowFlags_None, row_height);
+            for (int col = 0; col < columns; col++) {
+                const int position = row * columns + col;
+                if (position >= int(matches.size())) break;
+                ImGui::TableSetColumnIndex(col);
+                const int index = matches[position];
+                const auto a = catalogue[index];
+                ImGui::PushID(index);
+                auto pic = GetPicture(PictureKey("game asset|" + a.Key(), 128), 128, [a](Bitmap& b) { return assets::Thumbnail(a, b); });
+                const auto at = ImGui::GetCursorScreenPos();
+                PictureBox(pic, ImVec2(side, side), "no preview", s.selected_asset == index ? IM_COL32(130,230,80,255) : 0);
+                ImGui::SetCursorScreenPos(at);
+                if (ImGui::InvisibleButton("select asset", ImVec2(side, side))) s.selected_asset = index;
+                if (ImGui::IsItemHovered()) ImGui::SetTooltip("%s\n%s", a.entry.c_str(), a.stage_piece ? "Stage geometry" : a.kind == assets::Kind::Model ? "Static model" : "Game texture");
+                ImGui::PushClipRect(ImGui::GetCursorScreenPos(), ImVec2(at.x + side, ImGui::GetCursorScreenPos().y + ImGui::GetTextLineHeight()), true);
+                ImGui::TextUnformatted(a.name.c_str());
+                ImGui::PopClipRect();
+                ImGui::PopID();
+            }
+        }
+        ImGui::EndTable();
+    }
+    ImGui::EndChild();
+    ImGui::SameLine();
+    ImGui::BeginChild("asset details", ImVec2(0, 0));
+    const bool selected = s.selected_asset >= 0 && s.selected_asset < int(catalogue.size()) && catalogue[s.selected_asset].kind == kind;
+    if (!selected) {
+        Hint("Select a thumbnail to preview it and use it in your level.");
+    } else {
+        const auto& a = catalogue[s.selected_asset];
+        auto pic = GetPicture(PictureKey("game asset|" + a.Key(), 320), 320, [a](Bitmap& b) { return assets::Thumbnail(a, b, 320); });
+        PictureBox(pic, ImVec2(ImGui::GetContentRegionAvail().x, 220), "no preview");
+        ImGui::TextWrapped("%s", a.entry.c_str());
+        if (kind == assets::Kind::Model) {
+            static int preview_asset = -1;
+            static assets::Geometry geometry;
+            if (preview_asset != s.selected_asset) { preview_asset = s.selected_asset; geometry = assets::ReadGeometry(a); }
+            if (!geometry.mesh.error.empty()) Hint(geometry.mesh.error.c_str());
+            else {
+                ImGui::Text("%zu triangles / %zu materials", geometry.mesh.faces.size(), geometry.mesh.materials.size());
+                const auto missing = std::count(geometry.textures.begin(), geometry.textures.end(), std::string());
+                if (missing) ImGui::TextWrapped("%zu materials have no matching texture; choose those in Models after placement.", size_t(missing));
+            }
+            ImGui::BeginDisabled(!geometry.mesh.error.empty());
+            if (ImGui::Button("Place at view centre", ImVec2(-1, 0))) {
+                float x, z; ViewCentre(x, z); PlaceAsset(s.selected_asset, x, z);
+            }
+            if (ImGui::Button("Place with a map click", ImVec2(-1, 0))) { s.pending_asset = s.selected_asset; s.assets_open = false; }
+            ImGui::EndDisabled();
+            Hint("Placed at original size with mesh collision. Use Models to move, turn, resize or change collision.");
+            Hint("Static geometry only: enemies and collectible items are placed through their own sections.");
+        } else {
+            ImGui::SetNextItemWidth(-1);
+            ImGui::Combo("##texture target", &s.texture_target, "Ground\0Selected box\0Selected model material\0");
+            bool valid = s.texture_target == 0 || (s.texture_target == 1 && s.selected_box >= 0 && s.selected_box < int(s.level.boxes.size()));
+            if (s.texture_target == 2 && s.selected_model >= 0 && s.selected_model < int(s.level.models.size())) {
+                const auto mesh = lv::ReadModel(lv::ModelPath(s.level, s.level.models[s.selected_model]));
+                valid = !mesh->materials.empty();
+                if (valid) {
+                    s.texture_material = std::clamp(s.texture_material, 0, int(mesh->materials.size()) - 1);
+                    ImGui::SetNextItemWidth(-1);
+                    if (ImGui::BeginCombo("##texture material", mesh->materials[s.texture_material].c_str())) {
+                        for (int i = 0; i < int(mesh->materials.size()); i++)
+                            if (ImGui::Selectable(mesh->materials[i].c_str(), i == s.texture_material)) s.texture_material = i;
+                        ImGui::EndCombo();
+                    }
+                }
+            }
+            ImGui::BeginDisabled(!valid);
+            if (ImGui::Button("Apply texture", ImVec2(-1, 0))) {
+                std::string error;
+                if (assets::ApplyTexture(s.level, a, s.texture_target, s.selected_box, s.selected_model, s.texture_material, error)) {
+                    Changed(); Notify("Applied " + a.name);
+                } else Notify(error, true);
+            }
+            ImGui::EndDisabled();
+            if (!valid) Hint("Select a box or model in the map first.");
+            Hint("Textures from other stages travel with the saved level and use its available texture slots.");
+        }
+    }
+    ImGui::EndChild();
+    ImGui::End();
+}
+
 // a ray against the level's boxes and models: the nearest hit selected (boxes 0.., models 1000..), or -1
 int Pick(const float o[3], const float d[3]) {
     const lv::Level& l = S().level;
@@ -846,6 +1063,8 @@ void ViewArea() {
     ImGui::SetCursorScreenPos(at);
     ImGui::InvisibleButton("view", size, ImGuiButtonFlags_MouseButtonLeft | ImGuiButtonFlags_MouseButtonRight | ImGuiButtonFlags_MouseButtonMiddle);
     ImGuiIO& io = ImGui::GetIO();
+    if (s.pending_asset >= 0 && ImGui::IsKeyPressed(ImGuiKey_Escape)) s.pending_asset = -1;
+    if (s.place_entity && ImGui::IsKeyPressed(ImGuiKey_Escape)) s.place_entity = 0;
     if (ImGui::IsItemActive()) {
         const bool pan = ImGui::IsMouseDown(ImGuiMouseButton_Middle) || (ImGui::IsMouseDown(ImGuiMouseButton_Right) && io.KeyShift);
         if (pan) s.camera.Pan(io.MouseDelta.x, io.MouseDelta.y);
@@ -857,15 +1076,47 @@ void ViewArea() {
         if (s.mode == kMake && s.has_level && ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
             float o[3], d[3];
             s.viewport.Ray(io.MousePos.x - at.x, io.MousePos.y - at.y, o, d);
-            const int hit = Pick(o, d);
-            s.selected_box = hit >= 0 && hit < 1000 ? hit : -1;
-            s.selected_model = hit >= 1000 ? hit - 1000 : -1;
-            s.dirty_scene = true;
+            if (s.place_entity) {
+                const float t = std::fabs(d[1]) > .00001f ? (-s.level.ground_y - o[1]) / d[1] : -1;
+                if (t > 0 && t < 200000) {
+                    const float x = o[0] + d[0] * t, z = o[2] + d[2] * t;
+                    auto& l = s.level;
+                    if (s.place_entity == 1 && l.own_enemies && s.selected_enemy >= 0 && size_t(s.selected_enemy) < l.enemies.size()) {
+                        auto& enemy = l.enemies[s.selected_enemy];
+                        enemy.x = x; enemy.y = l.ground_y; enemy.z = z; enemy.removed = false;
+                        Changed();
+                    } else if (s.place_entity == 2 && l.own_items && s.selected_item >= 0 && size_t(s.selected_item) < l.items.size()) {
+                        auto& item = l.items[s.selected_item];
+                        item.x = x; item.y = l.ground_y; item.z = z;
+                        Changed();
+                    }
+                    s.place_entity = 0;
+                } else Notify("Point the view towards the ground.", true);
+            } else if (s.pending_asset >= 0) {
+                const float t = std::fabs(d[1]) > .00001f ? (-s.level.ground_y - o[1]) / d[1] : -1;
+                if (t > 0 && t < 200000) {
+                    PlaceAsset(s.pending_asset, o[0] + d[0] * t, o[2] + d[2] * t);
+                    s.pending_asset = -1;
+                } else Notify("Point the view towards the ground to place the model.", true);
+            } else {
+                const int hit = Pick(o, d);
+                s.selected_box = hit >= 0 && hit < 1000 ? hit : -1;
+                s.selected_model = hit >= 1000 ? hit - 1000 : -1;
+                s.reveal_section = s.selected_box >= 0 ? "Boxes" : s.selected_model >= 0 ? "Models" : nullptr;
+                s.dirty_scene = true;
+            }
         }
     }
     if (s.loading) {
         ImGui::GetWindowDrawList()->AddText(ImVec2(at.x + 12, at.y + 10), IM_COL32(220, 220, 220, 255), "Loading the stage...");
     }
+    if (s.pending_asset >= 0) {
+        const auto message = "Click the map to place " + assets::Catalogue()[s.pending_asset].name + " (Esc cancels)";
+        ImGui::GetWindowDrawList()->AddText(ImVec2(at.x + 12, at.y + 34), IM_COL32(200,255,160,255), message.c_str());
+    }
+    if (s.mode == kMake && s.place_entity)
+        ImGui::GetWindowDrawList()->AddText(ImVec2(at.x + 12, at.y + 34), IM_COL32(200,255,160,255),
+                                           "Click the ground to place (Esc cancels)");
 }
 
 }  // namespace
@@ -884,7 +1135,7 @@ void LevelsPage() {
         const int remembered = std::atoi(Setting("levels_stage", "3").c_str());
         for (size_t i = 0; i < s.stages.size(); i++) if (s.stages[i].stage == remembered) s.view_stage = int(i);
         if (const lv::StageInfo* st = ShownStage()) { Load(*st); FrameStage(); }
-        if (Automate().packs_mode == 1 && ShownStage()) {  // --capture of a new level
+        if (Automate().packs_mode >= 1 && Automate().packs_mode <= 3 && ShownStage()) {  // --capture: new level / model browser / texture browser
             s.level = lv::NewLevel(*ShownStage());
             s.revision++;
             s.level.boxes.push_back({s.level.spawn[0] + 600, s.level.spawn[2] + 300, s.level.ground_y, 800, 400, 300, s.level.ground_texture});
@@ -901,6 +1152,15 @@ void LevelsPage() {
             }
             s.has_level = true;
             s.mode = kMake;
+            if (Automate().packs_mode >= 2) {
+                s.assets_open = true;
+                s.assets_tab = Automate().packs_mode - 2;
+                const auto& catalogue = assets::Catalogue();
+                const auto kind = s.assets_tab == 0 ? assets::Kind::Model : assets::Kind::Texture;
+                char folder[16]; std::snprintf(folder, sizeof(folder), "st%02d", s.level.stage);
+                for (int i = 0; i < int(catalogue.size()); i++)
+                    if (catalogue[i].kind == kind && Lower(catalogue[i].folder).starts_with(folder)) { s.selected_asset = i; break; }
+            }
             SetLevelStage(s.level.stage);
             FrameStage();
         }
@@ -914,9 +1174,10 @@ void LevelsPage() {
     CountTextures();
     const float panel = ImGui::GetFontSize() * 20;
     ImGui::BeginChild("levels panel", ImVec2(panel, 0), ImGuiChildFlags_None);
-    const char* modes[] = {"View a stage", "Make a level"};
+    const char* modes[] = {"View stage", "Make level"};
     if (Segmented("levels mode", &s.mode, modes, 2)) {
         s.dirty_scene = true;
+        s.place_entity = 0;
         if (s.mode == kMake && s.has_level) SetLevelStage(s.level.stage);
         FrameStage();
     }
@@ -928,11 +1189,12 @@ void LevelsPage() {
     ImGui::BeginChild("levels view", ImVec2(0, 0), ImGuiChildFlags_Border);
     ViewArea();
     ImGui::EndChild();
+    AssetBrowser();
     // a loaded stage frames itself once
     static int framed = -1;
     if (!s.loading && s.loaded_stage >= 0 && s.loaded_stage != framed) {
         framed = s.loaded_stage;
-        if (s.mode == kView) FrameStage();
+        if (s.mode != kMake) FrameStage();
         s.dirty_scene = true;
     }
 }

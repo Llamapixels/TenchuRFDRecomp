@@ -3,6 +3,7 @@
 #include "app/app.h"
 #include "audio/master_volume.h"
 #include "game_camera.h"
+#include "hud_settings.h"
 #include "game_cheats.h"
 #include "cloth_solver.h"
 #include "graphics/widescreen.h"
@@ -40,6 +41,15 @@ int main(){try{
     check(tenchu::cloth::enhanced,"enhanced cloth preference must roundtrip");
     check(!tenchu::cloth::body_collision&&tenchu::cloth::response_speed==.4f&&tenchu::cloth::body_size==1.2f,"cloth speed and body collision settings must roundtrip");
     toml::table legacy;TenchuLoadPortSettings(&legacy);
+    check(tenchu::hud::shown&&tenchu::hud::opacity_percent==100,"legacy settings must keep HUD fully visible");
+    tenchu::hud::shown=false;tenchu::hud::opacity_percent=35;toml::table hudSaved;TenchuSavePortSettings(&hudSaved);
+    tenchu::hud::Reset();TenchuLoadPortSettings(&hudSaved);
+    check(!tenchu::hud::shown&&tenchu::hud::opacity_percent==35,"HUD hide and chosen opacity must persist independently");
+    toml::table invalidHud{{"hud",toml::table{{"opacity_percent",std::numeric_limits<double>::infinity()}}}};
+    TenchuLoadPortSettings(&invalidHud);check(tenchu::hud::opacity_percent==100,"nonfinite HUD opacity must use visible default");
+    toml::table lowHud{{"hud",toml::table{{"opacity_percent",-25}}}};TenchuLoadPortSettings(&lowHud);
+    check(tenchu::hud::opacity_percent==0,"HUD opacity must clamp at zero");
+    TenchuLoadPortSettings(&legacy);
     check(!tenchu::cloth::enhanced,"existing settings must retain original cloth by default");
     check(tenchu::cloth::body_collision&&tenchu::cloth::response_speed==.6f&&tenchu::cloth::body_size==1.f,"cloth collision and heavier response defaults must apply to old settings");
     toml::table invalidCloth{{"physics",toml::table{{"cloth_response_speed",std::numeric_limits<double>::infinity()},{"cloth_body_size",99.}}}};
@@ -72,13 +82,25 @@ int main(){try{
     toml::table invalidShader{{"shader",toml::table{{"gamma",std::numeric_limits<double>::infinity()},{"sharpness",99.0}}}};
     TenchuLoadPortSettings(&invalidShader);check(tenchu::post::values[4]==1&&tenchu::post::values[6]==1,"shader load must clamp and reject nonfinite values");
     using namespace tenchu::camera;
+    auto bindings=tenchu::controls::Snapshot();bindings.keyboard_bindings[tenchu::controls::X]='J';
+    bindings.controller_bindings[tenchu::controls::A]=tenchu::controls::RT;bindings.mouse_speed=2.5f;bindings.deadzone=.27f;
+    tenchu::controls::Configure(bindings);g_tenchu_remember_camera=false;toml::table controlsSaved;TenchuSavePortSettings(&controlsSaved);
+    tenchu::controls::Reset();TenchuLoadPortSettings(&controlsSaved);bindings=tenchu::controls::Snapshot();
+    check(bindings.keyboard_bindings[tenchu::controls::X]=='J'&&bindings.controller_bindings[tenchu::controls::A]==tenchu::controls::RT&&bindings.mouse_speed==2.5f&&bindings.deadzone==.27f,"bindings must persist independently of remember camera");
+    toml::table invalidControls{{"controls",toml::table{{"mouse_sensitivity",std::numeric_limits<double>::infinity()},{"right_stick_deadzone",8.},
+        {"keyboard",toml::table{{"x",999},{"a",0x75}}},{"controller",toml::table{{"a",999},{"b",-1}}}}}};
+    TenchuLoadPortSettings(&invalidControls);bindings=tenchu::controls::Snapshot();
+    check(bindings.mouse_speed==1&&bindings.deadzone==.5f&&bindings.keyboard_bindings[tenchu::controls::X]==0&&bindings.keyboard_bindings[tenchu::controls::A]==0&&bindings.controller_bindings[tenchu::controls::A]==tenchu::controls::A&&bindings.controller_bindings[tenchu::controls::B]==-1,"invalid bindings and reserved keys must be validated");
     g_tenchu_remember_camera=true;
     toml::table input{{"camera",toml::table{{"horizontal_speed",2.0},{"vertical_speed",std::numeric_limits<double>::infinity()},
-        {"fov",200.0},{"distance",.01},{"running_horizontal_speed",.25},{"linked",true},{"invert_horizontal",true},{"free_requested",true}}}};
+        {"world_draw_distance",.1},{"enemy_draw_distance",8.0},{"fov",200.0},{"distance",.01},{"running_horizontal_speed",.25},{"linked",true},{"invert_horizontal",true},{"free_requested",true}}}};
     free_requested=false;TenchuLoadPortSettings(&input);
     check(horizontal==2&&vertical==1&&fov==120&&distance==.25f&&running_horizontal==2&&invert_x&&!free_requested,"camera restore must validate values and exclude live freecam state");
+    check(world_draw_distance==.25f&&enemy_draw_distance==4.f,"draw distance must clamp below and above original");
+    check(follow_control&&link_profiles,"legacy settings must migrate to modern camera with linked speed sliders");
     toml::table output;TenchuSavePortSettings(&output);
     check(output["camera"]["horizontal_speed"].value_or(0.)==2&&!output["camera"]["free_requested"],"camera serializer must omit active modes");
+    check(output["camera"]["world_draw_distance"].value_or(0.)==.25&&output["camera"]["enemy_draw_distance"].value_or(0.)==4.,"draw distances must roundtrip");
     g_tenchu_remember_camera=false;toml::table omitted;TenchuSavePortSettings(&omitted);check(!omitted["camera"],"remember-off must omit camera data");
     g_tenchu_remember_camera=true;TenchuInitializePortSettings();auto before=saves;horizontal=3;
     TenchuSaveCameraIfChanged(true);check(saves==before,"slider drag must not save every frame");
@@ -128,6 +150,7 @@ int main(){try{
     auto sentinel=app::ExeDir()/"game_save_sentinel.txt";{std::ofstream f(sentinel);f<<"keep";}
     g_tenchu_performance_overlay=true;g_tenchu_mute=true;free_requested=true;tenchu::cheats::god_mode=true;
     TenchuRestoreDefaults();
+    check(tenchu::hud::shown&&tenchu::hud::opacity_percent==100,"system reset must restore HUD visibility");
     check(settings.display_mode==app::DisplayMode::Windowed&&settings.width==640&&settings.height==480&&settings.vsync&&settings.fps_cap==60,"reset must restore display defaults");
     check(g_tenchu_renderer==0&&!g_tenchu_widescreen&&g_tenchu_internal_percent==100&&g_tenchu_master_volume==100&&!g_tenchu_mute&&!g_tenchu_performance_overlay&&!free_requested&&!tenchu::cheats::god_mode,"reset must restore F6 preferences");
     check(TenchuGraphicsProfiles().size()==1&&TenchuShaderPresets().size()==1&&g_tenchu_shader_preset.empty()&&std::filesystem::exists(sentinel),"reset must preserve profiles and saves");
